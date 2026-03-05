@@ -1,0 +1,32 @@
+<section class="client-info">
+  <div>
+    <h2>{{ client.name }}</h2>
+    {% if client.summary %}<p>{{ client.summary }}</p>{% endif %}
+    <p class="muted">Questions? Email <a href="mailto:{{ client.contact }}">{{ client.contact }}</a></p>
+  </div>
+  <div class="button-stack">
+    <a class="btn" href="{{ client.requestUrl or settings.defaultRequestUrl }}" target="_blank">Request a change</a>
+  </div>
+</section>
+<section class="grid">
+{% for project in projects %}
+  <article class="card">
+    <div class="card-header">
+      <h3>{{ project.name }}</h3>
+      <span class="status-pill {{ project.stage | lower | replace(' ', '-') }}">{{ project.stage }}</span>
+    </div>
+    <p>{{ project.summary }}</p>
+    <dl class="meta">
+      <div><dt>Status</dt><dd>{{ project.status }}</dd></div>
+      <div><dt>Last update</dt><dd>{{ project.lastUpdate | date('MMM d, yyyy') }}</dd></div>
+    </dl>
+    <div class="links">
+      {% if project.previewUrl %}<a href="{{ project.previewUrl }}" target="_blank">Preview</a>{% endif %}
+      {% if project.liveUrl %}<a href="{{ project.liveUrl }}" target="_blank">Live</a>{% endif %}
+      <a href="{{ client.requestUrl or settings.defaultRequestUrl }}" class="secondary" target="_blank">Request change</a>
+    </div>
+  </article>
+{% else %}
+  <p class="muted">No live projects yet.</p>
+{% endfor %}
+</section>

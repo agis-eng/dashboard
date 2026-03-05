@@ -1,0 +1,20 @@
+{
+  "name": "dashboard",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "node build.mjs",
+    "publish": "node publish.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "date-fns": "^4.1.0",
+    "fs-extra": "^11.3.4",
+    "nunjucks": "^3.2.4",
+    "yaml": "^2.8.2"
+  },
+  "type": "module"
+}

@@ -1,0 +1,15 @@
+settings:
+  messageAtlasUrl: "https://tally.so/r/message-atlas"
+  messageAgisUrl: "https://tally.so/r/message-agis"
+  defaultRequestUrl: "https://tally.so/r/request-change"
+  messageNotes: "Ping Atlas or AGIS when you need strategy, unblockers, or infra help."
+  subagentActivity:
+    - name: "Ralph"
+      detail: "Running QA checklist on Lumen Dental microsite."
+      timestamp: "2026-03-04T15:25:00Z"
+    - name: "Mira"
+      detail: "Drafting onboarding copy blocks for Lovable portal."
+      timestamp: "2026-03-04T13:40:00Z"
+    - name: "Orion"
+      detail: "Monitoring overnight deploys + alerts."
+      timestamp: "2026-03-04T09:10:00Z"

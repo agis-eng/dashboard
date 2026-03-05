@@ -1,0 +1,96 @@
+<div class="workspace">
+  <section class="workspace-main">
+    <header class="section-header">
+      <div>
+        <h2>Active builds</h2>
+        <p class="muted">{{ stats.activeProjects }} projects tracked across {{ stats.clientCount }} clients.</p>
+      </div>
+      <div class="stat-chips">
+        <span class="chip">Open requests: {{ stats.openRequests }}</span>
+        <span class="chip">Last sync: {{ generatedAt | default('—') }}</span>
+      </div>
+    </header>
+    <div class="grid project-grid">
+    {% for project in projects %}
+      <article class="card">
+        <div class="card-header">
+          <div>
+            <h2>{{ project.name }}</h2>
+            <p class="muted">{{ project.summary }}</p>
+          </div>
+          <span class="status-pill {{ project.stage | lower | replace(' ', '-') }}">{{ project.stage }}</span>
+        </div>
+        <dl class="meta">
+          <div><dt>Owner</dt><dd>{{ project.owner }}</dd></div>
+          <div><dt>Client</dt><dd>{{ project.client.name }}</dd></div>
+          <div><dt>Status</dt><dd>{{ project.status }}</dd></div>
+          <div><dt>Last update</dt><dd>{{ project.lastUpdate | date('MMM d, yyyy') }}</dd></div>
+        </dl>
+        <div class="links">
+          {% if project.previewUrl %}<a href="{{ project.previewUrl }}" target="_blank">Preview</a>{% endif %}
+          {% if project.liveUrl %}<a href="{{ project.liveUrl }}" target="_blank">Live</a>{% endif %}
+          {% if project.repoUrl %}<a href="{{ project.repoUrl }}" target="_blank">Repo</a>{% endif %}
+        </div>
+      </article>
+    {% endfor %}
+    </div>
+  </section>
+  <aside class="workspace-sidebar">
+    <section class="panel">
+      <header>
+        <h3>Command center</h3>
+        <p class="muted">{{ settings.messageNotes or 'Reach out for unblockers or escalations.' }}</p>
+      </header>
+      <div class="button-stack">
+        <a class="btn" href="{{ settings.messageAtlasUrl or '#' }}" target="_blank">Message Atlas</a>
+        <a class="btn ghost" href="{{ settings.messageAgisUrl or '#' }}" target="_blank">Message AGIS</a>
+      </div>
+    </section>
+
+    <section class="panel">
+      <header>
+        <h3>Open requests</h3>
+        <p class="muted">Newest first</p>
+      </header>
+      <ul class="request-list">
+        {% for request in requests %}
+          <li>
+            <div class="request-title">{{ request.title }}</div>
+            <div class="request-meta">
+              <span>{{ request.client.name if request.client else 'Unknown client' }}</span>
+              <span>•</span>
+              <span>{{ request.status }}</span>
+              <span>•</span>
+              <span>{{ request.priority }} priority</span>
+            </div>
+            <p class="muted">{{ request.summary }}</p>
+            <div class="request-footer">
+              <span>Owner: {{ request.owner }}</span>
+              <span>{{ request.submittedAtFormatted }}</span>
+            </div>
+          </li>
+        {% else %}
+          <li class="muted">No requests queued.</li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section class="panel">
+      <header>
+        <h3>Subagent activity</h3>
+        <p class="muted">Pulse feed</p>
+      </header>
+      <ul class="activity-list">
+        {% for entry in settings.subagentActivity or [] %}
+          <li>
+            <strong>{{ entry.name }}</strong>
+            <p>{{ entry.detail }}</p>
+            <span class="muted">{{ entry.timestamp | date('MMM d, h:mm a') }}</span>
+          </li>
+        {% else %}
+          <li class="muted">No activity logged.</li>
+        {% endfor %}
+      </ul>
+    </section>
+  </aside>
+</div>

@@ -1,0 +1,15 @@
+clients:
+  - id: atlas
+    name: "Atlas HQ"
+    slug: atlas-hq
+    contact: "erik@manifestbot.ai"
+    notes: "Internal ops + R&D"
+    summary: "Internal workspace for experiments, Lovable builds, and infra projects."
+    requestUrl: "https://tally.so/r/atlas-change"
+  - id: lumen
+    name: "Lumen Dental"
+    slug: lumen-dental
+    contact: "contact@lumendental.com"
+    notes: "Dental practice landing page"
+    summary: "Patient intake microsite with bilingual content and new photo assets."
+    requestUrl: "https://tally.so/r/lumen-updates"

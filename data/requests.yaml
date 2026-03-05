@@ -1,0 +1,28 @@
+requests:
+  - id: req-1041
+    projectId: lumen-site
+    clientId: lumen
+    title: "Swap hero banner copy"
+    summary: "Client wants the comfort guarantee highlighted above the fold."
+    status: "New"
+    priority: "High"
+    owner: "Anton"
+    submittedAt: "2026-03-04T14:20:00Z"
+  - id: req-1042
+    projectId: love-portal
+    clientId: atlas
+    title: "Expose automation toggle"
+    summary: "Need a quick switch to pause nightly Lovable syncs."
+    status: "In progress"
+    priority: "Medium"
+    owner: "Atlas"
+    submittedAt: "2026-03-03T20:55:00Z"
+  - id: req-1043
+    projectId: lumen-site
+    clientId: lumen
+    title: "Add insurance logos"
+    summary: "Upload the new insurer badges to the footer carousel."
+    status: "Blocked"
+    priority: "Low"
+    owner: "Ralph"
+    submittedAt: "2026-03-02T11:05:00Z"
