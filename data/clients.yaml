@@ -1,15 +1,360 @@
 clients:
+  - id: a-plus-epoxy
+    name: A Plus Epoxy
+    slug: a-plus-epoxy
+    contact: agis@manifestbot.ai
+    notes: Contractor / Referral Projects (Will Bisette)
+    summary: Contractor project via Will Bisette.
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20A%20Plus%20Epoxy
+  - id: action-real-estate
+    name: Action Real Estate
+    slug: action-real-estate
+    contact: agis@manifestbot.ai
+    notes: Contractor / Referral Projects (Will Bisette)
+    summary: Contractor project via Will Bisette.
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Action%20Real%20Estate
+  - id: asian-food-magic
+    name: Asian Food Magic
+    slug: asian-food-magic
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Asian%20Food%20Magic
   - id: atlas
-    name: "Atlas HQ"
+    name: Atlas HQ
     slug: atlas-hq
-    contact: "erik@manifestbot.ai"
-    notes: "Internal ops + R&D"
-    summary: "Internal workspace for experiments, Lovable builds, and infra projects."
-    requestUrl: "https://tally.so/r/atlas-change"
+    contact: erik@manifestbot.ai
+    notes: Internal ops + R&D
+    summary: Internal workspace for experiments, Lovable builds, and infra projects.
+    requestUrl: https://tally.so/r/atlas-change
+  - id: brentlee-paddi-thomas
+    name: Brentlee & Paddi Thomas
+    slug: brentlee-paddi-thomas
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Brentlee%20%26%20Paddi%20Thomas
+  - id: capture-build-connect
+    name: Capture Build Connect
+    slug: capture-build-connect
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: Active
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Capture%20Build%20Connect
+  - id: caring-echo-bridge
+    name: Caring Echo Bridge
+    slug: caring-echo-bridge
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: ECHO ecosystem. Empwr (Private labeled).
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Caring%20Echo%20Bridge
+  - id: carmen
+    name: Carmen
+    slug: carmen
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Carmen
+  - id: che-limitless
+    name: Che Limitless
+    slug: che-limitless
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: Internal. Anton's company, partnership with Erik.
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Che%20Limitless
+  - id: chip-smith-hammersmith
+    name: Chip Smith (Hammersmith)
+    slug: chip-smith-hammersmith
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: "Active Client. *Note: Strategic overlap with ECHO/KD Foundation
+      partnership.*"
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Chip%20Smith%20(Hammersmith)
+  - id: clyde-rath
+    name: Clyde Rath
+    slug: clyde-rath
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Clyde%20Rath
+  - id: dan-bauman
+    name: Dan Bauman
+    slug: dan-bauman
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client (Project 1)
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Dan%20Bauman
+  - id: dilotiko-ai-network
+    name: Dilotiko AI Network
+    slug: dilotiko-ai-network
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: Active
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Dilotiko%20AI%20Network
+  - id: dr-liza-jones
+    name: Dr. Liza Jones
+    slug: dr-liza-jones
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Dr.%20Liza%20Jones
+  - id: echo-credentialing
+    name: ECHO Credentialing
+    slug: echo-credentialing
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: ECHO ecosystem. Credentialing project.
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20ECHO%20Credentialing
+  - id: echo-management
+    name: ECHO Management
+    slug: echo-management
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: Active
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20ECHO%20Management
+  - id: ellie-hocking
+    name: Ellie Hocking
+    slug: ellie-hocking
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client (Anton's daughter)
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Ellie%20Hocking
+  - id: embrace-our-causes
+    name: Embrace Our Causes
+    slug: embrace-our-causes
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: Active
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Embrace%20Our%20Causes
+  - id: fundraising-hub
+    name: Fundraising Hub
+    slug: fundraising-hub
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: Active
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Fundraising%20Hub
+  - id: genius-landing
+    name: Genius Landing
+    slug: genius-landing
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: Webdezigns ecosystem project.
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Genius%20Landing
+  - id: george-hildreth
+    name: George Hildreth
+    slug: george-hildreth
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client (Project 1)
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20George%20Hildreth
+  - id: heather-helms
+    name: Heather Helms
+    slug: heather-helms
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Heather%20Helms
+  - id: jesse-halverson
+    name: Jesse Halverson
+    slug: jesse-halverson
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Jesse%20Halverson
+  - id: john-griffin
+    name: John Griffin
+    slug: john-griffin
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20John%20Griffin
+  - id: jukebox-joy-jive
+    name: Jukebox Joy Jive
+    slug: jukebox-joy-jive
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Jukebox%20Joy%20Jive
+  - id: kd-foundation
+    name: KD Foundation
+    slug: kd-foundation
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: ECHO ecosystem. Partnership with Justin Davis, Chip Smith, and Tripp Smith.
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20KD%20Foundation
+  - id: keith-trautman
+    name: Keith Trautman
+    slug: keith-trautman
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Keith%20Trautman
+  - id: kenny-salyer
+    name: Kenny Salyer
+    slug: kenny-salyer
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Kenny%20Salyer
+  - id: kooper-davis-foundation
+    name: Kooper Davis Foundation
+    slug: kooper-davis-foundation
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: "Active Client. *Note: Overlaps with Manifestic ECHO partnership.*"
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Kooper%20Davis%20Foundation
+  - id: lazo-kim
+    name: Lazo & Kim
+    slug: lazo-kim
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Lazo%20%26%20Kim
+  - id: lisa
+    name: Lisa
+    slug: lisa
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Lisa
   - id: lumen
-    name: "Lumen Dental"
+    name: Lumen Dental
     slug: lumen-dental
-    contact: "contact@lumendental.com"
-    notes: "Dental practice landing page"
-    summary: "Patient intake microsite with bilingual content and new photo assets."
-    requestUrl: "https://tally.so/r/lumen-updates"
+    contact: contact@lumendental.com
+    notes: Dental practice landing page
+    summary: Patient intake microsite with bilingual content and new photo assets.
+    requestUrl: https://tally.so/r/lumen-updates
+  - id: manifest-grow-mind
+    name: Manifest Grow Mind
+    slug: manifest-grow-mind
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: Active
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Manifest%20Grow%20Mind
+  - id: med-dream-weaver
+    name: Med Dream Weaver
+    slug: med-dream-weaver
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: Partner project with VonMarie Gastelo.
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Med%20Dream%20Weaver
+  - id: mike-raiche
+    name: Mike Raiche
+    slug: mike-raiche
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Mike%20Raiche
+  - id: mike-richman
+    name: Mike Richman
+    slug: mike-richman
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Mike%20Richman
+  - id: psychedelic-art-dream
+    name: Psychedelic Art Dream
+    slug: psychedelic-art-dream
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: Active
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Psychedelic%20Art%20Dream
+  - id: radiant-hiring-partners
+    name: Radiant Hiring Partners
+    slug: radiant-hiring-partners
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: APEX project.
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Radiant%20Hiring%20Partners
+  - id: resonant-care-network
+    name: Resonant Care Network
+    slug: resonant-care-network
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: ECHO ecosystem project.
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Resonant%20Care%20Network
+  - id: rich-storholm
+    name: Rich Storholm
+    slug: rich-storholm
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Rich%20Storholm
+  - id: sam
+    name: Sam
+    slug: sam
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Sam
+  - id: sight-replicate-web
+    name: Sight Replicate Web
+    slug: sight-replicate-web
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: Active
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Sight%20Replicate%20Web
+  - id: stratpath-version-1
+    name: StratPath (Version 1)
+    slug: stratpath-version-1
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: Partner project with Mark Green. V1 site.
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20StratPath%20(Version%201)
+  - id: stratpath-version-2
+    name: StratPath (Version 2)
+    slug: stratpath-version-2
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: Partner project with Mark Green. V2 site.
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20StratPath%20(Version%202)
+  - id: susan
+    name: Susan
+    slug: susan
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Susan
+  - id: taylor-southerton
+    name: Taylor Southerton
+    slug: taylor-southerton
+    contact: agis@manifestbot.ai
+    notes: Direct Clients
+    summary: Active Client
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Taylor%20Southerton
+  - id: ted-associates
+    name: Ted Associates
+    slug: ted-associates
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: Active
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Ted%20Associates
+  - id: ted-care-compass
+    name: Ted Care Compass
+    slug: ted-care-compass
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: Active
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Ted%20Care%20Compass
+  - id: view-to-vista
+    name: View To Vista
+    slug: view-to-vista
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: Active
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20View%20To%20Vista
+  - id: webdezigns-client-intake-stack
+    name: Webdezigns Client Intake Stack
+    slug: webdezigns-client-intake-stack
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: Internal system for Webdezigns clients to submit project requirements
+      (needs/wants).
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Webdezigns%20Client%20Intake%20Stack
+  - id: webdezigns-core-agency-site
+    name: Webdezigns Core Agency Site
+    slug: webdezigns-core-agency-site
+    contact: agis@manifestbot.ai
+    notes: Manifestic Internal
+    summary: Active
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Webdezigns%20Core%20Agency%20Site

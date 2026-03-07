@@ -1,6 +1,6 @@
 settings:
-  messageAtlasUrl: "https://tally.so/r/message-atlas"
-  messageAgisUrl: "https://tally.so/r/message-agis"
+  messageAtlasUrl: "mailto:atlas@openclaw.ai?subject=Dashboard%20Ping%20(Atlas)"
+  messageAgisUrl: "mailto:agis@openclaw.ai?subject=Dashboard%20Ping%20(AGIS)"
   defaultRequestUrl: "https://tally.so/r/request-change"
   messageNotes: "Ping Atlas or AGIS when you need strategy, unblockers, or infra help."
   subagentActivity:

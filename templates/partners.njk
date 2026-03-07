@@ -1,0 +1,45 @@
+<section class="partners-hero">
+  <div>
+    <h2>Partner ecosystem</h2>
+    <p class="muted">Trusted collaborators powering delivery, operations, and growth.</p>
+  </div>
+  <div class="search-field">
+    <label for="partner-search" class="sr-only">Search partners</label>
+    <input id="partner-search" type="search" placeholder="Search partners" data-search-input="partners" />
+    <small class="muted" data-search-count="partners"></small>
+  </div>
+</section>
+<div class="grid partner-grid" data-search-list="partners">
+  {% for partner in partners %}
+  <a class="card-link" href="./{{ partner.slug }}.html">
+    <article class="card partner-card" data-search-item="partners" data-search-text="{{ (partner.name + ' ' + (partner.summary or '') + ' ' + (partner.region or '') + ' ' + (partner.tags | join(' '))) | lower }}">
+      <header class="card-header">
+        <div>
+          <h3>{{ partner.name }}</h3>
+          <p class="muted">{{ partner.summary }}</p>
+        </div>
+        <span class="status-pill">{{ partner.projectCount }} project{% if partner.projectCount != 1 %}s{% endif %}</span>
+      </header>
+      {% if partner.logoUrl %}
+      <div class="thumb-wrapper small-thumb">
+        <img class="site-thumb" src="{{ partner.logoUrl }}" alt="{{ partner.name }} logo" loading="lazy" />
+      </div>
+      {% endif %}
+      <p>{{ partner.description }}</p>
+      <ul class="tag-list">
+        {% for tag in partner.tags or [] %}
+          <li>{{ tag }}</li>
+        {% endfor %}
+      </ul>
+      <div class="meta">
+        <div><dt>Region</dt><dd>{{ partner.region or '—' }}</dd></div>
+        <div><dt>Focus</dt><dd>{{ (partner.focusAreas and partner.focusAreas | join(', ')) or '—' }}</dd></div>
+      </div>
+      <div class="links">
+        {% if partner.website %}<span>Visit site →</span>{% endif %}
+      </div>
+    </article>
+  </a>
+  {% endfor %}
+</div>
+<p class="empty-state" data-search-empty="partners">No partners match that search.</p>

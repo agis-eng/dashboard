@@ -14,10 +14,83 @@
     </div>
     <div class="site-meta">
       <span>Updated {{ generatedAt }}</span>
+      {% if showNav %}
+      <nav class="site-nav" aria-label="Primary">
+        <a href="{{ basePath }}index.html" class="{% if activeNav == 'projects' %}active{% endif %}" {% if activeNav == 'projects' %}aria-current="page"{% endif %}>Projects</a>
+        <a href="{{ basePath }}partners/index.html" class="{% if activeNav == 'partners' %}active{% endif %}" {% if activeNav == 'partners' %}aria-current="page"{% endif %}>Partners</a>
+      </nav>
+      {% endif %}
     </div>
   </header>
   <main>
     {{ content | safe }}
   </main>
+
+  {% if includeChat %}
+  <!--Start of Tawk.to Script-->
+  <script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+  s1.async=true;
+  s1.src='https://embed.tawk.to/69ab45659a31f71c36661195/1jj2ge56a';
+  s1.charset='UTF-8';
+  s1.setAttribute('crossorigin','*');
+  s0.parentNode.insertBefore(s1,s0);
+  })();
+  </script>
+  <!--End of Tawk.to Script-->
+  {% endif %}
+
+  <script>
+    const initCardPortals = () => {
+      document.querySelectorAll('[data-portal]').forEach(card => {
+        card.addEventListener('click', event => {
+          if (event.target.closest('[data-noportal]')) return;
+          const url = card.getAttribute('data-portal');
+          if (url) window.open(url, '_blank');
+        });
+      });
+      document.querySelectorAll('[data-noportal]').forEach(link => {
+        link.addEventListener('click', event => event.stopPropagation());
+      });
+    };
+
+    const initSearchFilters = () => {
+      document.querySelectorAll('[data-search-input]').forEach(input => {
+        const group = input.getAttribute('data-search-input');
+        const list = document.querySelector(`[data-search-list="${group}"]`);
+        const items = list
+          ? Array.from(list.querySelectorAll(`[data-search-item="${group}"]`))
+          : Array.from(document.querySelectorAll(`[data-search-item="${group}"]`));
+        if (!items.length) return;
+        const emptyState = document.querySelector(`[data-search-empty="${group}"]`);
+        const counter = document.querySelector(`[data-search-count="${group}"]`);
+        const update = () => {
+          const query = input.value.trim().toLowerCase();
+          let visible = 0;
+          items.forEach(item => {
+            const text = (item.getAttribute('data-search-text') || '').toLowerCase();
+            const matches = !query || text.includes(query);
+            item.style.display = matches ? '' : 'none';
+            if (matches) visible += 1;
+          });
+          if (emptyState) emptyState.style.display = visible === 0 ? 'block' : 'none';
+          if (counter) {
+            const total = items.length;
+            counter.textContent = visible === total ? `Showing all ${total}` : `Showing ${visible} of ${total}`;
+          }
+        };
+        input.addEventListener('input', update);
+        update();
+      });
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initCardPortals();
+      initSearchFilters();
+    });
+  </script>
+
 </body>
 </html>

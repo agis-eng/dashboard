@@ -5,14 +5,21 @@
         <h2>Active builds</h2>
         <p class="muted">{{ stats.activeProjects }} projects tracked across {{ stats.clientCount }} clients.</p>
       </div>
-      <div class="stat-chips">
-        <span class="chip">Open requests: {{ stats.openRequests }}</span>
-        <span class="chip">Last sync: {{ generatedAt | default('—') }}</span>
+      <div class="section-actions">
+        <div class="stat-chips">
+          <span class="chip">Open requests: {{ stats.openRequests }}</span>
+          <span class="chip">Last sync: {{ generatedAt | default('—') }}</span>
+        </div>
+        <div class="search-field">
+          <label for="project-search" class="sr-only">Search projects</label>
+          <input id="project-search" type="search" placeholder="Search projects" data-search-input="projects" />
+          <small class="muted" data-search-count="projects"></small>
+        </div>
       </div>
     </header>
-    <div class="grid project-grid">
+    <div class="grid project-grid" data-search-list="projects">
     {% for project in projects %}
-      <article class="card">
+      <article class="card" data-portal="./clients/{{ project.client.slug }}.html" data-search-item="projects" data-search-text="{{ (project.name + ' ' + (project.summary or '') + ' ' + (project.owner or '') + ' ' + (project.client.name or '') + ' ' + (project.stage or '') + ' ' + (project.status or '')) | lower }}">
         <div class="card-header">
           <div>
             <h2>{{ project.name }}</h2>
@@ -20,6 +27,11 @@
           </div>
           <span class="status-pill {{ project.stage | lower | replace(' ', '-') }}">{{ project.stage }}</span>
         </div>
+        {% if project.thumbnailUrl %}
+        <div class="thumb-wrapper">
+          <img class="site-thumb" src="{{ project.thumbnailUrl }}" alt="Preview of {{ project.name }}">
+        </div>
+        {% endif %}
         <dl class="meta">
           <div><dt>Owner</dt><dd>{{ project.owner }}</dd></div>
           <div><dt>Client</dt><dd>{{ project.client.name }}</dd></div>
@@ -27,13 +39,13 @@
           <div><dt>Last update</dt><dd>{{ project.lastUpdate | date('MMM d, yyyy') }}</dd></div>
         </dl>
         <div class="links">
-          {% if project.previewUrl %}<a href="{{ project.previewUrl }}" target="_blank">Preview</a>{% endif %}
-          {% if project.liveUrl %}<a href="{{ project.liveUrl }}" target="_blank">Live</a>{% endif %}
-          {% if project.repoUrl %}<a href="{{ project.repoUrl }}" target="_blank">Repo</a>{% endif %}
+          {% if project.previewUrl %}<a href="{{ project.previewUrl }}" target="_blank" data-noportal>Preview</a>{% endif %}
+          {% if project.repoUrl %}<a href="{{ project.repoUrl }}" target="_blank" data-noportal>Repo</a>{% endif %}
         </div>
       </article>
     {% endfor %}
     </div>
+    <p class="empty-state" data-search-empty="projects">No projects match that search.</p>
   </section>
   <aside class="workspace-sidebar">
     <section class="panel">
@@ -45,6 +57,21 @@
         <a class="btn" href="{{ settings.messageAtlasUrl or '#' }}" target="_blank">Message Atlas</a>
         <a class="btn ghost" href="{{ settings.messageAgisUrl or '#' }}" target="_blank">Message AGIS</a>
       </div>
+    </section>
+
+    <section class="panel">
+      <header>
+        <h3>Clients</h3>
+        <p class="muted">Open a portal</p>
+      </header>
+      <ul class="client-list">
+        {% for client in clients %}
+          <li>
+            <a href="./{{ client.portalPath }}" target="_blank">{{ client.name }}</a>
+            <span class="muted">{{ client.projectCount }} project{% if client.projectCount != 1 %}s{% endif %}</span>
+          </li>
+        {% endfor %}
+      </ul>
     </section>
 
     <section class="panel">

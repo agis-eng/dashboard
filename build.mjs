@@ -18,9 +18,13 @@ const loadYaml = async (fileName, key) => {
   return key ? parsed[key] || [] : parsed;
 };
 
+const slugify = (value = '') => value.toString().toLowerCase()
+  .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
 await fs.emptyDir(distDir);
 await fs.copy(publicDir, path.join(distDir));
 await fs.emptyDir(path.join(distDir, 'clients'));
+await fs.emptyDir(path.join(distDir, 'partners'));
 
 const env = nunjucks.configure(path.join(root, 'templates'), { autoescape: true });
 env.addFilter('date', (value, fmt = "MMM d, yyyy") => {
@@ -32,6 +36,7 @@ env.addFilter('date', (value, fmt = "MMM d, yyyy") => {
 const clientsData = await loadYaml('clients.yaml', 'clients');
 const projectsData = await loadYaml('projects.yaml', 'projects');
 const requestsData = await loadYaml('requests.yaml', 'requests');
+const partnersData = await loadYaml('partners.yaml', 'partners');
 const settings = await loadYaml('settings.yaml').settings || {};
 
 const clientsMap = new Map(clientsData.map(client => [client.id, client]));
@@ -41,6 +46,19 @@ const projects = projectsData.map(project => ({
   ...project,
   client: clientsMap.get(project.clientId) ?? { name: 'Unknown', slug: 'unknown' }
 }));
+
+const partners = (partnersData || []).map(partner => {
+  const projectIds = partner.projectIds || [];
+  const featuredProjects = projectIds
+    .map(id => projects.find(project => project.id === id))
+    .filter(Boolean);
+  return {
+    ...partner,
+    slug: partner.slug || slugify(partner.name || partner.id || ''),
+    featuredProjects,
+    projectCount: featuredProjects.length
+  };
+}).sort((a, b) => a.name.localeCompare(b.name));
 
 const requests = (requestsData || [])
   .filter(request => (request.status || '').toLowerCase() !== 'done')
@@ -72,14 +90,49 @@ const writePage = async (outputPath, html) => {
   await fs.writeFile(fullPath, html, 'utf8');
 };
 
+const clientsForSidebar = clientsData.map(client => ({
+  ...client,
+  projectCount: projects.filter(p => p.clientId === client.id).length,
+  portalPath: `clients/${client.slug}.html`
+})).sort((a, b) => a.name.localeCompare(b.name));
+
 const internalHtml = renderPage('layout.njk', {
   title: 'Project Control Room',
   subtitle: 'Internal view of active builds and experiments',
   generatedAt,
   basePath: './',
-  content: renderPage('internal.njk', { projects, requests, settings, stats, generatedAt })
+  includeChat: true,
+  showNav: true,
+  activeNav: 'projects',
+  content: renderPage('internal.njk', { projects, requests, settings, stats, generatedAt, clients: clientsForSidebar })
 });
 await writePage('index.html', internalHtml);
+
+if (partners.length) {
+  const partnersHtml = renderPage('layout.njk', {
+    title: 'Partner Network',
+    subtitle: 'Strategy, delivery, and ecosystem allies',
+    generatedAt,
+    basePath: '../',
+    showNav: true,
+    activeNav: 'partners',
+    content: renderPage('partners.njk', { partners })
+  });
+  await writePage(path.join('partners', 'index.html'), partnersHtml);
+
+  for (const partner of partners) {
+    const partnerHtml = renderPage('layout.njk', {
+      title: partner.name,
+      subtitle: partner.summary,
+      generatedAt,
+      basePath: '../',
+      showNav: true,
+      activeNav: 'partners',
+      content: renderPage('partner.njk', { partner, projects: partner.featuredProjects })
+    });
+    await writePage(path.join('partners', `${partner.slug}.html`), partnerHtml);
+  }
+}
 
 for (const client of clientsData) {
   const clientProjects = projects.filter(p => p.clientId === client.id);

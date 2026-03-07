@@ -1,0 +1,699 @@
+partners:
+  - id: manifestic
+    name: Manifestic
+    slug: manifestic
+    summary: Core automation + R&D lab for Atlas and Webdezigns.
+    description: Manifestic incubates internal accelerators, handles tier-one automations, and funds rapid experiments before they reach clients.
+    website: https://manifestic.ai
+    contact: Anton & Erik
+    region: Remote-first
+    focusAreas: ["Automation", "R&D", "Strategy"]
+    tags: ["Core"]
+    projectIds: [love-portal, logoclear]
+
+  - id: ted-associates
+    name: Ted Associates
+    slug: ted-associates
+    summary: Healthcare operations collective driving Atlas credentialing builds.
+    description: Ted Associates coordinates provider onboarding and compliance, pairing Atlas engineers with field operators.
+    website: https://ted-associates.com
+    contact: Ted Ops Desk
+    region: Southeast U.S.
+    focusAreas: ["Healthcare", "Credentialing"]
+    tags: ["Core"]
+    projectIds: [ted-associates-ted-associates, ted-care-compass-ted-care-compass]
+
+  - id: webdezigns
+    name: Webdezigns
+    slug: webdezigns
+    summary: Agency engine powering most client builds.
+    description: Webdezigns supplies Lovable builders, editors, and client delivery pods for Atlas projects.
+    website: https://webdezigns.ai
+    contact: agis@manifestbot.ai
+    region: Global
+    focusAreas: ["Web", "Client Delivery"]
+    tags: ["Core"]
+    projectIds: [webdezigns-core-agency-site-webdezigns, webdezigns-client-intake-stack-stack]
+
+  - id: echo
+    name: ECHO Network
+    slug: echo-network
+    summary: Ecosystem for healthcare, credentialing, and Empwr-branded portals.
+    description: Justin Davis and team co-build credentialing, management, and care-delivery stacks.
+    website: https://management.echohcp.com
+    contact: echo@manifestbot.ai
+    region: National
+    focusAreas: ["Healthcare", "Credentialing", "Ops"]
+    tags: ["Core"]
+    projectIds: [caring-echo-bridge-caring-echo-bridge, echo-credentialing-credentialing, echo-management-management]
+
+  - id: apex-head-hunters
+    name: Apex Head Hunters
+    slug: apex-head-hunters
+    summary: Talent partner led by Tom Laing and Preston Park.
+    description: Provides recruiting pipelines and fractional leadership for high-growth agency pods.
+    website: ""
+    contact: Tom Laing & Preston Park
+    region: Nationwide
+    focusAreas: ["Talent", "Staffing"]
+    tags: ["Core"]
+    projectIds: []
+
+  - id: atlas-leadership
+    name: Anton & Erik
+    slug: atlas-leadership
+    summary: Founders stewarding strategy and delivery.
+    description: Atlas leadership pairs Anton’s agency engine with Erik’s ops + automation stack to keep turnaround times under 24 hours.
+    website: https://atlas.manifestbot.ai
+    contact: anton@manifestbot.ai / erik@manifestbot.ai
+    region: GA • UT
+    focusAreas: ["Strategy", "Product", "Automation"]
+    tags: ["Core"]
+    projectIds: [logoclear, love-portal]
+
+  - id: kd-foundation
+    name: KD Foundation Alliance
+    slug: kdfoundation
+    summary: Philanthropic backbone for pediatric advocacy and credentialing.
+    description: Justin Davis plus Matt, Freddie, and Corey coordinate funding and outreach for ECHO projects.
+    website: https://kdfoundation.webdezigns.ai
+    contact: partners@kdfoundation.org
+    region: Nationwide
+    focusAreas: ["Pediatrics", "Advocacy", "Credentialing"]
+    tags: ["Strategic"]
+    projectIds: [kd-foundation-kdfoundation, kooper-davis-foundation-kooperdavis, echo-credentialing-credentialing]
+
+  - id: hammersmith
+    name: Hammersmith
+    slug: hammersmith
+    summary: Chip & Tripp Smith’s infrastructure + investment partner.
+    description: Supplies capital projects and overlaps with KD Foundation workstreams.
+    website: https://hammersmith.webdezigns.ai
+    contact: Chip & Tripp Smith
+    region: Southeast U.S.
+    focusAreas: ["Investment", "Infrastructure"]
+    tags: ["Strategic"]
+    projectIds: [chip-smith-hammersmith-hammersmith]
+
+  - id: medsource
+    name: Medsource
+    slug: medsource
+    summary: VonMarie’s medical ops and credentialing lab.
+    description: Drives Med Dream Weaver experiments across credentialing and staffing.
+    website: https://med-dream-weaver.lovable.app
+    contact: VonMarie Gastelo
+    region: National
+    focusAreas: ["Healthcare", "Staffing"]
+    tags: ["Strategic"]
+    projectIds: [med-dream-weaver-med-dream-weaver]
+
+  - id: legacy-capital
+    name: Legacy Capital
+    slug: legacy-capital
+    summary: Dan Bauman’s multi-brand ecosystem.
+    description: From Freedom Foundations to Polar Sparkle, Legacy supplies multiple active builds.
+    website: https://legacy-foundations-builder.lovable.app
+    contact: Dan Bauman
+    region: Midwest U.S.
+    focusAreas: ["Education", "Services", "Philanthropy"]
+    tags: ["Strategic"]
+    projectIds:
+      - dan-bauman-freedom-foundations-build
+      - dan-bauman-legacy-foundations-builder
+      - dan-bauman-polar-sparkle-site
+
+  - id: admission-squad
+    name: Admission Squad
+    slug: admission-squad
+    summary: Tai Abrams’ education partner.
+    description: Provides curriculum and admissions IP for youth-focused portals.
+    website: ""
+    contact: Tai Abrams
+    region: National
+    focusAreas: ["Education"]
+    tags: ["Strategic"]
+    projectIds: []
+
+  - id: sky-schools
+    name: Sky Schools
+    slug: sky-schools
+    summary: Elan’s micro-school network.
+    description: Collaborates on education and childcare builds.
+    website: ""
+    contact: Elan
+    region: National
+    focusAreas: ["Education", "Childcare"]
+    tags: ["Strategic"]
+    projectIds: []
+
+  - id: fix-my-fees
+    name: Fix My Fees
+    slug: fix-my-fees
+    summary: Mike Sancho’s revenue recovery partner.
+    description: Focused on dental + healthcare fee negotiation tech.
+    website: ""
+    contact: Mike Sancho
+    region: National
+    focusAreas: ["Revenue", "Healthcare"]
+    tags: ["Strategic"]
+    projectIds: []
+
+  - id: stratpath
+    name: Stratpath
+    slug: stratpath
+    summary: Mark Green’s leadership + GTM advisory firm.
+    description: Supplies curriculum, product feedback, and enterprise GTM pilots.
+    website: https://www.stratpath.com
+    contact: Mark Green
+    region: Atlanta • Remote
+    focusAreas: ["Leadership", "GTM"]
+    tags: ["Strategic"]
+    projectIds: [stratpath-version-1-www, stratpath-version-2-stratpath]
+
+  - id: vensure
+    name: Vensure
+    slug: vensure
+    summary: Olivia & Austin’s HR platform partner.
+    description: Supports HR, benefits, and payroll flows tied to credentialing builds.
+    website: ""
+    contact: Olivia & Austin
+    region: National
+    focusAreas: ["HR", "Benefits"]
+    tags: ["Strategic"]
+    projectIds: []
+
+  - id: myriad
+    name: Myriad
+    slug: myriad
+    summary: Hanna & Jeremy’s creative studio.
+    description: Provides design, storytelling, and content polish.
+    website: ""
+    contact: Hanna & Jeremy
+    region: Remote
+    focusAreas: ["Creative", "Content"]
+    tags: ["Strategic"]
+    projectIds: []
+
+  - id: empwr
+    name: Empwr
+    slug: empwr
+    summary: Vivek, Rahul, and Sharif’s white-label care platform.
+    description: Co-develops Empwr-branded portals under the ECHO umbrella.
+    website: ""
+    contact: Vivek • Rahul • Sharif
+    region: National
+    focusAreas: ["Healthcare", "Platform"]
+    tags: ["Strategic"]
+    projectIds: [caring-echo-bridge-caring-echo-bridge]
+
+  - id: maven
+    name: Maven
+    slug: maven
+    summary: Logan Hunter’s venture support studio.
+    description: Provides capital introductions and BD for select builds.
+    website: ""
+    contact: Logan Hunter
+    region: National
+    focusAreas: ["Capital", "BD"]
+    tags: ["Strategic"]
+    projectIds: []
+
+  - id: social24
+    name: 24social7
+    slug: 24social7
+    summary: Mike Raiche’s marketing collective.
+    description: Funnels campaigns and influencer partnerships into Atlas builds.
+    website: https://24social7.com
+    contact: Mike Raiche
+    region: National
+    focusAreas: ["Marketing", "Social"]
+    tags: ["Strategic"]
+    projectIds: [mike-raiche-24social7]
+
+  - id: tells
+    name: Tells
+    slug: tells
+    summary: Dan Fleetwood’s conversational AI partner.
+    description: Tackles chat-based onboarding/feedback loops.
+    website: ""
+    contact: Dan Fleetwood
+    region: National
+    focusAreas: ["AI", "CX"]
+    tags: ["Strategic"]
+    projectIds: []
+
+  - id: teresa-poindexter
+    name: Teresa Poindexter, PT
+    slug: teresa-poindexter
+    summary: Physical therapy expert for care-pathways.
+    description: Advises on PT-specific onboarding flows.
+    website: ""
+    contact: Teresa Poindexter
+    region: National
+    focusAreas: ["Healthcare", "PT"]
+    tags: ["Strategic"]
+    projectIds: []
+
+  - id: maj-zakari
+    name: Maj Zakari, LP
+    slug: maj-zakari
+    summary: Licensed professional and compliance advisor.
+    description: Guides regulated language and LP-specific funnels.
+    website: ""
+    contact: Maj Zakari
+    region: National
+    focusAreas: ["Compliance"]
+    tags: ["Strategic"]
+    projectIds: []
+
+  - id: health-insurance-solutions
+    name: Health Insurance Solutions
+    slug: health-insurance-solutions
+    summary: Benefits partner for concierge care projects.
+    description: Unlocks insurance integrations for new sites.
+    website: ""
+    contact: Health Insurance Solutions Team
+    region: National
+    focusAreas: ["Benefits", "Insurance"]
+    tags: ["Strategic"]
+    projectIds: []
+
+  - id: kenny-salyer
+    name: Kenny Salyer
+    slug: kenny-salyer
+    summary: Direct client + referral partner.
+    description: Drives Benefits For You plus new agency leads.
+    website: https://benefitsforyoullc.com
+    contact: Kenny Salyer
+    region: National
+    focusAreas: ["Insurance", "Lead Gen"]
+    tags: ["Strategic"]
+    projectIds: [kenny-salyer-benefitsforyoullc]
+
+  - id: keith-trautman
+    name: Keith Trautman
+    slug: keith-trautman
+    summary: Insurance partner focused on the Midwest.
+    description: Supplies licensed advisory plus new policy funnels.
+    website: https://www.keiththeinsuranceguy.com
+    contact: Keith Trautman
+    region: Midwest U.S.
+    focusAreas: ["Insurance"]
+    tags: ["Strategic"]
+    projectIds: [keith-trautman-www]
+
+  - id: ink-slinger
+    name: Ink Slinger
+    slug: ink-slinger
+    summary: John Furr’s storytelling shop.
+    description: Provides copywriting and long-form storytelling for launches.
+    website: ""
+    contact: John Furr
+    region: Remote
+    focusAreas: ["Copy", "Story"]
+    tags: ["Strategic"]
+    projectIds: []
+
+  - id: nurturebeast
+    name: Nurturebeast
+    slug: nurturebeast
+    summary: Rohan’s marketing automation toolkit.
+    description: Brings nurture journeys and CRM glue.
+    website: ""
+    contact: Rohan
+    region: Remote
+    focusAreas: ["Automation", "CRM"]
+    tags: ["Strategic"]
+    projectIds: []
+
+  - id: ganesh
+    name: Ganesh
+    slug: ganesh
+    summary: Technical advisor + integration specialist.
+    description: Supports backend integrations and data migrations.
+    website: ""
+    contact: Ganesh
+    region: Remote
+    focusAreas: ["Engineering"]
+    tags: ["Strategic"]
+    projectIds: []
+
+  - id: astronaut-industries
+    name: Astronaut Industries
+    slug: astronaut-industries
+    summary: Stephen’s creative-tech studio.
+    description: Collaborates on immersive and experimental builds.
+    website: ""
+    contact: Stephen
+    region: Remote
+    focusAreas: ["Creative", "Experiential"]
+    tags: ["Strategic"]
+    projectIds: []
+
+  - id: trent-clark
+    name: Trent Clark
+    slug: trent-clark
+    summary: Investor + business leader advisor.
+    description: Opens enterprise doors and LP networks.
+    website: ""
+    contact: Trent Clark
+    region: National
+    focusAreas: ["Investment", "Strategy"]
+    tags: ["Strategic"]
+    projectIds: []
+
+  - id: max-hart
+    name: Max Hart
+    slug: max-hart
+    summary: Tesla rentals + fleet innovation partner.
+    description: Supplies mobility and event-based fleet programs.
+    website: ""
+    contact: Max Hart
+    region: National
+    focusAreas: ["Mobility", "Events"]
+    tags: ["Strategic"]
+    projectIds: []
+
+  - id: tony-swantek
+    name: Tony Swantek
+    slug: tony-swantek
+    summary: Blockchain expert.
+    description: Advises on tokenized credentials and ledger-backed compliance.
+    website: ""
+    contact: Tony Swantek
+    region: Remote
+    focusAreas: ["Blockchain", "Compliance"]
+    tags: ["Strategic"]
+    projectIds: []
+
+  - id: kevin-tornai
+    name: Kevin Tornai
+    slug: kevin-tornai
+    summary: Trusts and estate strategist.
+    description: Provides legal scaffolding for philanthropic builds.
+    website: ""
+    contact: Kevin Tornai
+    region: National
+    focusAreas: ["Legal", "Trusts"]
+    tags: ["Strategic"]
+    projectIds: []
+
+  - id: raymond-cardenas
+    name: Raymond Cardenas (TC)
+    slug: raymond-cardenas
+    summary: Trusted connector in the TC network.
+    description: Opens doors for TC-linked opportunities.
+    website: ""
+    contact: Raymond Cardenas
+    region: TC Markets
+    focusAreas: ["Network"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: chad-floyd
+    name: Chad Floyd (TC)
+    slug: chad-floyd
+    summary: TC partner + referral.
+    description: Provides capital and deal-flow intros.
+    website: ""
+    contact: Chad Floyd
+    region: TC Markets
+    focusAreas: ["Network"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: kim-bishop
+    name: Kim Bishop (TC)
+    slug: kim-bishop
+    summary: TC relationship steward.
+    description: Connects Atlas with TC healthcare operators.
+    website: ""
+    contact: Kim Bishop
+    region: TC Markets
+    focusAreas: ["Network"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: paul-mecier
+    name: Paul Mecier (TC)
+    slug: paul-mecier
+    summary: TC financial partner.
+    description: Supports financing conversations.
+    website: ""
+    contact: Paul Mecier
+    region: TC Markets
+    focusAreas: ["Finance"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: david-love
+    name: David Love (TC)
+    slug: david-love
+    summary: TC connector.
+    description: Brings in logistics and capital allies.
+    website: ""
+    contact: David Love
+    region: TC Markets
+    focusAreas: ["Network"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: wilson-tc
+    name: Wilson (TC)
+    slug: wilson-tc
+    summary: TC operations contact.
+    description: Coordinates TC vendor relationships.
+    website: ""
+    contact: Wilson
+    region: TC Markets
+    focusAreas: ["Network"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: christian-rosario
+    name: Christian Rosario (TC)
+    slug: christian-rosario
+    summary: TC partner + logistics.
+    description: Helps with import/export pipelines.
+    website: ""
+    contact: Christian Rosario
+    region: TC Markets
+    focusAreas: ["Logistics"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: george-tc
+    name: George (TC)
+    slug: george-tc
+    summary: TC channel connector.
+    description: Provides lead-ins for TC-specific opportunities.
+    website: ""
+    contact: George (TC)
+    region: TC Markets
+    focusAreas: ["Network"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: halstead-knutson
+    name: Halstead Knutson
+    slug: halstead-knutson
+    summary: Strategic advisor + investor.
+    description: Supports diligence and capital raising.
+    website: ""
+    contact: Halstead Knutson
+    region: National
+    focusAreas: ["Investment"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: john-griffin
+    name: John Griffin
+    slug: john-griffin
+    summary: Direct client + partner (Snowbird States Hub).
+    description: Offers referrals and product feedback.
+    website: https://snowbird-states-hub.lovable.app
+    contact: John Griffin
+    region: National
+    focusAreas: ["Real Estate"]
+    tags: ["Network"]
+    projectIds: [john-griffin-snowbird-states-hub]
+
+  - id: jared-rothenberger
+    name: Jared Rothenberger
+    slug: jared-rothenberger
+    summary: Contractor + builder ally.
+    description: Brings physical builds and client introductions.
+    website: ""
+    contact: Jared Rothenberger
+    region: National
+    focusAreas: ["Construction"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: will-bisette
+    name: Will Bisette
+    slug: will-bisette
+    summary: Contractor/referral channel.
+    description: Supplies multiple contractor clients via A Plus Epoxy and Action Real Estate.
+    website: ""
+    contact: Will Bisette
+    region: National
+    focusAreas: ["Contractor"]
+    tags: ["Network"]
+    projectIds: [a-plus-epoxy-v1aplusepoxy, action-real-estate-actionrealestate]
+
+  - id: brian-street
+    name: Brian Street
+    slug: brian-street
+    summary: Finance + lending connector.
+    description: Opens lending and SBA networks.
+    website: ""
+    contact: Brian Street
+    region: National
+    focusAreas: ["Finance"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: rob-pickleball
+    name: Rob Pickleball
+    slug: rob-pickleball
+    summary: Sports + lifestyle partner.
+    description: Brings pickleball network leads.
+    website: ""
+    contact: Rob
+    region: National
+    focusAreas: ["Sports"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: michael-brown
+    name: Michael Brown
+    slug: michael-brown
+    summary: Importer network ally.
+    description: Handles import logistics for specialty goods.
+    website: ""
+    contact: Michael Brown
+    region: International
+    focusAreas: ["Logistics"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: erik-thailand
+    name: Erik (Thailand)
+    slug: erik-thailand
+    summary: Import/export contact in Thailand.
+    description: Sourcing partner for specialty inventory.
+    website: ""
+    contact: Erik
+    region: Thailand
+    focusAreas: ["Logistics"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: bryant-williams
+    name: Bryant Williams
+    slug: bryant-williams
+    summary: Founder of nut-free peanut butter venture.
+    description: Provides CPG insights and referrals.
+    website: ""
+    contact: Bryant Williams
+    region: National
+    focusAreas: ["CPG"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: falak
+    name: Falak
+    slug: falak
+    summary: Tech + robotics liaison.
+    description: Connects robotics labs to Atlas experiments.
+    website: ""
+    contact: Falak
+    region: International
+    focusAreas: ["Robotics"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: timmie-leprince
+    name: Timmie Leprince
+    slug: timmie-leprince
+    summary: Operations and referrals partner.
+    description: Brings service-based client intros.
+    website: ""
+    contact: Timmie Leprince
+    region: National
+    focusAreas: ["Ops"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: clyde-rath
+    name: Clyde Rath
+    slug: clyde-rath
+    summary: Direct client + referrer.
+    description: Offers Minnesota-based referrals and co-builds.
+    website: https://rathmn.com
+    contact: Clyde Rath
+    region: Minnesota
+    focusAreas: ["Insurance", "Real Estate"]
+    tags: ["Network"]
+    projectIds: [clyde-rath-rathmn]
+
+  - id: darrun-britt
+    name: Darrun Britt
+    slug: darrun-britt
+    summary: Business development partner.
+    description: Opens doors for service businesses.
+    website: ""
+    contact: Darrun Britt
+    region: National
+    focusAreas: ["Biz Dev"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: andrew-martini
+    name: Andrew Martini
+    slug: andrew-martini
+    summary: Contractor and build partner.
+    description: Provides install crews and logistics for facility projects.
+    website: ""
+    contact: Andrew Martini
+    region: National
+    focusAreas: ["Construction"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: ravi-robot-labs
+    name: Ravi – Robot Labs
+    slug: ravi-robot-labs
+    summary: Robotics + automation liaison.
+    description: Supplies prototype hardware and lab space.
+    website: ""
+    contact: Ravi
+    region: International
+    focusAreas: ["Robotics", "Automation"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: josh-bear
+    name: Josh Bear
+    slug: josh-bear
+    summary: Entrepreneur + relationship hub.
+    description: Shares startup pipeline and advisors.
+    website: ""
+    contact: Josh Bear
+    region: National
+    focusAreas: ["Startup"]
+    tags: ["Network"]
+    projectIds: []
+
+  - id: johnny-ringold
+    name: Johnny Ringold
+    slug: johnny-ringold
+    summary: Commercial contractor + advisor.
+    description: Supports build-outs and onsite crews.
+    website: ""
+    contact: Johnny Ringold
+    region: National
+    focusAreas: ["Construction"]
+    tags: ["Network"]
+    projectIds: []

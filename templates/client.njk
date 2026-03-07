@@ -15,14 +15,18 @@
       <h3>{{ project.name }}</h3>
       <span class="status-pill {{ project.stage | lower | replace(' ', '-') }}">{{ project.stage }}</span>
     </div>
+    {% if project.thumbnailUrl %}
+    <div class="thumb-wrapper">
+      <img class="site-thumb" src="{{ project.thumbnailUrl }}" alt="Preview of {{ project.name }}">
+    </div>
+    {% endif %}
     <p>{{ project.summary }}</p>
     <dl class="meta">
       <div><dt>Status</dt><dd>{{ project.status }}</dd></div>
       <div><dt>Last update</dt><dd>{{ project.lastUpdate | date('MMM d, yyyy') }}</dd></div>
     </dl>
     <div class="links">
-      {% if project.previewUrl %}<a href="{{ project.previewUrl }}" target="_blank">Preview</a>{% endif %}
-      {% if project.liveUrl %}<a href="{{ project.liveUrl }}" target="_blank">Live</a>{% endif %}
+      {% if project.previewUrl %}<a href="{{ project.previewUrl }}" target="_blank">Open site</a>{% endif %}
       <a href="{{ client.requestUrl or settings.defaultRequestUrl }}" class="secondary" target="_blank">Request change</a>
     </div>
   </article>
