@@ -169,7 +169,7 @@
           var empty = container.querySelector('.chat-empty');
           if (empty && chatName === activeChat) empty.remove();
           data.messages.forEach(function(msg) {
-            addBubble(chatName, msg, false);
+            addBubble(chatName, msg, !!msg.outgoing);
             state.lastUpdateId = Math.max(state.lastUpdateId || 0, msg.update_id);
           });
         } else if (!state.rendered.size && chatName === activeChat) {
