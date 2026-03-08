@@ -1,11 +1,46 @@
+<script>
+(function() {
+  var slug = '{{ client.slug }}';
+  var token = localStorage.getItem('atlas_token');
+  var storedSlug = localStorage.getItem('atlas_client_slug');
+  if (!token || storedSlug !== slug) {
+    window.location.href = '../login.html?redirect=' + encodeURIComponent(window.location.pathname);
+    return;
+  }
+  fetch('/api/verify', { headers: { 'Authorization': 'Bearer ' + token } })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data.valid || data.clientSlug !== slug) {
+        localStorage.removeItem('atlas_token');
+        localStorage.removeItem('atlas_client_slug');
+        window.location.href = '../login.html?redirect=' + encodeURIComponent(window.location.pathname);
+      }
+    })
+    .catch(function() {});
+})();
+</script>
 <section class="client-info">
   <div>
     <h2>{{ client.name }}</h2>
     {% if client.summary %}<p>{{ client.summary }}</p>{% endif %}
-    <p class="muted">Questions? Email <a href="mailto:{{ client.contact }}">{{ client.contact }}</a></p>
+    <dl class="contact-meta">
+      {% if client.email or client.contact %}
+      <div>
+        <dt>Email</dt>
+        <dd><a href="mailto:{{ client.email or client.contact }}">{{ client.email or client.contact }}</a></dd>
+      </div>
+      {% endif %}
+      {% if client.phone %}
+      <div>
+        <dt>Phone</dt>
+        <dd><a href="tel:{{ client.phone }}">{{ client.phone }}</a></dd>
+      </div>
+      {% endif %}
+    </dl>
   </div>
   <div class="button-stack">
     <a class="btn" href="{{ client.requestUrl or settings.defaultRequestUrl }}" target="_blank">Request a change</a>
+    <button class="btn btn-secondary" onclick="atlasLogout()">Log out</button>
   </div>
 </section>
 <section class="grid">
@@ -34,3 +69,10 @@
   <p class="muted">No live projects yet.</p>
 {% endfor %}
 </section>
+<script>
+function atlasLogout() {
+  localStorage.removeItem('atlas_token');
+  localStorage.removeItem('atlas_client_slug');
+  window.location.href = '../login.html';
+}
+</script>

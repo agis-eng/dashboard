@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Portal — Atlas</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <style>
+    .login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .login-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 400px;
+    }
+    .login-card h1 {
+      font-size: 1.25rem;
+      margin: 0 0 0.25rem;
+    }
+    .login-card .muted {
+      margin: 0 0 2rem;
+    }
+    .login-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+    .login-field label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .login-field input {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.65rem 0.75rem;
+      color: var(--text);
+      font-size: 0.95rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .login-field input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .login-btn {
+      width: 100%;
+      margin-top: 0.5rem;
+      padding: 0.75rem;
+      font-size: 1rem;
+    }
+    .login-error {
+      color: #f87171;
+      font-size: 0.875rem;
+      margin-top: 0.75rem;
+      display: none;
+    }
+    .login-error.visible { display: block; }
+  </style>
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="login-card">
+      <h1>Client Portal</h1>
+      <p class="muted">Sign in to view your project status.</p>
+      <form id="login-form" onsubmit="handleLogin(event)">
+        <div class="login-field">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" autocomplete="username" required />
+        </div>
+        <div class="login-field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" autocomplete="current-password" required />
+        </div>
+        <button type="submit" class="btn login-btn" id="login-btn">Sign in</button>
+        <p class="login-error" id="login-error">Invalid username or password. Please try again.</p>
+      </form>
+    </div>
+  </div>
+  <script>
+    // If already logged in, redirect to client page
+    var token = localStorage.getItem('atlas_token');
+    var slug = localStorage.getItem('atlas_client_slug');
+    if (token && slug) {
+      fetch('/api/verify', { headers: { 'Authorization': 'Bearer ' + token } })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.valid) {
+            window.location.href = './clients/' + data.clientSlug + '.html';
+          }
+        }).catch(function() {});
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      var btn = document.getElementById('login-btn');
+      var errEl = document.getElementById('login-error');
+      var username = document.getElementById('username').value.trim();
+      var password = document.getElementById('password').value;
+
+      btn.disabled = true;
+      btn.textContent = 'Signing in…';
+      errEl.classList.remove('visible');
+
+      fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: username, password: password })
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.token) {
+          localStorage.setItem('atlas_token', data.token);
+          localStorage.setItem('atlas_client_slug', data.clientSlug);
+          // Check for redirect param
+          var params = new URLSearchParams(window.location.search);
+          var redirect = params.get('redirect');
+          window.location.href = redirect || ('./clients/' + data.clientSlug + '.html');
+        } else {
+          errEl.classList.add('visible');
+          btn.disabled = false;
+          btn.textContent = 'Sign in';
+        }
+      })
+      .catch(function() {
+        errEl.textContent = 'Something went wrong. Please try again.';
+        errEl.classList.add('visible');
+        btn.disabled = false;
+        btn.textContent = 'Sign in';
+      });
+    }
+  </script>
+</body>
+</html>

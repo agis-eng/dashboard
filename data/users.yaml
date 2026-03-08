@@ -1,0 +1,17 @@
+# Client portal logins
+# Each user can only access their own client page (matched by clientSlug)
+#
+# To add a new user, run:
+#   node scripts/hash-password.mjs <password>
+# Then copy the hash into passwordHash below.
+#
+# passwordHash = SHA-256 of the password (lowercase hex)
+
+users: []
+
+# Example entry (uncomment and fill in):
+# users:
+#   - username: lumen
+#     passwordHash: 5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+#     clientSlug: lumen-dental
+#     name: Lumen Dental

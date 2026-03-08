@@ -34,6 +34,8 @@
       <div class="meta">
         <div><dt>Region</dt><dd>{{ partner.region or '—' }}</dd></div>
         <div><dt>Focus</dt><dd>{{ (partner.focusAreas and partner.focusAreas | join(', ')) or '—' }}</dd></div>
+        {% if partner.email %}<div><dt>Email</dt><dd>{{ partner.email }}</dd></div>{% endif %}
+        {% if partner.phone %}<div><dt>Phone</dt><dd>{{ partner.phone }}</dd></div>{% endif %}
       </div>
       <div class="links">
         {% if partner.website %}<span>Visit site →</span>{% endif %}
