@@ -619,3 +619,15 @@ projects:
     previewUrl: https://z-mike-fight-club.lovable.app/
     liveUrl: https://z-mike-fight-club.lovable.app/
     repoUrl: ""
+
+  - id: g-wallet-usdt
+    name: G-Wallet (USDT Global Wallet)
+    clientId: akilli-pollee
+    owner: Anton
+    stage: Design
+    status: Partner Project
+    lastUpdate: 2026-03-08
+    summary: Merchant-focused stablecoin settlement infrastructure platform.
+    previewUrl: ""
+    liveUrl: ""
+    repoUrl: ""
