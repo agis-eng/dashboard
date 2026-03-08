@@ -89,7 +89,103 @@
     document.addEventListener('DOMContentLoaded', () => {
       initCardPortals();
       initSearchFilters();
+      initAtlasChat();
     });
+
+    // ── Atlas Chat ────────────────────────────────────────────────────────
+    function initAtlasChat() {
+      const container = document.getElementById('chatMessages');
+      const form = document.getElementById('chatForm');
+      const input = document.getElementById('chatInput');
+      const sendBtn = document.getElementById('chatSend');
+      if (!container || !form) return;
+
+      let lastUpdateId = null;
+      let rendered = new Set();
+
+      function formatTime(unixTs) {
+        const d = new Date(unixTs * 1000);
+        return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
+
+      function addBubble(msg, outgoing) {
+        if (rendered.has(msg.message_id)) return;
+        rendered.add(msg.message_id);
+        const bubble = document.createElement('div');
+        bubble.className = `chat-bubble ${outgoing ? 'outgoing' : 'incoming'}`;
+        bubble.innerHTML = `
+          <div class="chat-bubble-text">${msg.text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+          <span class="chat-bubble-meta">${outgoing ? 'You' : msg.from} · ${formatTime(msg.date)}</span>
+        `;
+        container.appendChild(bubble);
+        container.scrollTop = container.scrollHeight;
+      }
+
+      async function fetchMessages() {
+        try {
+          const url = lastUpdateId
+            ? `/api/telegram-messages?offset=${lastUpdateId + 1}`
+            : `/api/telegram-messages`;
+          const res = await fetch(url);
+          if (!res.ok) return;
+          const data = await res.json();
+          if (data.messages && data.messages.length) {
+            // Clear empty state
+            const empty = container.querySelector('.chat-empty');
+            if (empty) empty.remove();
+            data.messages.forEach(msg => {
+              addBubble(msg, false);
+              lastUpdateId = Math.max(lastUpdateId || 0, msg.update_id);
+            });
+          } else if (!rendered.size) {
+            const empty = container.querySelector('.chat-empty');
+            if (empty) empty.textContent = 'No messages yet. Say hi to Atlas!';
+          }
+        } catch (e) {
+          console.warn('Chat fetch error:', e);
+        }
+      }
+
+      async function sendMessage(text) {
+        sendBtn.disabled = true;
+        try {
+          const res = await fetch('/api/telegram-send', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text }),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.result) {
+              const empty = container.querySelector('.chat-empty');
+              if (empty) empty.remove();
+              addBubble({
+                message_id: data.result.message_id,
+                from: 'You',
+                text,
+                date: data.result.date,
+              }, true);
+            }
+          }
+        } catch (e) {
+          console.warn('Chat send error:', e);
+        } finally {
+          sendBtn.disabled = false;
+          input.focus();
+        }
+      }
+
+      form.addEventListener('submit', () => {
+        const text = input.value.trim();
+        if (!text) return;
+        input.value = '';
+        sendMessage(text);
+      });
+
+      // Poll every 4 seconds
+      fetchMessages();
+      setInterval(fetchMessages, 4000);
+    }
   </script>
 
 </body>
