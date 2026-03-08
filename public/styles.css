@@ -497,3 +497,24 @@ body {
   font-size: 0.875rem;
   flex-shrink: 0;
 }
+
+/* Chat tabs */
+.chat-tab-header { gap: 0.5rem; }
+.chat-tabs {
+  display: flex;
+  gap: 0.35rem;
+  margin-bottom: 0.25rem;
+}
+.chat-tab {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.3rem 0.75rem;
+  transition: all 0.15s;
+}
+.chat-tab:hover { border-color: var(--accent); color: var(--text); }
+.chat-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }

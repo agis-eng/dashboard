@@ -49,9 +49,12 @@
   </section>
   <aside class="workspace-sidebar">
     <section class="panel panel-chat">
-      <header>
-        <h3>Atlas Chat</h3>
-        <p class="muted">Give Atlas tasks directly</p>
+      <header class="chat-tab-header">
+        <div class="chat-tabs">
+          <button class="chat-tab active" data-chat="atlas" onclick="switchChat('atlas', this)">Atlas</button>
+          <button class="chat-tab" data-chat="agis" onclick="switchChat('agis', this)">AGIS</button>
+        </div>
+        <p class="muted" id="chatSubtitle">Give Atlas tasks directly</p>
       </header>
       <div class="chat-messages" id="chatMessages">
         <p class="chat-empty muted">Loading messages…</p>

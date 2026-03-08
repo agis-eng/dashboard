@@ -92,99 +92,114 @@
       initAtlasChat();
     });
 
-    // ── Atlas Chat ────────────────────────────────────────────────────────
+    // ── Chat (Atlas + AGIS) ──────────────────────────────────────────────
+    var activeChat = 'atlas';
+    var chatState = {
+      atlas: { lastUpdateId: null, rendered: new Set(), pollTimer: null },
+      agis:  { lastUpdateId: null, rendered: new Set(), pollTimer: null }
+    };
+
+    var chatConfig = {
+      atlas: { sendUrl: '/api/telegram-send',  fetchUrl: '/api/telegram-messages',  label: 'Atlas', subtitle: 'Give Atlas tasks directly' },
+      agis:  { sendUrl: '/api/agis-send',       fetchUrl: '/api/agis-messages',       label: 'AGIS',  subtitle: 'Talk to AGIS (Anton\'s agent)' }
+    };
+
+    function switchChat(name, btn) {
+      activeChat = name;
+      document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      var subtitle = document.getElementById('chatSubtitle');
+      if (subtitle) subtitle.textContent = chatConfig[name].subtitle;
+      var container = document.getElementById('chatMessages');
+      container.innerHTML = '<p class="chat-empty muted">Loading messages…</p>';
+      chatState[name].rendered = new Set();
+      chatState[name].lastUpdateId = null;
+      document.getElementById('chatInput').placeholder = 'Message ' + chatConfig[name].label + '…';
+      fetchMessages(name);
+    }
+
     function initAtlasChat() {
-      const container = document.getElementById('chatMessages');
-      const form = document.getElementById('chatForm');
-      const input = document.getElementById('chatInput');
-      const sendBtn = document.getElementById('chatSend');
-      if (!container || !form) return;
+      var form = document.getElementById('chatForm');
+      var input = document.getElementById('chatInput');
+      var sendBtn = document.getElementById('chatSend');
+      if (!form) return;
 
-      let lastUpdateId = null;
-      let rendered = new Set();
-
-      function formatTime(unixTs) {
-        const d = new Date(unixTs * 1000);
-        return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      }
-
-      function addBubble(msg, outgoing) {
-        if (rendered.has(msg.message_id)) return;
-        rendered.add(msg.message_id);
-        const bubble = document.createElement('div');
-        bubble.className = `chat-bubble ${outgoing ? 'outgoing' : 'incoming'}`;
-        bubble.innerHTML = `
-          <div class="chat-bubble-text">${msg.text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
-          <span class="chat-bubble-meta">${outgoing ? 'You' : msg.from} · ${formatTime(msg.date)}</span>
-        `;
-        container.appendChild(bubble);
-        container.scrollTop = container.scrollHeight;
-      }
-
-      async function fetchMessages() {
-        try {
-          const url = lastUpdateId
-            ? `/api/telegram-messages?offset=${lastUpdateId + 1}`
-            : `/api/telegram-messages`;
-          const res = await fetch(url);
-          if (!res.ok) return;
-          const data = await res.json();
-          if (data.messages && data.messages.length) {
-            // Clear empty state
-            const empty = container.querySelector('.chat-empty');
-            if (empty) empty.remove();
-            data.messages.forEach(msg => {
-              addBubble(msg, false);
-              lastUpdateId = Math.max(lastUpdateId || 0, msg.update_id);
-            });
-          } else if (!rendered.size) {
-            const empty = container.querySelector('.chat-empty');
-            if (empty) empty.textContent = 'No messages yet. Say hi to Atlas!';
-          }
-        } catch (e) {
-          console.warn('Chat fetch error:', e);
-        }
-      }
-
-      async function sendMessage(text) {
-        sendBtn.disabled = true;
-        try {
-          const res = await fetch('/api/telegram-send', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text }),
-          });
-          if (res.ok) {
-            const data = await res.json();
-            if (data.result) {
-              const empty = container.querySelector('.chat-empty');
-              if (empty) empty.remove();
-              addBubble({
-                message_id: data.result.message_id,
-                from: 'You',
-                text,
-                date: data.result.date,
-              }, true);
-            }
-          }
-        } catch (e) {
-          console.warn('Chat send error:', e);
-        } finally {
-          sendBtn.disabled = false;
-          input.focus();
-        }
-      }
-
-      form.addEventListener('submit', () => {
-        const text = input.value.trim();
+      form.addEventListener('submit', function() {
+        var text = input.value.trim();
         if (!text) return;
         input.value = '';
-        sendMessage(text);
+        sendMessage(activeChat, text);
       });
 
-      // Poll every 4 seconds
-      fetchMessages();
-      setInterval(fetchMessages, 4000);
+      fetchMessages('atlas');
+      setInterval(function() { fetchMessages(activeChat); }, 4000);
+    }
+
+    function formatTime(unixTs) {
+      return new Date(unixTs * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function addBubble(chatName, msg, outgoing) {
+      if (chatName !== activeChat) return;
+      var state = chatState[chatName];
+      if (state.rendered.has(msg.message_id)) return;
+      state.rendered.add(msg.message_id);
+      var container = document.getElementById('chatMessages');
+      var bubble = document.createElement('div');
+      bubble.className = 'chat-bubble ' + (outgoing ? 'outgoing' : 'incoming');
+      bubble.innerHTML =
+        '<div class="chat-bubble-text">' + msg.text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>' +
+        '<span class="chat-bubble-meta">' + (outgoing ? 'You' : msg.from) + ' · ' + formatTime(msg.date) + '</span>';
+      container.appendChild(bubble);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    async function fetchMessages(chatName) {
+      var state = chatState[chatName];
+      var cfg = chatConfig[chatName];
+      try {
+        var url = state.lastUpdateId
+          ? cfg.fetchUrl + '?since=' + state.lastUpdateId
+          : cfg.fetchUrl;
+        var res = await fetch(url);
+        if (!res.ok) return;
+        var data = await res.json();
+        var container = document.getElementById('chatMessages');
+        if (data.messages && data.messages.length) {
+          var empty = container.querySelector('.chat-empty');
+          if (empty && chatName === activeChat) empty.remove();
+          data.messages.forEach(function(msg) {
+            addBubble(chatName, msg, false);
+            state.lastUpdateId = Math.max(state.lastUpdateId || 0, msg.update_id);
+          });
+        } else if (!state.rendered.size && chatName === activeChat) {
+          var empty = container.querySelector('.chat-empty');
+          if (empty) empty.textContent = 'No messages yet. Say hi to ' + cfg.label + '!';
+        }
+      } catch(e) { console.warn('Chat fetch error:', e); }
+    }
+
+    async function sendMessage(chatName, text) {
+      var sendBtn = document.getElementById('chatSend');
+      var container = document.getElementById('chatMessages');
+      var cfg = chatConfig[chatName];
+      sendBtn.disabled = true;
+      try {
+        var res = await fetch(cfg.sendUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: text })
+        });
+        if (res.ok) {
+          var data = await res.json();
+          if (data.result) {
+            var empty = container.querySelector('.chat-empty');
+            if (empty) empty.remove();
+            addBubble(chatName, { message_id: data.result.message_id, from: 'You', text: text, date: data.result.date }, true);
+          }
+        }
+      } catch(e) { console.warn('Chat send error:', e); }
+      finally { sendBtn.disabled = false; document.getElementById('chatInput').focus(); }
     }
   </script>
 
