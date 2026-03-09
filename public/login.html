@@ -90,7 +90,6 @@
     </div>
   </div>
   <script>
-    // If already logged in, redirect to client page
     var token = localStorage.getItem('atlas_token');
     var slug = localStorage.getItem('atlas_client_slug');
     if (token && slug) {
@@ -98,6 +97,10 @@
         .then(function(r) { return r.json(); })
         .then(function(data) {
           if (data.valid) {
+            if (data.mustChangePassword) {
+              window.location.href = './change-password.html';
+              return;
+            }
             window.location.href = './clients/' + data.clientSlug + '.html';
           }
         }).catch(function() {});
@@ -124,11 +127,15 @@
         if (data.token) {
           localStorage.setItem('atlas_token', data.token);
           localStorage.setItem('atlas_client_slug', data.clientSlug);
-          // Check for redirect param
+          if (data.mustChangePassword) {
+            window.location.href = './change-password.html';
+            return;
+          }
           var params = new URLSearchParams(window.location.search);
           var redirect = params.get('redirect');
           window.location.href = redirect || ('./clients/' + data.clientSlug + '.html');
         } else {
+          errEl.textContent = data.error || 'Invalid username or password. Please try again.';
           errEl.classList.add('visible');
           btn.disabled = false;
           btn.textContent = 'Sign in';

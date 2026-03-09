@@ -14,6 +14,10 @@
         localStorage.removeItem('atlas_token');
         localStorage.removeItem('atlas_client_slug');
         window.location.href = '../login.html?redirect=' + encodeURIComponent(window.location.pathname);
+        return;
+      }
+      if (data.mustChangePassword) {
+        window.location.href = '../change-password.html';
       }
     })
     .catch(function() {});

@@ -38,6 +38,7 @@ export default async function handler(req, res) {
     valid: true,
     clientSlug: payload.clientSlug,
     username: payload.username,
-    name: payload.name
+    name: payload.name,
+    mustChangePassword: Boolean(payload.mustChangePassword)
   });
 }
