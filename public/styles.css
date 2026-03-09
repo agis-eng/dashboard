@@ -518,3 +518,159 @@ body {
 }
 .chat-tab:hover { border-color: var(--accent); color: var(--text); }
 .chat-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* ── Notes & Transcripts Activity Section ───────────────────────────── */
+.notion-activity {
+  margin-top: 2.5rem;
+}
+
+.activity-group-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 1.5rem 0 0.75rem;
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.activity-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.activity-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  cursor: default;
+}
+
+details.activity-card > summary.activity-card-header {
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+details.activity-card > summary.activity-card-header::-webkit-details-marker { display: none; }
+details.activity-card[open] > summary .activity-chevron { transform: rotate(90deg); }
+
+.activity-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.activity-date {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.note-author {
+  color: var(--accent);
+  font-weight: 400;
+}
+
+.activity-title {
+  font-size: 0.85rem;
+  color: var(--text);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.activity-chevron {
+  font-size: 0.7rem;
+  color: var(--muted);
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.activity-body {
+  padding: 0 1rem 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.activity-body p {
+  margin: 0.6rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.transcript-body p {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* Submit note form */
+.note-form-wrap {
+  margin: 1.25rem 0;
+}
+
+.note-form-toggle > summary {
+  display: inline-block;
+  cursor: pointer;
+  list-style: none;
+}
+.note-form-toggle > summary::-webkit-details-marker { display: none; }
+
+.note-form {
+  margin-top: 1rem;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.note-form textarea {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  padding: 0.6rem 0.8rem;
+  resize: vertical;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+.note-form textarea:focus { border-color: var(--accent); outline: none; }
+
+.note-form-footer {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.note-form-footer input[type="text"] {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.85rem;
+  padding: 0.5rem 0.75rem;
+  flex: 1;
+  min-width: 140px;
+  transition: border-color 0.15s;
+}
+.note-form-footer input[type="text"]:focus { border-color: var(--accent); outline: none; }
+
+.note-form-status {
+  font-size: 0.85rem;
+}

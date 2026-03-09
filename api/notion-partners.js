@@ -15,7 +15,7 @@ export default async function handler(req, res) {
 
   const { slug } = req.query;
 
-  // GET /api/notion-partners — list all partners
+  // ── GET /api/notion-partners ── list all partners ────────────────────────
   if (req.method === 'GET' && !slug) {
     const r = await fetch(`https://api.notion.com/v1/databases/${PARTNERS_DB_ID}/query`, {
       method: 'POST',
@@ -23,21 +23,11 @@ export default async function handler(req, res) {
       body: JSON.stringify({ sorts: [{ property: 'Name', direction: 'ascending' }] })
     });
     const data = await r.json();
-    const partners = (data.results || []).map(page => ({
-      id: page.id,
-      slug: slugify(page.properties.Name?.title?.[0]?.plain_text || ''),
-      name: page.properties.Name?.title?.[0]?.plain_text || '',
-      status: page.properties.Status?.status?.name || '',
-      email: page.properties.Email?.email || '',
-      company: page.properties.Company?.rich_text?.[0]?.plain_text || '',
-      tags: (page.properties.Tags?.multi_select || []).map(t => t.name),
-      lastContact: page.properties['Last Contact']?.date?.start || null,
-      url: page.url
-    }));
+    const partners = (data.results || []).map(page => mapPartnerProps(page));
     return res.status(200).json(partners);
   }
 
-  // GET /api/notion-partners?slug=xxx — get single partner with page blocks
+  // ── GET /api/notion-partners?slug=xxx ── single partner + blocks ─────────
   if (req.method === 'GET' && slug) {
     const r = await fetch(`https://api.notion.com/v1/databases/${PARTNERS_DB_ID}/query`, {
       method: 'POST',
@@ -50,49 +40,159 @@ export default async function handler(req, res) {
     );
     if (!page) return res.status(404).json({ error: 'Partner not found' });
 
-    const blocksR = await fetch(`https://api.notion.com/v1/blocks/${page.id}/children?page_size=100`, { headers });
-    const blocksData = await blocksR.json();
+    const blocksData = await fetchAllBlocks(page.id);
+    const { notes, transcripts } = parseBlocks(blocksData);
 
     return res.status(200).json({
-      id: page.id,
-      name: page.properties.Name?.title?.[0]?.plain_text || '',
-      status: page.properties.Status?.status?.name || '',
-      email: page.properties.Email?.email || '',
-      company: page.properties.Company?.rich_text?.[0]?.plain_text || '',
-      tags: (page.properties.Tags?.multi_select || []).map(t => t.name),
-      lastContact: page.properties['Last Contact']?.date?.start || null,
-      blocks: blocksData.results || [],
-      url: page.url
+      ...mapPartnerProps(page),
+      notes,
+      transcripts
     });
   }
 
-  // POST /api/notion-partners — append a note to a partner page
+  // ── POST /api/notion-partners ── add a note or transcript block ──────────
   if (req.method === 'POST') {
-    const { pageId, text, heading } = req.body;
-    if (!pageId || !text) return res.status(400).json({ error: 'pageId and text required' });
+    const { pageId, slug: bodySlug, text, author, type = 'note' } = req.body;
 
-    const children = [];
-    if (heading) {
-      children.push({
-        object: 'block', type: 'heading_3',
-        heading_3: { rich_text: [{ type: 'text', text: { content: heading } }] }
+    let resolvedPageId = pageId;
+    if (!resolvedPageId && bodySlug) {
+      const r = await fetch(`https://api.notion.com/v1/databases/${PARTNERS_DB_ID}/query`, {
+        method: 'POST', headers, body: JSON.stringify({})
       });
+      const data = await r.json();
+      const page = (data.results || []).find(p =>
+        slugify(p.properties.Name?.title?.[0]?.plain_text || '') === bodySlug
+      );
+      if (!page) return res.status(404).json({ error: 'Partner not found' });
+      resolvedPageId = page.id;
     }
-    children.push({
-      object: 'block', type: 'paragraph',
-      paragraph: { rich_text: [{ type: 'text', text: { content: text } }] }
-    });
 
-    const r = await fetch(`https://api.notion.com/v1/blocks/${pageId}/children`, {
+    if (!resolvedPageId || !text) {
+      return res.status(400).json({ error: 'pageId (or slug) and text required' });
+    }
+
+    const children = buildNoteBlocks({ text, author, type });
+    const r = await fetch(`https://api.notion.com/v1/blocks/${resolvedPageId}/children`, {
       method: 'PATCH',
       headers,
       body: JSON.stringify({ children })
     });
-    const data = await r.json();
-    return res.status(r.ok ? 200 : 400).json(data);
+    const result = await r.json();
+    return res.status(r.ok ? 200 : 400).json(result);
   }
 
   return res.status(405).json({ error: 'Method not allowed' });
+}
+
+// ── Helpers ─────────────────────────────────────────────────────────────────
+
+function mapPartnerProps(page) {
+  return {
+    id: page.id,
+    slug: slugify(page.properties.Name?.title?.[0]?.plain_text || ''),
+    name: page.properties.Name?.title?.[0]?.plain_text || '',
+    status: page.properties.Status?.status?.name || '',
+    email: page.properties.Email?.email || '',
+    phone: page.properties.Phone?.phone_number || '',
+    company: page.properties.Company?.rich_text?.[0]?.plain_text || '',
+    website: page.properties.Website?.url || '',
+    linkedin: page.properties.LinkedIn?.url || '',
+    partnershipType: page.properties['Partnership Type']?.select?.name || '',
+    tags: (page.properties.Tags?.multi_select || []).map(t => t.name),
+    lastContact: page.properties['Last Contact']?.date?.start || null,
+    lastCall: page.properties['Last Call']?.date?.start || null,
+    callCount: page.properties['Call Count']?.number || 0,
+    url: page.url
+  };
+}
+
+async function fetchAllBlocks(pageId) {
+  const blocks = [];
+  let cursor;
+  do {
+    const url = `https://api.notion.com/v1/blocks/${pageId}/children?page_size=100${cursor ? `&start_cursor=${cursor}` : ''}`;
+    const r = await fetch(url, { headers });
+    const data = await r.json();
+    blocks.push(...(data.results || []));
+    cursor = data.has_more ? data.next_cursor : null;
+  } while (cursor);
+  return blocks;
+}
+
+function parseBlocks(blocks) {
+  const notes = [];
+  const transcripts = [];
+  let currentItem = null;
+
+  for (const block of blocks) {
+    const text = extractText(block);
+
+    if (block.type === 'toggle' && text.startsWith('📞')) {
+      currentItem = { title: text, date: extractDate(text), content: [], id: block.id };
+      transcripts.push(currentItem);
+      continue;
+    }
+
+    if ((block.type === 'callout' || block.type === 'heading_3') && text.startsWith('📝')) {
+      currentItem = { title: text, date: extractDate(text), author: extractAuthor(text), content: [], id: block.id };
+      notes.push(currentItem);
+      continue;
+    }
+
+    if (currentItem && text) {
+      currentItem.content.push(text);
+    }
+  }
+
+  notes.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  transcripts.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+  return { notes, transcripts };
+}
+
+function buildNoteBlocks({ text, author, type }) {
+  const now = new Date().toISOString().split('T')[0];
+  const time = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' });
+
+  if (type === 'transcript') {
+    return [{
+      object: 'block',
+      type: 'toggle',
+      toggle: {
+        rich_text: [{ type: 'text', text: { content: `📞 Call — ${now}${author ? ` — ${author}` : ''}` } }],
+        children: [
+          { object: 'block', type: 'paragraph', paragraph: { rich_text: [{ type: 'text', text: { content: text } }] } }
+        ]
+      }
+    }];
+  }
+
+  return [{
+    object: 'block',
+    type: 'callout',
+    callout: {
+      rich_text: [{ type: 'text', text: { content: `📝 Note — ${now} ${time}${author ? ` (by ${author})` : ''}` } }],
+      icon: { emoji: '📝' },
+      children: [
+        { object: 'block', type: 'paragraph', paragraph: { rich_text: [{ type: 'text', text: { content: text } }] } }
+      ]
+    }
+  }];
+}
+
+function extractText(block) {
+  const rt = block[block.type]?.rich_text || block[block.type]?.title || [];
+  return rt.map(t => t.plain_text || '').join('');
+}
+
+function extractDate(str) {
+  const m = str.match(/\d{4}-\d{2}-\d{2}/);
+  return m ? m[0] : '';
+}
+
+function extractAuthor(str) {
+  const m = str.match(/by\s+(.+?)\)/);
+  return m ? m[1] : '';
 }
 
 function slugify(str) {

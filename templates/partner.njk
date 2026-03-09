@@ -13,11 +13,22 @@
       <div><dt>Contact</dt><dd>{{ partner.contact or '—' }}</dd></div>
       {% if partner.email %}<div><dt>Email</dt><dd><a href="mailto:{{ partner.email }}">{{ partner.email }}</a></dd></div>{% endif %}
       {% if partner.phone %}<div><dt>Phone</dt><dd><a href="tel:{{ partner.phone }}">{{ partner.phone }}</a></dd></div>{% endif %}
+      {% if partner.linkedin %}<div><dt>LinkedIn</dt><dd><a href="{{ partner.linkedin }}" target="_blank" rel="noopener">Profile</a></dd></div>{% endif %}
+      {% if partner.partnershipType %}<div><dt>Partnership</dt><dd>{{ partner.partnershipType }}</dd></div>{% endif %}
       <div><dt>Region</dt><dd>{{ partner.region or '—' }}</dd></div>
       <div><dt>Focus areas</dt><dd>{{ (partner.focusAreas and partner.focusAreas | join(', ')) or '—' }}</dd></div>
+      <div id="partner-call-stats-row" style="display:none">
+        <dt>Last call</dt>
+        <dd id="partner-last-call-val">—</dd>
+      </div>
+      <div id="partner-call-count-row" style="display:none">
+        <dt>Total calls</dt>
+        <dd id="partner-call-count-val">—</dd>
+      </div>
     </dl>
   </div>
 </section>
+
 <section class="partner-projects">
   <header class="section-header">
     <div>
@@ -56,3 +67,169 @@
   </div>
   <p class="empty-state" data-search-empty="partner-projects-{{ partner.slug }}">No projects match that search.</p>
 </section>
+
+<!-- ── Notes & Transcripts (loaded dynamically from Notion) ────────────── -->
+<section class="notion-activity" id="partner-notion-activity">
+  <div class="section-header">
+    <div>
+      <h3>Notes &amp; Call History</h3>
+      <p class="muted" id="partner-activity-subtitle">Loading…</p>
+    </div>
+  </div>
+
+  <!-- Submit a note (internal team only) -->
+  <div class="note-form-wrap">
+    <details class="note-form-toggle">
+      <summary class="btn btn-secondary">+ Add a note</summary>
+      <form class="note-form" id="partner-note-form" onsubmit="submitNote(event, '{{ partner.slug }}', 'partner')">
+        <textarea id="partner-note-text" placeholder="Write your note…" rows="4" required></textarea>
+        <div class="note-form-footer">
+          <input type="text" id="partner-note-author" placeholder="Your name (optional)" />
+          <button type="submit" class="btn" id="partner-note-submit-btn">Save note</button>
+        </div>
+        <p class="note-form-status muted" id="partner-note-status" style="display:none"></p>
+      </form>
+    </details>
+  </div>
+
+  <!-- Notes list -->
+  <div id="partner-notes-section" style="display:none">
+    <h4 class="activity-group-label">Notes</h4>
+    <div id="partner-notes-list" class="activity-list"></div>
+  </div>
+
+  <!-- Transcripts list -->
+  <div id="partner-transcripts-section" style="display:none">
+    <h4 class="activity-group-label">Call Transcripts</h4>
+    <div id="partner-transcripts-list" class="activity-list"></div>
+  </div>
+
+  <p class="muted" id="partner-activity-empty" style="display:none">No notes or calls recorded yet.</p>
+</section>
+
+<script>
+// ── Load partner notes + transcripts from Notion API ────────────────────
+(function loadPartnerNotionActivity() {
+  var slug = '{{ partner.slug }}';
+  fetch('/api/notion-partners?slug=' + encodeURIComponent(slug))
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.lastCall) {
+        document.getElementById('partner-last-call-val').textContent = data.lastCall;
+        document.getElementById('partner-call-stats-row').style.display = '';
+      }
+      if (data.callCount) {
+        document.getElementById('partner-call-count-val').textContent = data.callCount;
+        document.getElementById('partner-call-count-row').style.display = '';
+      }
+
+      var notes = data.notes || [];
+      var transcripts = data.transcripts || [];
+      var total = notes.length + transcripts.length;
+
+      document.getElementById('partner-activity-subtitle').textContent =
+        total === 0 ? 'No activity yet' :
+        notes.length + ' note' + (notes.length !== 1 ? 's' : '') +
+        ' · ' + transcripts.length + ' call' + (transcripts.length !== 1 ? 's' : '');
+
+      if (total === 0) {
+        document.getElementById('partner-activity-empty').style.display = '';
+        return;
+      }
+
+      if (notes.length > 0) {
+        var notesList = document.getElementById('partner-notes-list');
+        notes.forEach(function(note) { notesList.appendChild(buildNoteCard(note)); });
+        document.getElementById('partner-notes-section').style.display = '';
+      }
+
+      if (transcripts.length > 0) {
+        var txList = document.getElementById('partner-transcripts-list');
+        transcripts.forEach(function(tx) { txList.appendChild(buildTranscriptCard(tx)); });
+        document.getElementById('partner-transcripts-section').style.display = '';
+      }
+    })
+    .catch(function(err) {
+      document.getElementById('partner-activity-subtitle').textContent = 'Could not load activity';
+      console.warn('Partner Notion activity load error:', err);
+    });
+})();
+
+function esc(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function buildNoteCard(note) {
+  var el = document.createElement('div');
+  el.className = 'activity-card note-card';
+  var author = note.author ? ' <span class="note-author">by ' + esc(note.author) + '</span>' : '';
+  el.innerHTML =
+    '<div class="activity-card-header">' +
+      '<span class="activity-icon">📝</span>' +
+      '<span class="activity-date">' + esc(note.date || '') + author + '</span>' +
+    '</div>' +
+    '<div class="activity-body">' +
+      note.content.map(function(c) { return '<p>' + esc(c) + '</p>'; }).join('') +
+    '</div>';
+  return el;
+}
+
+function buildTranscriptCard(tx) {
+  var el = document.createElement('details');
+  el.className = 'activity-card transcript-card';
+  var title = esc(tx.title || '');
+  var body = tx.content.map(function(c) { return '<p>' + esc(c) + '</p>'; }).join('');
+  el.innerHTML =
+    '<summary class="activity-card-header">' +
+      '<span class="activity-icon">📞</span>' +
+      '<span class="activity-date">' + esc(tx.date || '') + '</span>' +
+      '<span class="activity-title">' + title + '</span>' +
+      '<span class="activity-chevron">▸</span>' +
+    '</summary>' +
+    '<div class="activity-body transcript-body">' + (body || '<p class="muted">No transcript content.</p>') + '</div>';
+  return el;
+}
+
+// ── Submit note (partner page) ──────────────────────────────────────────
+async function submitNote(event, slug, dbType) {
+  event.preventDefault();
+  var prefix = dbType === 'partner' ? 'partner-' : '';
+  var text = document.getElementById(prefix + 'note-text').value.trim();
+  var author = document.getElementById(prefix + 'note-author').value.trim();
+  var btn = document.getElementById(prefix + 'note-submit-btn');
+  var status = document.getElementById(prefix + 'note-status');
+  if (!text) return;
+
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+  status.style.display = 'none';
+
+  var endpoint = dbType === 'partner' ? '/api/notion-partners' : '/api/notion-clients';
+  try {
+    var res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slug: slug, text: text, author: author || undefined, type: 'note' })
+    });
+    if (res.ok) {
+      status.textContent = '✅ Note saved to Notion.';
+      status.style.color = 'var(--accent)';
+      document.getElementById(prefix + 'note-text').value = '';
+      var notesList = document.getElementById(prefix + 'notes-list');
+      var today = new Date().toISOString().split('T')[0];
+      var fakeNote = { date: today, author: author || '', content: [text] };
+      notesList.prepend(buildNoteCard(fakeNote));
+      document.getElementById(prefix + 'notes-section').style.display = '';
+    } else {
+      status.textContent = '⚠️ Failed to save. Please try again.';
+      status.style.color = '#fdb874';
+    }
+  } catch(e) {
+    status.textContent = '⚠️ Network error. Please try again.';
+    status.style.color = '#fdb874';
+  }
+  status.style.display = '';
+  btn.disabled = false;
+  btn.textContent = 'Save note';
+}
+</script>
