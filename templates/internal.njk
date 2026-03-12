@@ -41,6 +41,13 @@
         <div class="links">
           {% if project.previewUrl %}<a href="{{ project.previewUrl }}" target="_blank" data-noportal>Preview</a>{% endif %}
           {% if project.repoUrl %}<a href="{{ project.repoUrl }}" target="_blank" data-noportal>Repo</a>{% endif %}
+          {% if project.memoCount > 0 %}
+            {% if project.voiceMemos[0].notion_url %}
+              <a href="{{ project.voiceMemos[0].notion_url }}" target="_blank" data-noportal>🎙️ {{ project.memoCount }} memo{% if project.memoCount != 1 %}s{% endif %}</a>
+            {% else %}
+              <span class="muted">🎙️ {{ project.memoCount }} memo{% if project.memoCount != 1 %}s{% endif %}</span>
+            {% endif %}
+          {% endif %}
         </div>
       </article>
     {% endfor %}
@@ -110,6 +117,31 @@
           </li>
         {% else %}
           <li class="muted">No requests queued.</li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section class="panel">
+      <header>
+        <h3>Recent voice memos</h3>
+        <p class="muted">Auto-transcribed recordings</p>
+      </header>
+      <ul class="activity-list">
+        {% for memo in recentMemos %}
+          <li>
+            <strong>
+              {% if memo.notion_url %}<a href="{{ memo.notion_url }}" target="_blank">{{ memo.title }}</a>
+              {% else %}{{ memo.title }}{% endif %}
+            </strong>
+            <p>{{ memo.summary | truncate(80) }}</p>
+            <span class="muted">
+              {{ memo.date | date('MMM d, h:mm a') }}
+              {% if memo.project_match %} · {{ memo.project_match }}{% endif %}
+              · <span class="status-pill {{ memo.type }}">{{ memo.type }}</span>
+            </span>
+          </li>
+        {% else %}
+          <li class="muted">No voice memos processed yet.</li>
         {% endfor %}
       </ul>
     </section>

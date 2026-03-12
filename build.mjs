@@ -38,6 +38,14 @@ const projectsData = await loadYaml('projects.yaml', 'projects');
 const requestsData = await loadYaml('requests.yaml', 'requests');
 const partnersData = await loadYaml('partners.yaml', 'partners');
 const settings = await loadYaml('settings.yaml').settings || {};
+const voiceMemosRaw = await loadYaml('voice_memos.yaml', 'voice_memos');
+
+// Sort memos newest first, keep 20 for sidebar
+const voiceMemos = (voiceMemosRaw || [])
+  .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0))
+  .slice(0, 20);
+
+const recentMemos = voiceMemos.slice(0, 8);
 
 const clientsMap = new Map(clientsData.map(client => [client.id, client]));
 const projectsMap = new Map(projectsData.map(project => [project.id, project]));
@@ -96,6 +104,15 @@ const clientsForSidebar = clientsData.map(client => ({
   portalPath: `clients/${client.slug}.html`
 })).sort((a, b) => a.name.localeCompare(b.name));
 
+// Attach matching voice memos to each project
+const projectsWithMemos = projects.map(project => {
+  const memos = voiceMemos.filter(m =>
+    m.project_match &&
+    project.name.toLowerCase().includes(m.project_match.toLowerCase())
+  );
+  return { ...project, voiceMemos: memos, memoCount: memos.length };
+});
+
 const internalHtml = renderPage('layout.njk', {
   title: 'Project Control Room',
   subtitle: 'Internal view of active builds and experiments',
@@ -104,7 +121,7 @@ const internalHtml = renderPage('layout.njk', {
   includeChat: true,
   showNav: true,
   activeNav: 'projects',
-  content: renderPage('internal.njk', { projects, requests, settings, stats, generatedAt, clients: clientsForSidebar })
+  content: renderPage('internal.njk', { projects: projectsWithMemos, requests, settings, stats, generatedAt, clients: clientsForSidebar, recentMemos })
 });
 await writePage('index.html', internalHtml);
 
