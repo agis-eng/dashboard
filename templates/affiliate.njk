@@ -1,0 +1,131 @@
+<div class="workspace affiliate-workspace">
+
+  {# ── Header stats bar ── #}
+  <header class="affiliate-header">
+    <div class="affiliate-hero">
+      <h2>Affiliate Intelligence</h2>
+      <p class="muted">Commission opportunities ranked by estimated monthly value.</p>
+    </div>
+    <div class="affiliate-totals">
+      <div class="aff-total-stat">
+        <span class="aff-total-num">${{ totalPotential | replace(",", ",") }}</span>
+        <span class="aff-total-label">Est. monthly potential</span>
+      </div>
+      <div class="aff-total-stat">
+        <span class="aff-total-num">{{ activeCount }}</span>
+        <span class="aff-total-label">Active programs</span>
+      </div>
+      <div class="aff-total-stat">
+        <span class="aff-total-num">{{ pendingCount }}</span>
+        <span class="aff-total-label">Pending / to apply</span>
+      </div>
+      <div class="aff-total-stat">
+        <span class="aff-total-num">{{ opportunities | length }}</span>
+        <span class="aff-total-label">Total opportunities</span>
+      </div>
+    </div>
+  </header>
+
+  {# ── Filter chips ── #}
+  <div class="affiliate-filters">
+    <span class="chip aff-filter active" data-filter="all">All</span>
+    <span class="chip aff-filter" data-filter="active">Active</span>
+    <span class="chip aff-filter" data-filter="pending">Pending</span>
+    <span class="chip aff-filter" data-filter="not_applied">Apply Now</span>
+  </div>
+
+  {# ── AI Analysis panel ── #}
+  {% if aiAnalysis %}
+  <section class="aff-analysis-panel">
+    <div class="aff-analysis-header">
+      <span class="aff-analysis-icon">🤖</span>
+      <h3>AI Opportunity Analysis</h3>
+      <span class="muted aff-analysis-date">{{ aiAnalysis.generatedAt }}</span>
+    </div>
+    <div class="aff-analysis-body">
+      {{ aiAnalysis.summary | safe }}
+    </div>
+    {% if aiAnalysis.topActions %}
+    <div class="aff-top-actions">
+      <h4>Top actions for this week</h4>
+      <ul>
+        {% for action in aiAnalysis.topActions %}
+          <li>{{ action }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  {# ── Opportunity cards ranked by monthly potential ── #}
+  <div class="aff-opportunities" id="affGrid">
+    {% for opp in opportunities %}
+    <article class="aff-card aff-status-{{ opp.status }}" data-status="{{ opp.status }}" data-potential="{{ opp.monthly_potential }}">
+
+      <div class="aff-card-left">
+        <div class="aff-rank">{{ loop.index }}</div>
+        <div class="aff-source-info">
+          <div class="aff-source-row">
+            <span class="aff-source-name">{{ opp.source }}</span>
+            <span class="aff-source-type-badge type-{{ opp.sourceType }}">{{ opp.sourceType }}</span>
+          </div>
+          <span class="aff-program-name">{{ opp.program_name }}</span>
+        </div>
+      </div>
+
+      <div class="aff-card-metrics">
+        <div class="aff-metric">
+          <span class="aff-metric-val">{{ opp.commission }}</span>
+          <span class="aff-metric-label">Commission</span>
+        </div>
+        <div class="aff-metric">
+          <span class="aff-metric-val">${{ opp.avg_deal_size }}</span>
+          <span class="aff-metric-label">Avg deal</span>
+        </div>
+        <div class="aff-metric">
+          <span class="aff-metric-val">{{ opp.monthly_leads }}/mo</span>
+          <span class="aff-metric-label">Est. leads</span>
+        </div>
+        <div class="aff-metric aff-potential-metric">
+          <span class="aff-potential">${{ opp.monthly_potential }}</span>
+          <span class="aff-metric-label">/ month</span>
+        </div>
+      </div>
+
+      <div class="aff-card-right">
+        <span class="aff-status-badge status-{{ opp.status }}">
+          {% if opp.status == 'active' %}✓ Active
+          {% elif opp.status == 'pending' %}⏳ Pending
+          {% else %}→ Apply{% endif %}
+        </span>
+        {% if opp.notes %}
+          <p class="aff-notes muted">{{ opp.notes | truncate(120) }}</p>
+        {% endif %}
+        <div class="aff-links">
+          {% if opp.affiliate_url %}<a href="{{ opp.affiliate_url }}" target="_blank" class="btn btn-secondary btn-sm">Program page</a>{% endif %}
+          {% if opp.signup_url and opp.status != 'active' %}<a href="{{ opp.signup_url }}" target="_blank" class="btn btn-sm">Apply →</a>{% endif %}
+          {% if opp.source_url %}<a href="{{ opp.source_url }}" class="btn btn-secondary btn-sm">View {{ opp.sourceType }}</a>{% endif %}
+        </div>
+      </div>
+
+    </article>
+    {% else %}
+    <p class="muted">No affiliate opportunities configured yet.</p>
+    {% endfor %}
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.aff-filter').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.aff-filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.getAttribute('data-filter');
+      document.querySelectorAll('.aff-card').forEach(card => {
+        card.style.display = (filter === 'all' || card.getAttribute('data-status') === filter) ? '' : 'none';
+      });
+    });
+  });
+</script>
