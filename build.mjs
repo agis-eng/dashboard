@@ -29,6 +29,15 @@ const sortByRank = (a, b) => {
   return (a.name || '').localeCompare(b.name || '');
 };
 
+// Calculate affiliate monthly potential
+const calcPotential = (aff) => {
+  if (aff.monthly_potential) return aff.monthly_potential;
+  if (aff.commission_type === 'flat') {
+    return (aff.commission_flat || 0) * (aff.monthly_leads || 0);
+  }
+  return Math.round((aff.commission_pct || 0) / 100 * (aff.avg_deal_size || 0) * (aff.monthly_leads || 0));
+};
+
 await fs.emptyDir(distDir);
 await fs.copy(publicDir, path.join(distDir));
 await fs.emptyDir(path.join(distDir, 'clients'));
@@ -41,24 +50,27 @@ env.addFilter('date', (value, fmt = "MMM d, yyyy") => {
   return format(date, fmt);
 });
 env.addFilter('where', (arr, key, val) => (arr || []).filter(item => item[key] === val));
+env.addFilter('formatNum', (val) => {
+  const n = Number(val) || 0;
+  return n.toLocaleString('en-US');
+});
 
-const clientsData = await loadYaml('clients.yaml', 'clients');
+const clientsData  = await loadYaml('clients.yaml', 'clients');
 const projectsData = await loadYaml('projects.yaml', 'projects');
 const requestsData = await loadYaml('requests.yaml', 'requests');
 const partnersData = await loadYaml('partners.yaml', 'partners');
-const settings = await loadYaml('settings.yaml').settings || {};
+const settings     = await loadYaml('settings.yaml').settings || {};
 const voiceMemosRaw = await loadYaml('voice_memos.yaml', 'voice_memos');
 const tasksData    = await loadYaml('tasks.yaml', 'tasks');
 
-// Sort memos newest first, keep 20 for sidebar
+// Sort memos newest first
 const voiceMemos = (voiceMemosRaw || [])
   .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0))
   .slice(0, 20);
-
 const recentMemos = voiceMemos.slice(0, 8);
 
-const clientsMap = new Map(clientsData.map(client => [client.id, client]));
-const projectsMap = new Map(projectsData.map(project => [project.id, project]));
+const clientsMap  = new Map(clientsData.map(c => [c.id, c]));
+const projectsMap = new Map(projectsData.map(p => [p.id, p]));
 
 const projects = projectsData
   .map(project => ({
@@ -70,7 +82,7 @@ const projects = projectsData
 const partners = (partnersData || []).map(partner => {
   const projectIds = partner.projectIds || [];
   const featuredProjects = projectIds
-    .map(id => projects.find(project => project.id === id))
+    .map(id => projects.find(p => p.id === id))
     .filter(Boolean);
   return {
     ...partner,
@@ -81,40 +93,69 @@ const partners = (partnersData || []).map(partner => {
 }).sort(sortByRank);
 
 const requests = (requestsData || [])
-  .filter(request => (request.status || '').toLowerCase() !== 'done')
+  .filter(r => (r.status || '').toLowerCase() !== 'done')
   .map(request => {
-  const project = projectsMap.get(request.projectId) ?? null;
-  const client = request.clientId ? clientsMap.get(request.clientId) : project ? clientsMap.get(project.clientId) : null;
-  return {
-    ...request,
-    project,
-    client,
-    submittedAtFormatted: request.submittedAt ? format(new Date(request.submittedAt), 'MMM d, h:mm a') : '—'
-  };
-}).sort((a, b) => new Date(b.submittedAt || 0) - new Date(a.submittedAt || 0));
+    const project = projectsMap.get(request.projectId) ?? null;
+    const client  = request.clientId
+      ? clientsMap.get(request.clientId)
+      : project ? clientsMap.get(project.clientId) : null;
+    return {
+      ...request,
+      project,
+      client,
+      submittedAtFormatted: request.submittedAt
+        ? format(new Date(request.submittedAt), 'MMM d, h:mm a') : '—'
+    };
+  }).sort((a, b) => new Date(b.submittedAt || 0) - new Date(a.submittedAt || 0));
 
 // Tasks stats
 const now7 = new Date(); now7.setDate(now7.getDate() + 7);
 const tasksStats = {
-  totalTasks:     tasksData.length,
-  inProgress:     tasksData.filter(t => t.status === 'in-progress').length,
-  dueThisWeek:    tasksData.filter(t => t.due_date && new Date(t.due_date) <= now7).length,
-  completionPct:  tasksData.length
+  totalTasks:    tasksData.length,
+  inProgress:    tasksData.filter(t => t.status === 'in-progress').length,
+  dueThisWeek:   tasksData.filter(t => t.due_date && new Date(t.due_date) <= now7).length,
+  completionPct: tasksData.length
     ? Math.round(tasksData.filter(t => t.status === 'done').length / tasksData.length * 100)
     : 0,
 };
 
+// ── Affiliate intelligence ─────────────────────────────────────────────────
+const allOpportunities = [
+  ...partners
+    .filter(p => p.affiliate)
+    .map(p => ({
+      ...p.affiliate,
+      source:      p.name,
+      sourceType:  'partner',
+      source_url:  `./partners/${p.slug}.html`,
+      monthly_potential: calcPotential(p.affiliate),
+    })),
+  ...projects
+    .filter(p => p.affiliate)
+    .map(p => ({
+      ...p.affiliate,
+      source:      p.name,
+      sourceType:  'project',
+      source_url:  `./clients/${p.client?.slug || 'unknown'}.html`,
+      monthly_potential: calcPotential(p.affiliate),
+    })),
+].sort((a, b) => (b.monthly_potential || 0) - (a.monthly_potential || 0));
+
+const totalPotential = allOpportunities.reduce((s, o) => s + (o.monthly_potential || 0), 0)
+  .toLocaleString('en-US');
+const activeCount  = allOpportunities.filter(o => o.status === 'active').length;
+const pendingCount = allOpportunities.filter(o => o.status !== 'active').length;
+
 const stats = {
   activeProjects: projects.length,
-  clientCount: clientsData.length,
-  openRequests: requests.length,
+  clientCount:    clientsData.length,
+  openRequests:   requests.length,
 };
 
 const now = new Date();
 const generatedAt = format(now, 'MMM d, yyyy h:mm a');
 
 const renderPage = (template, data) => nunjucks.render(template, data);
-
 const writePage = async (outputPath, html) => {
   const fullPath = path.join(distDir, outputPath);
   await fs.ensureDir(path.dirname(fullPath));
@@ -124,10 +165,10 @@ const writePage = async (outputPath, html) => {
 const clientsForSidebar = clientsData.map(client => ({
   ...client,
   projectCount: projects.filter(p => p.clientId === client.id).length,
-  portalPath: `clients/${client.slug}.html`
+  portalPath:   `clients/${client.slug}.html`
 })).sort((a, b) => a.name.localeCompare(b.name));
 
-// Attach matching voice memos to each project
+// Attach voice memos to projects
 const projectsWithMemos = projects.map(project => {
   const memos = voiceMemos.filter(m =>
     m.project_match &&
@@ -136,15 +177,15 @@ const projectsWithMemos = projects.map(project => {
   return { ...project, voiceMemos: memos, memoCount: memos.length };
 });
 
+// ── Build pages ───────────────────────────────────────────────────────────
 const internalHtml = renderPage('layout.njk', {
   title: 'Project Control Room',
   subtitle: 'Internal view of active builds and experiments',
-  generatedAt,
-  basePath: './',
-  includeChat: true,
-  showNav: true,
-  activeNav: 'projects',
-  content: renderPage('internal.njk', { projects: projectsWithMemos, requests, settings, stats, generatedAt, clients: clientsForSidebar, recentMemos })
+  generatedAt, basePath: './', includeChat: true, showNav: true, activeNav: 'projects',
+  content: renderPage('internal.njk', {
+    projects: projectsWithMemos, requests, settings, stats, generatedAt,
+    clients: clientsForSidebar, recentMemos
+  })
 });
 await writePage('index.html', internalHtml);
 
@@ -153,22 +194,32 @@ await fs.emptyDir(path.join(distDir, 'tasks'));
 const tasksHtml = renderPage('layout.njk', {
   title: 'Task Board',
   subtitle: 'Active work across all projects and platforms',
-  generatedAt,
-  basePath: '../',
-  showNav: true,
-  activeNav: 'tasks',
+  generatedAt, basePath: '../', showNav: true, activeNav: 'tasks',
   content: renderPage('tasks.njk', { tasks: tasksData, stats: tasksStats })
 });
 await writePage(path.join('tasks', 'index.html'), tasksHtml);
+
+// Affiliate intelligence page
+await fs.emptyDir(path.join(distDir, 'affiliate'));
+const affiliateHtml = renderPage('layout.njk', {
+  title: 'Affiliate Intelligence',
+  subtitle: 'Commission opportunities ranked by monthly value',
+  generatedAt, basePath: '../', showNav: true, activeNav: 'affiliate',
+  content: renderPage('affiliate.njk', {
+    opportunities: allOpportunities,
+    totalPotential,
+    activeCount,
+    pendingCount,
+    aiAnalysis: null,
+  })
+});
+await writePage(path.join('affiliate', 'index.html'), affiliateHtml);
 
 if (partners.length) {
   const partnersHtml = renderPage('layout.njk', {
     title: 'Partner Network',
     subtitle: 'Strategy, delivery, and ecosystem allies',
-    generatedAt,
-    basePath: '../',
-    showNav: true,
-    activeNav: 'partners',
+    generatedAt, basePath: '../', showNav: true, activeNav: 'partners',
     content: renderPage('partners.njk', { partners })
   });
   await writePage(path.join('partners', 'index.html'), partnersHtml);
@@ -177,10 +228,7 @@ if (partners.length) {
     const partnerHtml = renderPage('layout.njk', {
       title: partner.name,
       subtitle: partner.summary,
-      generatedAt,
-      basePath: '../',
-      showNav: true,
-      activeNav: 'partners',
+      generatedAt, basePath: '../', showNav: true, activeNav: 'partners',
       content: renderPage('partner.njk', { partner, projects: partner.featuredProjects })
     });
     await writePage(path.join('partners', `${partner.slug}.html`), partnerHtml);
@@ -192,8 +240,7 @@ for (const client of clientsData) {
   const html = renderPage('layout.njk', {
     title: `${client.name} portal`,
     subtitle: 'Latest builds + links',
-    generatedAt,
-    basePath: '../',
+    generatedAt, basePath: '../',
     content: renderPage('client.njk', { client, projects: clientProjects, settings })
   });
   await writePage(path.join('clients', `${client.slug}.html`), html);
