@@ -57,6 +57,19 @@
             {% endif %}
           {% endif %}
         </div>
+        <div class="priority-control" onclick="event.stopPropagation()" data-noportal>
+          <select class="priority-select"
+                  data-entity-type="project"
+                  data-entity-id="{{ project.id }}"
+                  onchange="updatePriority(this)"
+                  onclick="event.stopPropagation()">
+            <option value="">— Priority —</option>
+            <option value="high"{% if project.priority == 'high' %} selected{% endif %}>★ High</option>
+            <option value="medium"{% if project.priority == 'medium' %} selected{% endif %}>◆ Medium</option>
+            <option value="low"{% if project.priority == 'low' %} selected{% endif %}>○ Low</option>
+          </select>
+          <span class="priority-save-status" id="ps-{{ project.id }}"></span>
+        </div>
       </article>
     {% endfor %}
     </div>
@@ -173,3 +186,45 @@
     </section>
   </aside>
 </div>
+
+<script>
+async function updatePriority(select) {
+  var entityType = select.dataset.entityType;
+  var entityId   = select.dataset.entityId;
+  var value      = select.value || null;
+  var statusEl   = document.getElementById('ps-' + entityId);
+  statusEl.textContent = '⟳';
+  statusEl.className = 'priority-save-status saving';
+  try {
+    var r = await fetch('/api/update-field', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ entityType: entityType, entityId: entityId, updates: { priority: value } })
+    });
+    var d = await r.json();
+    if (d.ok) {
+      statusEl.textContent = '✓ Saved';
+      statusEl.className = 'priority-save-status saved';
+      var card = select.closest('.card');
+      card.className = card.className.replace(/\bpriority-\w+\b/g, '').trim();
+      if (value) card.classList.add('priority-' + value);
+      var existingBadge = card.querySelector('.priority-badge');
+      if (existingBadge) existingBadge.remove();
+      if (value === 'high') {
+        var badge = document.createElement('span');
+        badge.className = 'priority-badge priority-badge-high';
+        badge.title = 'High priority';
+        badge.textContent = '★';
+        card.querySelector('.card-title-row').appendChild(badge);
+      }
+      setTimeout(function() { statusEl.textContent = ''; }, 2500);
+    } else {
+      statusEl.textContent = '✗ Error';
+      statusEl.className = 'priority-save-status error';
+    }
+  } catch(e) {
+    statusEl.textContent = '✗ Error';
+    statusEl.className = 'priority-save-status error';
+  }
+}
+</script>
