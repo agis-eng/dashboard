@@ -39,6 +39,8 @@ const requestsData = await loadYaml('requests.yaml', 'requests');
 const partnersData = await loadYaml('partners.yaml', 'partners');
 const settings = await loadYaml('settings.yaml').settings || {};
 const voiceMemosRaw = await loadYaml('voice_memos.yaml', 'voice_memos');
+const tasksData    = await loadYaml('tasks.yaml', 'tasks');
+
 
 // Sort memos newest first, keep 20 for sidebar
 const voiceMemos = (voiceMemosRaw || [])
@@ -80,6 +82,18 @@ const requests = (requestsData || [])
     submittedAtFormatted: request.submittedAt ? format(new Date(request.submittedAt), 'MMM d, h:mm a') : '—'
   };
 }).sort((a, b) => new Date(b.submittedAt || 0) - new Date(a.submittedAt || 0));
+
+
+// Tasks stats
+const now7 = new Date(); now7.setDate(now7.getDate() + 7);
+const tasksStats = {
+  totalTasks:     tasksData.length,
+  inProgress:     tasksData.filter(t => t.status === 'in-progress').length,
+  dueThisWeek:    tasksData.filter(t => t.due_date && new Date(t.due_date) <= now7).length,
+  completionPct:  tasksData.length
+    ? Math.round(tasksData.filter(t => t.status === 'done').length / tasksData.length * 100)
+    : 0,
+};
 
 const stats = {
   activeProjects: projects.length,
@@ -124,6 +138,20 @@ const internalHtml = renderPage('layout.njk', {
   content: renderPage('internal.njk', { projects: projectsWithMemos, requests, settings, stats, generatedAt, clients: clientsForSidebar, recentMemos })
 });
 await writePage('index.html', internalHtml);
+
+
+// Tasks page
+await fs.emptyDir(path.join(distDir, 'tasks'));
+const tasksHtml = renderPage('layout.njk', {
+  title: 'Task Board',
+  subtitle: 'Active work across all projects and platforms',
+  generatedAt,
+  basePath: '../',
+  showNav: true,
+  activeNav: 'tasks',
+  content: renderPage('tasks.njk', { tasks: tasksData, stats: tasksStats })
+});
+await writePage(path.join('tasks', 'index.html'), tasksHtml);
 
 if (partners.length) {
   const partnersHtml = renderPage('layout.njk', {
