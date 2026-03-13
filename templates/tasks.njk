@@ -1,133 +1,4 @@
-<div class="workspace tasks-workspace">
-
-  {# ── Stats bar ── #}
-  <header class="tasks-header">
-    <div class="tasks-stats">
-      <div class="tasks-stat">
-        <span class="tasks-stat-num">{{ stats.totalTasks }}</span>
-        <span class="tasks-stat-label">Total</span>
-      </div>
-      <div class="tasks-stat">
-        <span class="tasks-stat-num">{{ stats.inProgress }}</span>
-        <span class="tasks-stat-label">In progress</span>
-      </div>
-      <div class="tasks-stat">
-        <span class="tasks-stat-num">{{ stats.dueThisWeek }}</span>
-        <span class="tasks-stat-label">Due this week</span>
-      </div>
-      <div class="tasks-stat">
-        <span class="tasks-stat-num">{{ stats.completionPct }}%</span>
-        <span class="tasks-stat-label">Completion</span>
-      </div>
-    </div>
-    <div class="tasks-controls">
-      <div class="search-field">
-        <input type="search" placeholder="Search tasks…" data-search-input="tasks" />
-      </div>
-      <div class="tasks-filter-row">
-        <span class="chip tasks-filter-btn active" data-filter-status="all">All</span>
-        <span class="chip tasks-filter-btn" data-filter-status="backlog">Backlog</span>
-        <span class="chip tasks-filter-btn" data-filter-status="in-progress">In Progress</span>
-        <span class="chip tasks-filter-btn" data-filter-status="review">Review</span>
-        <span class="chip tasks-filter-btn" data-filter-status="done">Done</span>
-      </div>
-    </div>
-  </header>
-
-  {# ── Kanban board ── #}
-  <div class="kanban" data-search-list="tasks">
-
-    {# Recurring column #}
-    {% set recurringTasks = tasks | selectattr("status", "equalto", "recurring") | list %}
-    <div class="kanban-col">
-      <div class="kanban-col-header">
-        <span class="kanban-col-dot dot-recurring"></span>
-        <h3>Recurring</h3>
-        <span class="kanban-col-count">{{ recurringTasks | length }}</span>
-      </div>
-      <div class="kanban-col-body">
-        {% for task in recurringTasks %}
-          {{ taskCard(task) }}
-        {% else %}
-          <p class="kanban-empty muted">No recurring tasks</p>
-        {% endfor %}
-      </div>
-    </div>
-
-    {# Backlog column #}
-    {% set backlogTasks = tasks | selectattr("status", "equalto", "backlog") | list %}
-    <div class="kanban-col">
-      <div class="kanban-col-header">
-        <span class="kanban-col-dot dot-backlog"></span>
-        <h3>Backlog</h3>
-        <span class="kanban-col-count">{{ backlogTasks | length }}</span>
-      </div>
-      <div class="kanban-col-body">
-        {% for task in backlogTasks %}
-          {{ taskCard(task) }}
-        {% else %}
-          <p class="kanban-empty muted">Nothing in backlog</p>
-        {% endfor %}
-      </div>
-    </div>
-
-    {# In Progress column #}
-    {% set inProgressTasks = tasks | selectattr("status", "equalto", "in-progress") | list %}
-    <div class="kanban-col">
-      <div class="kanban-col-header">
-        <span class="kanban-col-dot dot-in-progress"></span>
-        <h3>In Progress</h3>
-        <span class="kanban-col-count">{{ inProgressTasks | length }}</span>
-      </div>
-      <div class="kanban-col-body">
-        {% for task in inProgressTasks %}
-          {{ taskCard(task) }}
-        {% else %}
-          <p class="kanban-empty muted">Nothing in progress</p>
-        {% endfor %}
-      </div>
-    </div>
-
-    {# Review column #}
-    {% set reviewTasks = tasks | selectattr("status", "equalto", "review") | list %}
-    <div class="kanban-col">
-      <div class="kanban-col-header">
-        <span class="kanban-col-dot dot-review"></span>
-        <h3>Review</h3>
-        <span class="kanban-col-count">{{ reviewTasks | length }}</span>
-      </div>
-      <div class="kanban-col-body">
-        {% for task in reviewTasks %}
-          {{ taskCard(task) }}
-        {% else %}
-          <p class="kanban-empty muted">Nothing in review</p>
-        {% endfor %}
-      </div>
-    </div>
-
-    {# Done column #}
-    {% set doneTasks = tasks | selectattr("status", "equalto", "done") | list %}
-    <div class="kanban-col">
-      <div class="kanban-col-header">
-        <span class="kanban-col-dot dot-done"></span>
-        <h3>Done</h3>
-        <span class="kanban-col-count">{{ doneTasks | length }}</span>
-      </div>
-      <div class="kanban-col-body">
-        {% for task in doneTasks %}
-          {{ taskCard(task) }}
-        {% else %}
-          <p class="kanban-empty muted">No completed tasks</p>
-        {% endfor %}
-      </div>
-    </div>
-
-  </div>{# /kanban #}
-
-  <p class="empty-state" data-search-empty="tasks" style="display:none;">No tasks match that search.</p>
-</div>
-
-{# ── Task card macro ── #}
+{# ── Task card macro — defined first so it can be called below ── #}
 {% macro taskCard(task) %}
 <div class="task-card priority-{{ task.priority }}"
      data-search-item="tasks"
@@ -180,6 +51,135 @@
 
 </div>
 {% endmacro %}
+
+<div class="workspace tasks-workspace">
+
+  {# ── Stats bar ── #}
+  <header class="tasks-header">
+    <div class="tasks-stats">
+      <div class="tasks-stat">
+        <span class="tasks-stat-num">{{ stats.totalTasks }}</span>
+        <span class="tasks-stat-label">Total</span>
+      </div>
+      <div class="tasks-stat">
+        <span class="tasks-stat-num">{{ stats.inProgress }}</span>
+        <span class="tasks-stat-label">In progress</span>
+      </div>
+      <div class="tasks-stat">
+        <span class="tasks-stat-num">{{ stats.dueThisWeek }}</span>
+        <span class="tasks-stat-label">Due this week</span>
+      </div>
+      <div class="tasks-stat">
+        <span class="tasks-stat-num">{{ stats.completionPct }}%</span>
+        <span class="tasks-stat-label">Completion</span>
+      </div>
+    </div>
+    <div class="tasks-controls">
+      <div class="search-field">
+        <input type="search" placeholder="Search tasks…" data-search-input="tasks" />
+      </div>
+      <div class="tasks-filter-row">
+        <span class="chip tasks-filter-btn active" data-filter-status="all">All</span>
+        <span class="chip tasks-filter-btn" data-filter-status="backlog">Backlog</span>
+        <span class="chip tasks-filter-btn" data-filter-status="in-progress">In Progress</span>
+        <span class="chip tasks-filter-btn" data-filter-status="review">Review</span>
+        <span class="chip tasks-filter-btn" data-filter-status="done">Done</span>
+      </div>
+    </div>
+  </header>
+
+  {# ── Kanban board ── #}
+  <div class="kanban" data-search-list="tasks">
+
+    {# Recurring column #}
+    {% set recurringTasks = tasks | where("status", "recurring") %}
+    <div class="kanban-col">
+      <div class="kanban-col-header">
+        <span class="kanban-col-dot dot-recurring"></span>
+        <h3>Recurring</h3>
+        <span class="kanban-col-count">{{ recurringTasks | length }}</span>
+      </div>
+      <div class="kanban-col-body">
+        {% for task in recurringTasks %}
+          {{ taskCard(task) }}
+        {% else %}
+          <p class="kanban-empty muted">No recurring tasks</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    {# Backlog column #}
+    {% set backlogTasks = tasks | where("status", "backlog") %}
+    <div class="kanban-col">
+      <div class="kanban-col-header">
+        <span class="kanban-col-dot dot-backlog"></span>
+        <h3>Backlog</h3>
+        <span class="kanban-col-count">{{ backlogTasks | length }}</span>
+      </div>
+      <div class="kanban-col-body">
+        {% for task in backlogTasks %}
+          {{ taskCard(task) }}
+        {% else %}
+          <p class="kanban-empty muted">Nothing in backlog</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    {# In Progress column #}
+    {% set inProgressTasks = tasks | where("status", "in-progress") %}
+    <div class="kanban-col">
+      <div class="kanban-col-header">
+        <span class="kanban-col-dot dot-in-progress"></span>
+        <h3>In Progress</h3>
+        <span class="kanban-col-count">{{ inProgressTasks | length }}</span>
+      </div>
+      <div class="kanban-col-body">
+        {% for task in inProgressTasks %}
+          {{ taskCard(task) }}
+        {% else %}
+          <p class="kanban-empty muted">Nothing in progress</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    {# Review column #}
+    {% set reviewTasks = tasks | where("status", "review") %}
+    <div class="kanban-col">
+      <div class="kanban-col-header">
+        <span class="kanban-col-dot dot-review"></span>
+        <h3>Review</h3>
+        <span class="kanban-col-count">{{ reviewTasks | length }}</span>
+      </div>
+      <div class="kanban-col-body">
+        {% for task in reviewTasks %}
+          {{ taskCard(task) }}
+        {% else %}
+          <p class="kanban-empty muted">Nothing in review</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    {# Done column #}
+    {% set doneTasks = tasks | where("status", "done") %}
+    <div class="kanban-col">
+      <div class="kanban-col-header">
+        <span class="kanban-col-dot dot-done"></span>
+        <h3>Done</h3>
+        <span class="kanban-col-count">{{ doneTasks | length }}</span>
+      </div>
+      <div class="kanban-col-body">
+        {% for task in doneTasks %}
+          {{ taskCard(task) }}
+        {% else %}
+          <p class="kanban-empty muted">No completed tasks</p>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>{# /kanban #}
+
+  <p class="empty-state" data-search-empty="tasks" style="display:none;">No tasks match that search.</p>
+</div>
 
 <script>
   // Kanban status filter
