@@ -674,3 +674,293 @@ details.activity-card[open] > summary .activity-chevron { transform: rotate(90de
 .note-form-status {
   font-size: 0.85rem;
 }
+
+
+/* ── Tasks page ─────────────────────────────────────────────────────── */
+.tasks-workspace { display: block; }
+
+.tasks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.tasks-stats {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.tasks-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.tasks-stat-num {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text);
+}
+
+.tasks-stat-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.tasks-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+.tasks-filter-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tasks-filter-btn {
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  user-select: none;
+}
+
+.tasks-filter-btn.active {
+  background: rgba(93,228,199,0.12);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ── Kanban board ── */
+.kanban {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(240px, 1fr));
+  gap: 1rem;
+  align-items: start;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+.kanban-col {
+  background: rgba(28,31,39,0.6);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.kanban-col-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.kanban-col-header h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  flex: 1;
+}
+
+.kanban-col-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-recurring  { background: #a78bfa; }
+.dot-backlog    { background: #6b7280; }
+.dot-in-progress{ background: #60a5fa; }
+.dot-review     { background: #fbbf24; }
+.dot-done       { background: #34d399; }
+
+.kanban-col-count {
+  font-size: 0.8rem;
+  color: var(--muted);
+  background: rgba(255,255,255,0.06);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+}
+
+.kanban-col-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.kanban-empty {
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 0.5rem 0;
+  margin: 0;
+}
+
+/* ── Task card ── */
+.task-card {
+  background: rgba(15,17,21,0.7);
+  border: 1px solid var(--border);
+  border-left: 3px solid transparent;
+  border-radius: 0.75rem;
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  transition: border-color 0.2s, transform 0.15s;
+  cursor: default;
+}
+
+.task-card:hover {
+  border-color: rgba(93,228,199,0.3);
+  transform: translateY(-1px);
+}
+
+.task-card.priority-high   { border-left-color: #f87171; }
+.task-card.priority-medium { border-left-color: #fbbf24; }
+.task-card.priority-low    { border-left-color: #6b7280; }
+
+.task-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.task-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.3;
+  flex: 1;
+}
+
+.task-title a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.task-title a:hover { color: var(--accent); }
+
+.task-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.task-priority-dot {
+  font-size: 0.6rem;
+  color: #f87171;
+}
+
+.task-notes {
+  font-size: 0.8rem;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ── Task type badge ── */
+.task-type-badge {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.type-website    { background: rgba(93,228,199,0.08);  color: var(--accent); }
+.type-marketing  { background: rgba(236,72,153,0.1);   color: #f472b6; }
+.type-ecommerce  { background: rgba(251,146,60,0.1);   color: #fb923c; }
+.type-content    { background: rgba(52,211,153,0.1);   color: #34d399; }
+.type-strategy   { background: rgba(167,139,250,0.1);  color: #a78bfa; }
+.type-internal   { background: rgba(156,163,175,0.08); color: var(--muted); }
+.type-admin      { background: rgba(156,163,175,0.08); color: var(--muted); }
+
+/* ── Tag rows ── */
+.task-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.task-client-tag,
+.task-project-tag {
+  font-size: 0.72rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+.task-client-tag  { background: rgba(124,131,255,0.08); color: var(--accent-2); }
+.task-project-tag { background: rgba(255,255,255,0.04); }
+
+.task-platform-tag {
+  font-size: 0.7rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.platform-amazon              { background: rgba(255,153,0,0.1);   color: #ff9900; }
+.platform-walmart             { background: rgba(0,113,206,0.12);  color: #0071ce; }
+.platform-tiktok              { background: rgba(255,0,80,0.1);    color: #ff0050; }
+.platform-ebay                { background: rgba(229,36,27,0.1);   color: #e5241b; }
+.platform-facebook-marketplace{ background: rgba(24,119,242,0.12); color: #1877f2; }
+.platform-website             { background: rgba(93,228,199,0.08); color: var(--accent); }
+
+/* ── Task footer ── */
+.task-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.1rem;
+}
+
+.task-assignee {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(93,228,199,0.15);
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(93,228,199,0.2);
+}
+
+.task-footer-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.task-due { font-size: 0.75rem; }
+
+.task-notion-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: color 0.15s;
+}
+
+.task-notion-link:hover { color: var(--accent); }
