@@ -996,3 +996,243 @@ details.activity-card[open] > summary .activity-chevron { transform: rotate(90de
   border: 1px solid rgba(245, 158, 11, 0.35);
   letter-spacing: 0.02em;
 }
+
+
+/* ── Affiliate intelligence page ─────────────────────────────────────────── */
+.affiliate-workspace { max-width: 1100px; }
+
+.affiliate-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.affiliate-hero h2 { margin: 0 0 0.25rem; }
+.affiliate-totals {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.aff-total-stat { text-align: right; }
+.aff-total-num {
+  display: block;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.1;
+}
+.aff-total-label {
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.affiliate-filters {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* ── AI analysis panel ── */
+.aff-analysis-panel {
+  background: rgba(93, 228, 199, 0.05);
+  border: 1px solid rgba(93, 228, 199, 0.2);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.aff-analysis-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+.aff-analysis-icon { font-size: 1.25rem; }
+.aff-analysis-header h3 { margin: 0; font-size: 1rem; }
+.aff-analysis-date { margin-left: auto; font-size: 0.8rem; }
+.aff-top-actions ul { margin: 0.5rem 0 0; padding-left: 1.25rem; }
+.aff-top-actions li { margin-bottom: 0.35rem; font-size: 0.9rem; }
+
+/* ── Opportunity cards ── */
+.aff-opportunities {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.aff-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  transition: border-color 0.15s;
+}
+.aff-card:hover { border-color: rgba(255,255,255,0.18); }
+.aff-status-active  { border-left: 3px solid #22c55e; }
+.aff-status-pending { border-left: 3px solid #f59e0b; }
+.aff-status-not_applied { border-left: 3px solid var(--accent-2); }
+
+.aff-card-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  min-width: 200px;
+  flex: 1.5;
+}
+.aff-rank {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--muted);
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.aff-source-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.15rem;
+}
+.aff-source-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.aff-source-type-badge {
+  font-size: 0.65rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+.type-partner { background: rgba(124,131,255,0.15); color: var(--accent-2); }
+.type-project { background: rgba(93,228,199,0.12); color: var(--accent); }
+.aff-program-name { font-size: 0.8rem; color: var(--muted); }
+
+.aff-card-metrics {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 3;
+}
+.aff-metric { text-align: center; min-width: 70px; }
+.aff-metric-val {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.aff-metric-label {
+  font-size: 0.68rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.aff-potential-metric { border-left: 1px solid var(--border); padding-left: 1.5rem; }
+.aff-potential {
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+  color: var(--accent) !important;
+}
+
+.aff-card-right {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+  flex: 1.2;
+  min-width: 160px;
+}
+.aff-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.status-active     { background: rgba(34,197,94,0.15);  color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+.status-pending    { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+.status-not_applied { background: rgba(124,131,255,0.12); color: var(--accent-2); border: 1px solid rgba(124,131,255,0.25); }
+.aff-notes {
+  font-size: 0.8rem;
+  text-align: right;
+  line-height: 1.4;
+  max-width: 280px;
+  margin: 0;
+}
+.aff-links {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.btn-sm { padding: 0.25rem 0.65rem !important; font-size: 0.78rem !important; }
+
+/* ── Partner affiliate detail section ── */
+.partner-affiliate {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+.partner-affiliate .section-header {
+  margin-bottom: 1.25rem;
+}
+.aff-detail-metrics {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.aff-detail-metric {
+  flex: 1;
+  min-width: 120px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  text-align: center;
+}
+.aff-detail-metric.highlight {
+  background: rgba(93,228,199,0.07);
+  border: 1px solid rgba(93,228,199,0.18);
+}
+.aff-detail-val {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+.aff-detail-label {
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.aff-program-notes {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0 0 1rem;
+}
+.aff-program-links {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
