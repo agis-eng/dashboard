@@ -27,12 +27,14 @@ All content lives under `data/`:
 - `projects.yaml` – Internal + client project metadata (stage, status, owner, URLs).
 - `requests.yaml` – Open change requests shown in the internal sidebar.
 - `partners.yaml` – Partner ecosystem entries that power `partners/index.html` and one detail page per partner.
+- `opportunities.yaml` – Growth pipeline ideas, partner outreach tracker items, questionnaire prompts, and draft email scaffolding.
 - `settings.yaml` – Global message URLs, subagent activity placeholders, and copy for sidebar buttons.
 
 Adjust these files then run `npm run build`. The generator writes:
 - `dist/index.html` – Internal control room (project grid + sidebar panels + project search).
 - `dist/partners/index.html` – Partner network directory.
 - `dist/partners/<slug>.html` – Partner-specific profile + linked projects.
+- `dist/opportunities/index.html` – Internal growth pipeline / outreach planning view.
 - `dist/clients/<slug>.html` – One portal per client with CTA + project cards.
 
 ## Environment variables

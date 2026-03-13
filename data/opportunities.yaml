@@ -1,0 +1,149 @@
+ideas:
+  - id: partner-pulse
+    title: Partner pulse outreach
+    stage: ready
+    owner: Erik
+    summary: Reach out to every active partner with a short questionnaire to map what they are building, where they need help, and what referral economics exist.
+    nextStep: Finalize outreach copy and send first wave.
+    tags: [Outreach, Partnerships, Referral]
+  - id: referral-map
+    title: Referral inventory + economics map
+    stage: in-progress
+    owner: Atlas
+    summary: Build a single view of every partner/project that can receive or send referrals, including one-time commissions, recurring rev share, and lead handoff rules.
+    nextStep: Fill in missing referral and commission details partner-by-partner.
+    tags: [Revenue, Referral, Ops]
+  - id: partner-lead-systems
+    title: Partner lead-gen systems
+    stage: idea
+    owner: Erik
+    summary: Design repeatable lead systems for selected partners using SEO, paid traffic, outbound, funnels, AI follow-up, and appointment booking.
+    nextStep: Prioritize 3 partners with the clearest ROI and fastest launch path.
+    tags: [Lead Gen, Systems, Growth]
+
+questionnaire:
+  title: Partner growth questionnaire
+  intro: Short questionnaire to understand what each partner is building now, where AGIS can help, and what referral/revenue opportunities exist.
+  questions:
+    - What are you actively building or launching over the next 90 days?
+    - Which offers or services are most important for revenue right now?
+    - What type of customers are you trying to reach?
+    - What are your current lead sources, and which ones are working best?
+    - Where are you currently stuck: leads, conversion, fulfillment, automation, content, or operations?
+    - If AGIS could help in one area immediately, what would create the fastest ROI?
+    - Do you have a referral, rev-share, or commission structure for introductions we send?
+    - If yes, how is it structured: flat fee, percentage, recurring revenue share, or custom?
+    - What is the average deal size or customer value for the referrals we would send?
+    - How quickly can your team handle new inbound demand if we turn on marketing?
+    - Are there any assets already available: landing pages, offers, CRM, email sequences, ad account, case studies?
+    - What would make this partnership an obvious win for both sides?
+
+outreach:
+  campaignName: Partner pulse spring 2026
+  subject: Quick partner check-in — what are you pushing right now?
+  preheader: We’re mapping who we can help most aggressively and where referral and lead-gen systems make sense.
+  emailBody: |
+    Hey {{name}},
+
+    We’re doing a quick partner pulse check across the network to understand what everyone is actively building right now and where we can create the most leverage.
+
+    We want to know:
+    - what you’re focused on in the next 30–90 days
+    - where AGIS / Atlas could help operationally or with growth
+    - whether there’s a referral or rev-share path we should document
+    - whether it makes sense for us to build lead systems for you
+
+    If you’re up for it, just reply back with short answers to the questions below, or we can jump on a quick call.
+
+    Questions:
+    {{questions_block}}
+
+    We’re trying to identify the fastest-win opportunities where we can help partners grow and also create clean mutual referral channels.
+
+    — Erik
+
+opportunities:
+  - id: fix-my-fees-activation
+    partnerId: fix-my-fees
+    status: ready-to-contact
+    lane: referral
+    priority: high
+    contactOwner: Erik
+    currentFocus: Clarify referral economics and activation plan for healthcare revenue recovery.
+    howWeCanHelp: Funnel healthcare and credentialing clients with fee leakage issues into Fix My Fees offers.
+    leadSystemIdea: Referral funnel + audit landing page + outbound sequence into existing healthcare relationships.
+    referralModel: Percentage of recovered revenue
+    referralValue: 20% first-year recovered revenue
+    estimatedMonthlyPotential: 1600
+    notes: Strong fit with ECHO and credentialing ecosystem. High upside if partner can fulfill quickly.
+    nextStep: Send questionnaire and ask for qualification criteria, deal sizes, and handoff process.
+  - id: webdezigns-whitelabel-growth
+    partnerId: webdezigns
+    status: active
+    lane: service-expansion
+    priority: high
+    contactOwner: Erik
+    currentFocus: Expand white-label website referral flow and identify service bundles AGIS can attach.
+    howWeCanHelp: Route overflow or niche website opportunities into Webdezigns and pair with automation or content retainers.
+    leadSystemIdea: Shared intake funnel + website audit lead magnet + partnership tagging for referral attribution.
+    referralModel: Flat referral fee
+    referralValue: $500 per referred client
+    estimatedMonthlyPotential: 2000
+    notes: Already active; easiest immediate revenue lever.
+    nextStep: Formalize attribution and create a simple partner intake form.
+  - id: stratpath-enterprise-intros
+    partnerId: stratpath
+    status: ready-to-contact
+    lane: referral
+    priority: medium
+    contactOwner: Erik
+    currentFocus: Enterprise and leadership advisory introductions.
+    howWeCanHelp: Send enterprise founders/operators needing GTM and leadership support; bundle growth systems around their offers.
+    leadSystemIdea: Founder roundtable + warm intro workflow + targeted outbound list building.
+    referralModel: Percentage of first contract
+    referralValue: 10% of first contract value
+    estimatedMonthlyPotential: 1200
+    notes: High-trust intros likely outperform cold acquisition here.
+    nextStep: Ask what ideal client profile and minimum engagement size looks like today.
+  - id: social247-postbuild-upsell
+    partnerId: social24
+    status: ready-to-contact
+    lane: upsell
+    priority: medium
+    contactOwner: Erik
+    currentFocus: Turn post-build clients into marketing campaign opportunities.
+    howWeCanHelp: Feed social and influencer projects after site launches.
+    leadSystemIdea: Post-launch nurture sequence + marketing audit upsell + referral tracking.
+    referralModel: Percentage of first campaign value
+    referralValue: 15% of first campaign value
+    estimatedMonthlyPotential: 1125
+    notes: Natural downstream offer after website work.
+    nextStep: Confirm campaign minimums and fulfillment capacity.
+  - id: nurturebeast-recurring-crm
+    partnerId: nurturebeast
+    status: research
+    lane: recurring-revenue
+    priority: medium
+    contactOwner: Atlas
+    currentFocus: Explore recurring CRM commission path.
+    howWeCanHelp: Recommend CRM + nurture automation to clients who need follow-up systems after launch.
+    leadSystemIdea: CRM migration package + nurture automation starter offer.
+    referralModel: Recurring commission
+    referralValue: 20% recurring monthly commission
+    estimatedMonthlyPotential: 300
+    notes: Lower immediate dollars, but sticky recurring revenue.
+    nextStep: Confirm pricing tiers, setup requirements, and support burden.
+  - id: partner-mass-outreach-wave-1
+    partnerId: atlas-leadership
+    status: in-planning
+    lane: outreach
+    priority: high
+    contactOwner: Erik
+    currentFocus: Send wave 1 questionnaire to all strategic and core partners.
+    howWeCanHelp: Re-open dormant conversations, map current offers, and identify who is ready for lead flow now.
+    leadSystemIdea: Outreach tracker + questionnaire responses + opportunity scoring.
+    referralModel: Mixed / depends on partner
+    referralValue: Varies by partner
+    estimatedMonthlyPotential: 0
+    notes: This is the umbrella initiative that feeds the whole opportunities page.
+    nextStep: Finalize list, email copy, and response tracking workflow.

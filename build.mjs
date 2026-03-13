@@ -59,6 +59,7 @@ const clientsData  = await loadYaml('clients.yaml', 'clients');
 const projectsData = await loadYaml('projects.yaml', 'projects');
 const requestsData = await loadYaml('requests.yaml', 'requests');
 const partnersData = await loadYaml('partners.yaml', 'partners');
+const opportunitiesData = await loadYaml('opportunities.yaml');
 const settings     = await loadYaml('settings.yaml').settings || {};
 const voiceMemosRaw = await loadYaml('voice_memos.yaml', 'voice_memos');
 const tasksData    = await loadYaml('tasks.yaml', 'tasks');
@@ -146,6 +147,31 @@ const totalPotential = allOpportunities.reduce((s, o) => s + (o.monthly_potentia
 const activeCount  = allOpportunities.filter(o => o.status === 'active').length;
 const pendingCount = allOpportunities.filter(o => o.status !== 'active').length;
 
+const opportunityIdeas = opportunitiesData.ideas || [];
+const questionnaire = opportunitiesData.questionnaire || { title: 'Questionnaire', intro: '', questions: [] };
+const outreach = opportunitiesData.outreach || {};
+const outreachQuestionsBlock = (questionnaire.questions || [])
+  .map((question, index) => `${index + 1}. ${question}`)
+  .join('\n');
+const opportunityPartnerMap = new Map(partners.map(partner => [partner.id, partner]));
+const opportunityItems = (opportunitiesData.opportunities || [])
+  .map(item => ({
+    ...item,
+    partner: opportunityPartnerMap.get(item.partnerId) || { name: item.partnerId || 'Unknown partner', slug: '' }
+  }))
+  .sort((a, b) => {
+    const pa = a.estimatedMonthlyPotential || 0;
+    const pb = b.estimatedMonthlyPotential || 0;
+    if (pb !== pa) return pb - pa;
+    return (a.partner?.name || '').localeCompare(b.partner?.name || '');
+  });
+const opportunitiesStats = {
+  opportunitiesCount: opportunityItems.length,
+  readyCount: opportunityItems.filter(item => ['ready-to-contact', 'active'].includes(item.status)).length,
+  pipelinePotential: opportunityItems.reduce((sum, item) => sum + (item.estimatedMonthlyPotential || 0), 0),
+  partnerCoverage: new Set(opportunityItems.map(item => item.partnerId).filter(Boolean)).size,
+};
+
 const stats = {
   activeProjects: projects.length,
   clientCount:    clientsData.length,
@@ -214,6 +240,27 @@ const affiliateHtml = renderPage('layout.njk', {
   })
 });
 await writePage(path.join('affiliate', 'index.html'), affiliateHtml);
+
+// Opportunities / growth pipeline page
+await fs.emptyDir(path.join(distDir, 'opportunities'));
+const opportunitiesHtml = renderPage('layout.njk', {
+  title: 'Opportunities',
+  subtitle: 'Partner growth, outreach, referral paths, and future plays',
+  generatedAt, basePath: '../', showNav: true, activeNav: 'opportunities',
+  content: renderPage('opportunities.njk', {
+    ideas: opportunityIdeas,
+    questionnaire,
+    outreach: {
+      ...outreach,
+      emailBodyResolved: (outreach.emailBody || '')
+        .replaceAll('{{name}}', '[Partner Name]')
+        .replaceAll('{{questions_block}}', outreachQuestionsBlock)
+    },
+    opportunities: opportunityItems,
+    stats: opportunitiesStats,
+  })
+});
+await writePage(path.join('opportunities', 'index.html'), opportunitiesHtml);
 
 if (partners.length) {
   const partnersHtml = renderPage('layout.njk', {

@@ -1,0 +1,163 @@
+<div class="workspace opportunities-workspace">
+  <section class="workspace-main">
+    <header class="opportunities-header">
+      <div>
+        <h2>Growth pipeline</h2>
+        <p class="muted">Ideas, partner expansion, referral economics, and outreach systems in one place.</p>
+      </div>
+      <div class="opportunities-stats">
+        <div class="opp-stat">
+          <span class="opp-stat-num">{{ stats.opportunitiesCount }}</span>
+          <span class="opp-stat-label">Tracked opportunities</span>
+        </div>
+        <div class="opp-stat">
+          <span class="opp-stat-num">{{ stats.readyCount }}</span>
+          <span class="opp-stat-label">Ready to contact</span>
+        </div>
+        <div class="opp-stat">
+          <span class="opp-stat-num">${{ stats.pipelinePotential | formatNum }}</span>
+          <span class="opp-stat-label">Pipeline potential / mo</span>
+        </div>
+        <div class="opp-stat">
+          <span class="opp-stat-num">{{ stats.partnerCoverage }}</span>
+          <span class="opp-stat-label">Partners in tracker</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="panel opp-panel">
+      <header class="section-header">
+        <div>
+          <h3>Idea backlog</h3>
+          <p class="muted">Strategic bets and next moves to keep pushing forward.</p>
+        </div>
+      </header>
+      <div class="grid opp-idea-grid">
+        {% for idea in ideas %}
+          <article class="card opp-idea-card" data-search-item="opportunities" data-search-text="{{ (idea.title + ' ' + idea.summary + ' ' + idea.stage + ' ' + (idea.owner or '') + ' ' + (idea.tags | join(' '))) | lower }}">
+            <div class="card-header">
+              <div>
+                <h3>{{ idea.title }}</h3>
+                <p class="muted">{{ idea.summary }}</p>
+              </div>
+              <span class="status-pill {{ idea.stage | lower | replace(' ', '-') }}">{{ idea.stage }}</span>
+            </div>
+            <dl class="meta">
+              <div><dt>Owner</dt><dd>{{ idea.owner or '—' }}</dd></div>
+              <div><dt>Next step</dt><dd>{{ idea.nextStep or '—' }}</dd></div>
+            </dl>
+            {% if idea.tags and idea.tags.length %}
+            <ul class="tag-list">
+              {% for tag in idea.tags %}<li>{{ tag }}</li>{% endfor %}
+            </ul>
+            {% endif %}
+          </article>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="panel opp-panel">
+      <header class="section-header">
+        <div>
+          <h3>Partner opportunity tracker</h3>
+          <p class="muted">Where to reach out, what to offer, and what revenue path exists.</p>
+        </div>
+        <div class="search-field">
+          <label for="opportunity-search" class="sr-only">Search opportunities</label>
+          <input id="opportunity-search" type="search" placeholder="Search opportunities, partners, lane, notes" data-search-input="opportunities" />
+          <small class="muted" data-search-count="opportunities"></small>
+        </div>
+      </header>
+      <div class="opp-list" data-search-list="opportunities">
+        {% for opp in opportunities %}
+          <article class="card opp-card priority-{{ opp.priority or 'low' }}" data-search-item="opportunities" data-search-text="{{ (opp.partner.name + ' ' + opp.currentFocus + ' ' + opp.howWeCanHelp + ' ' + opp.leadSystemIdea + ' ' + opp.referralModel + ' ' + opp.referralValue + ' ' + (opp.notes or '') + ' ' + opp.status + ' ' + opp.lane) | lower }}">
+            <div class="card-header">
+              <div>
+                <div class="card-title-row">
+                  <h3>{{ opp.partner.name }}</h3>
+                  {% if opp.priority == 'high' %}<span class="priority-badge priority-badge-high">★</span>{% endif %}
+                </div>
+                <p class="muted">{{ opp.currentFocus }}</p>
+              </div>
+              <span class="status-pill {{ opp.status | replace(' ', '-') | lower }}">{{ opp.status | replace('-', ' ') }}</span>
+            </div>
+            <dl class="meta">
+              <div><dt>Lane</dt><dd>{{ opp.lane | replace('-', ' ') }}</dd></div>
+              <div><dt>Owner</dt><dd>{{ opp.contactOwner or '—' }}</dd></div>
+              <div><dt>Referral model</dt><dd>{{ opp.referralModel or '—' }}</dd></div>
+              <div><dt>Referral value</dt><dd>{{ opp.referralValue or '—' }}</dd></div>
+              <div><dt>Potential</dt><dd>{% if opp.estimatedMonthlyPotential %}${{ opp.estimatedMonthlyPotential | formatNum }}/mo{% else %}—{% endif %}</dd></div>
+              <div><dt>Partner page</dt><dd>{% if opp.partner and opp.partner.slug %}<a href="../partners/{{ opp.partner.slug }}.html">Open</a>{% else %}—{% endif %}</dd></div>
+            </dl>
+            <div class="opp-detail-blocks">
+              <div>
+                <h4>How AGIS can help</h4>
+                <p>{{ opp.howWeCanHelp }}</p>
+              </div>
+              <div>
+                <h4>Lead system idea</h4>
+                <p>{{ opp.leadSystemIdea }}</p>
+              </div>
+              <div>
+                <h4>Next step</h4>
+                <p>{{ opp.nextStep }}</p>
+              </div>
+              {% if opp.notes %}
+              <div>
+                <h4>Notes</h4>
+                <p>{{ opp.notes }}</p>
+              </div>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+      <p class="empty-state" data-search-empty="opportunities">No opportunities match that search.</p>
+    </section>
+  </section>
+
+  <aside class="workspace-sidebar">
+    <section class="panel opp-panel">
+      <header>
+        <h3>Outreach campaign</h3>
+        <p class="muted">Mass-email scaffolding only — not sent from here.</p>
+      </header>
+      <dl class="meta">
+        <div><dt>Campaign</dt><dd>{{ outreach.campaignName }}</dd></div>
+        <div><dt>Subject</dt><dd>{{ outreach.subject }}</dd></div>
+      </dl>
+      <p class="muted">{{ outreach.preheader }}</p>
+      <details class="opp-details">
+        <summary class="btn ghost">View outreach email draft</summary>
+        <pre class="opp-pre">{{ outreach.emailBodyResolved }}</pre>
+      </details>
+    </section>
+
+    <section class="panel opp-panel">
+      <header>
+        <h3>{{ questionnaire.title }}</h3>
+        <p class="muted">Use for replies, calls, or a form build.</p>
+      </header>
+      <p class="muted">{{ questionnaire.intro }}</p>
+      <ol class="opp-question-list">
+        {% for question in questionnaire.questions %}
+          <li>{{ question }}</li>
+        {% endfor %}
+      </ol>
+    </section>
+
+    <section class="panel opp-panel">
+      <header>
+        <h3>Suggested workflow</h3>
+        <p class="muted">Simple operating sequence for this initiative.</p>
+      </header>
+      <ol class="opp-question-list">
+        <li>Finalize the partner list for wave 1.</li>
+        <li>Send the outreach email and questionnaire.</li>
+        <li>Log responses back into <code>opportunities.yaml</code> or the partner records.</li>
+        <li>Score each response for speed-to-revenue and fulfillment readiness.</li>
+        <li>Prioritize the top 3 lead systems to build first.</li>
+      </ol>
+    </section>
+  </aside>
+</div>
