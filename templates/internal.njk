@@ -10,6 +10,7 @@
           <span class="chip">Open requests: {{ stats.openRequests }}</span>
           <span class="chip">Last sync: {{ generatedAt | default('—') }}</span>
         </div>
+        <button class="btn btn-primary btn-sm" onclick="openNewProjectModal()" data-noportal>+ New Project</button>
         <div class="search-field">
           <label for="project-search" class="sr-only">Search projects</label>
           <input id="project-search" type="search" placeholder="Search projects" data-search-input="projects" />
@@ -17,11 +18,24 @@
         </div>
       </div>
     </header>
+
+    {# ── Stage filter chips ── #}
+    <div class="stage-filters" id="stage-filters" data-noportal>
+      <button class="stage-chip active" data-stage="all"        onclick="filterStage('all', this)">All <span class="stage-count" id="sc-all"></span></button>
+      <button class="stage-chip"        data-stage="lead"       onclick="filterStage('lead', this)">Lead</button>
+      <button class="stage-chip"        data-stage="client"     onclick="filterStage('client', this)">Client</button>
+      <button class="stage-chip"        data-stage="internal"   onclick="filterStage('internal', this)">Internal</button>
+      <button class="stage-chip"        data-stage="contractor" onclick="filterStage('contractor', this)">Contractor</button>
+      <button class="stage-chip"        data-stage="paused"     onclick="filterStage('paused', this)">Paused</button>
+      <button class="stage-chip"        data-stage="done"       onclick="filterStage('done', this)">Done</button>
+    </div>
+
     <div class="grid project-grid" data-search-list="projects">
     {% for project in projects %}
       <article class="card{% if project.priority %} priority-{{ project.priority }}{% endif %}"
                data-portal="./clients/{{ project.client.slug }}.html"
                data-search-item="projects"
+               data-stage="{{ project.stage | lower | replace(' ', '-') }}"
                data-search-text="{{ (project.name + ' ' + (project.summary or '') + ' ' + (project.owner or '') + ' ' + (project.client.name or '') + ' ' + (project.stage or '') + ' ' + (project.status or '')) | lower }}">
         <div class="card-header">
           <div>
@@ -92,6 +106,17 @@
             <div class="editor-field editor-full">
               <label>Project name</label>
               <input type="text" class="ef-name" placeholder="Project name">
+            </div>
+            <div class="editor-field editor-full">
+              <label>Client</label>
+              <select class="ef-client" data-current="{{ project.clientId }}">
+                <option value="atlas">— Internal / TBD —</option>
+                {% for client in clients | sort(attribute='name') %}
+                <option value="{{ client.id }}"{% if project.clientId == client.id %} selected{% endif %}>{{ client.name }}</option>
+                {% endfor %}
+                <option value="__new__">＋ New client…</option>
+              </select>
+              <input type="text" class="ef-new-client" placeholder="New client name" style="display:none;margin-top:0.4rem">
             </div>
             <div class="editor-field">
               <label>Owner</label>
@@ -337,6 +362,45 @@ async function updatePriority(select) {
   }
 }
 
+/* ── Stage filter ── */
+function filterStage(stage, btn) {
+  document.querySelectorAll('.stage-chip').forEach(function(c) { c.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.project-grid .card').forEach(function(card) {
+    var s = card.dataset.stage || '';
+    card.style.display = (stage === 'all' || s === stage) ? '' : 'none';
+  });
+}
+
+/* ── New Project modal ── */
+function openNewProjectModal() {
+  var modal = document.getElementById('create-project-modal');
+  document.getElementById('create-modal-title').textContent = 'New Project';
+  document.getElementById('cp-name').value    = '';
+  document.getElementById('cp-owner').value   = 'Erik';
+  document.getElementById('cp-stage').value   = 'Lead';
+  document.getElementById('cp-summary').value = '';
+  document.getElementById('cp-preview').value = '';
+  document.getElementById('cp-client').value  = 'atlas';
+  document.getElementById('cp-new-client').style.display = 'none';
+  document.getElementById('cp-recording-ids').value = '[]';
+  document.getElementById('cp-contacts-list').innerHTML = '';
+  document.getElementById('cp-status').textContent = '';
+  modal.style.display = 'flex';
+}
+
+function toggleNewClientField() {
+  var sel = document.getElementById('cp-client');
+  var inp = document.getElementById('cp-new-client');
+  if (sel) inp.style.display = sel.value === '__new__' ? 'block' : 'none';
+}
+
+function toggleEditorNewClientField(editor) {
+  var sel = editor.querySelector('.ef-client');
+  var inp = editor.querySelector('.ef-new-client');
+  if (sel && inp) inp.style.display = sel.value === '__new__' ? 'block' : 'none';
+}
+
 /* ── Project inline editor ── */
 function openProjectEditor(btn, evt) {
   evt.stopPropagation();
@@ -354,8 +418,13 @@ function openProjectEditor(btn, evt) {
   editor.querySelector('.ef-preview').value = btn.dataset.preview || '';
   editor.querySelector('.ef-repo').value    = btn.dataset.repo    || '';
   // Stage select
-  var stageEl = editor.querySelector('.ef-stage');
-  stageEl.value = btn.dataset.stage || 'Lead';
+  editor.querySelector('.ef-stage').value = btn.dataset.stage || 'Lead';
+  // Client select — set to current, wiring change handler
+  var clientSel = editor.querySelector('.ef-client');
+  if (clientSel) {
+    clientSel.value = btn.dataset.id ? clientSel.dataset.current || 'atlas' : 'atlas';
+    clientSel.onchange = function() { toggleEditorNewClientField(editor); };
+  }
   // Contacts
   var contacts = [];
   try { contacts = JSON.parse(btn.dataset.contacts || '[]'); } catch(e) {}
@@ -429,6 +498,10 @@ async function saveProjectEditor(id, btn) {
   statusEl.style.color = 'var(--muted)';
   btn.disabled = true;
 
+  var clientSel = editor.querySelector('.ef-client');
+  var clientId = clientSel ? clientSel.value : null;
+  var newClientName = (clientId === '__new__') ? (editor.querySelector('.ef-new-client').value.trim() || '') : null;
+
   var updates = {
     name:       editor.querySelector('.ef-name').value.trim(),
     owner:      editor.querySelector('.ef-owner').value.trim(),
@@ -439,6 +512,7 @@ async function saveProjectEditor(id, btn) {
     contacts:   collectContacts(id),
     lastUpdate: new Date().toISOString().slice(0, 10),
   };
+  if (clientId && clientId !== '__new__') updates.clientId = clientId;
   if (!updates.contacts.length) delete updates.contacts;
 
   try {
@@ -484,13 +558,17 @@ async function saveProjectEditor(id, btn) {
   btn.disabled = false;
 }
 
-/* ── Create project modal ── */
+/* ── Create project modal (from call queue) ── */
 function openCreateProjectModal(idx, name, recordingIds) {
   var modal = document.getElementById('create-project-modal');
-  modal.querySelector('#cp-name').value = name;
-  modal.querySelector('#cp-owner').value = 'Erik';
-  modal.querySelector('#cp-stage').value = 'Lead';
+  document.getElementById('create-modal-title').textContent = 'Create project stub';
+  modal.querySelector('#cp-name').value    = name;
+  modal.querySelector('#cp-owner').value   = 'Erik';
+  modal.querySelector('#cp-stage').value   = 'Lead';
   modal.querySelector('#cp-summary').value = '';
+  modal.querySelector('#cp-client').value  = 'atlas';
+  modal.querySelector('#cp-new-client').style.display = 'none';
+  if (modal.querySelector('#cp-preview')) modal.querySelector('#cp-preview').value = '';
   modal.querySelector('#cp-recording-ids').value = JSON.stringify(recordingIds);
   document.getElementById('cp-contacts-list').innerHTML = '';
   document.getElementById('cp-status').textContent = '';
@@ -539,13 +617,20 @@ async function submitCreateProject(btn) {
   btn.disabled = true;
   statusEl.textContent = '⟳ Creating…';
   statusEl.style.color = 'var(--muted)';
+  var clientSel = modal.querySelector('#cp-client');
+  var clientId = clientSel ? clientSel.value : 'atlas';
+  var newClientName = (clientId === '__new__') ? (modal.querySelector('#cp-new-client').value.trim() || '') : null;
+
   var payload = {
-    name:       name,
-    owner:      modal.querySelector('#cp-owner').value.trim() || 'Erik',
-    stage:      modal.querySelector('#cp-stage').value,
-    summary:    modal.querySelector('#cp-summary').value.trim(),
-    contacts:   collectCpContacts(),
-    linkCallIds: JSON.parse(modal.querySelector('#cp-recording-ids').value || '[]'),
+    name:          name,
+    owner:         modal.querySelector('#cp-owner').value.trim() || 'Erik',
+    stage:         modal.querySelector('#cp-stage').value,
+    summary:       modal.querySelector('#cp-summary').value.trim(),
+    previewUrl:    (modal.querySelector('#cp-preview') || {}).value && modal.querySelector('#cp-preview').value.trim() || null,
+    clientId:      (clientId !== '__new__') ? clientId : null,
+    newClientName: newClientName || null,
+    contacts:      collectCpContacts(),
+    linkCallIds:   JSON.parse(modal.querySelector('#cp-recording-ids').value || '[]'),
   };
   try {
     var r = await fetch('/api/update-field', {
@@ -583,7 +668,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <div id="create-project-modal" class="modal-backdrop" style="display:none" role="dialog" aria-modal="true">
   <div class="modal-box" onclick="event.stopPropagation()">
     <header class="modal-header">
-      <h3>Create project stub</h3>
+      <h3 id="create-modal-title">New Project</h3>
       <button class="modal-close" onclick="closeCreateModal()">✕</button>
     </header>
     <div class="modal-body">
@@ -591,6 +676,17 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="editor-field editor-full">
           <label>Project name</label>
           <input id="cp-name" type="text" placeholder="e.g. Texas Care Franchise">
+        </div>
+        <div class="editor-field editor-full">
+          <label>Client</label>
+          <select id="cp-client" onchange="toggleNewClientField()">
+            <option value="atlas">— Internal / TBD —</option>
+            {% for client in clients | sort(attribute='name') %}
+            <option value="{{ client.id }}">{{ client.name }}</option>
+            {% endfor %}
+            <option value="__new__">＋ New client…</option>
+          </select>
+          <input id="cp-new-client" type="text" placeholder="New client name" style="display:none;margin-top:0.4rem">
         </div>
         <div class="editor-field">
           <label>Owner</label>
@@ -609,6 +705,10 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="editor-field editor-full">
           <label>Summary</label>
           <input id="cp-summary" type="text" placeholder="Brief description">
+        </div>
+        <div class="editor-field editor-full">
+          <label>Preview URL <span class="muted">(optional)</span></label>
+          <input id="cp-preview" type="url" placeholder="https://">
         </div>
       </div>
       <div class="editor-contacts-section">

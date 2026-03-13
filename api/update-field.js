@@ -108,38 +108,65 @@ async function handleUpdateField(req, res) {
 }
 
 async function handleCreateProject(req, res) {
-  const { name, summary, owner, stage, status, contacts, linkCallIds } = req.body || {};
+  const { name, summary, owner, stage, status, contacts, linkCallIds, previewUrl,
+          clientId: rawClientId, newClientName } = req.body || {};
   if (!name) return res.status(400).json({ error: 'Missing project name' });
 
   const slug = slugify(name);
-  const projectId = `unmatched-${slug}`;
+  const projectId = `proj-${slug}`;
   const today = new Date().toISOString().slice(0, 10);
 
   try {
-    // 1. Add project to projects.yaml
+    // 1. Resolve client — create new client in clients.yaml if needed
+    let resolvedClientId = rawClientId || 'atlas';
+    if (newClientName) {
+      const clientSlug = slugify(newClientName);
+      resolvedClientId = clientSlug;
+      const { content: clientContent, sha: clientSha } = await ghGet('data/clients.yaml');
+      const clientData = parse(clientContent);
+      if (!clientData.clients.find(c => c.id === clientSlug)) {
+        clientData.clients.push({
+          id: clientSlug,
+          name: newClientName,
+          slug: clientSlug,
+          contact: 'agis@manifestbot.ai',
+          notes: 'Added via dashboard',
+          summary: summary || name,
+          requestUrl: `mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20${encodeURIComponent(newClientName)}`,
+        });
+        await ghPut('data/clients.yaml', stringify(clientData, { lineWidth: 0 }), clientSha,
+          `dashboard: add client "${newClientName}"`);
+      }
+    }
+
+    // 2. Add project to projects.yaml
     const { content: projContent, sha: projSha } = await ghGet('data/projects.yaml');
     const projData = parse(projContent);
     if (projData.projects.find(p => p.id === projectId)) {
-      return res.status(409).json({ error: 'Project already exists', id: projectId });
+      // Append a short unique suffix to avoid collision
+      const suffix = Date.now().toString(36).slice(-4);
+      return res.status(409).json({ error: 'Project ID already exists — try a more specific name', id: projectId });
     }
     const newProject = {
-      id: projectId, name,
-      clientId: 'atlas',
+      id: projectId,
+      name,
+      clientId: resolvedClientId,
       owner: owner || 'Erik',
       stage: stage || 'Lead',
-      status: status || 'Unmatched call stub',
+      status: status || name,
       lastUpdate: today,
-      summary: summary || `Auto-created from call recordings: ${name}`,
+      summary: summary || name,
     };
+    if (previewUrl) newProject.previewUrl = previewUrl;
     if (contacts && contacts.length) newProject.contacts = contacts;
     projData.projects.push(newProject);
     const projResult = await ghPut('data/projects.yaml', stringify(projData, { lineWidth: 0 }), projSha,
-      `dashboard: create project stub "${name}" from call recordings`);
+      `dashboard: create project "${name}"`);
     if (!projResult.content) {
       return res.status(500).json({ error: 'Failed to save project', detail: projResult.message });
     }
 
-    // 2. Link calls if provided
+    // 3. Link calls if provided
     if (linkCallIds && linkCallIds.length) {
       const { content: callContent, sha: callSha } = await ghGet('data/call-notes.yaml');
       const callData = parse(callContent);
@@ -153,7 +180,7 @@ async function handleCreateProject(req, res) {
       }
     }
 
-    return res.status(200).json({ ok: true, id: projectId, name });
+    return res.status(200).json({ ok: true, id: projectId, name, clientId: resolvedClientId });
   } catch (err) {
     console.error('create-project error:', err);
     return res.status(500).json({ error: err.message });
