@@ -678,6 +678,17 @@ projects:
   repoUrl: ''
   rank: 5
   priority: high
+- id: fund-and-grow-partner
+  name: "Fund & Grow Partner Hub"
+  clientId: fund-and-grow
+  owner: Anton
+  stage: Partner
+  status: Affiliate partnership with Fund & Grow
+  lastUpdate: 2026-03-13
+  summary: Affiliate program focused on business funding pipelines for our clients.
+  previewUrl: https://fundandgrow.com
+  liveUrl: https://fundandgrow.com
+  repoUrl: ''
 - id: unmatched-texas-care-franchise
   name: Texas Care Franchise
   clientId: atlas
