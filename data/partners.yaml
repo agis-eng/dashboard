@@ -57,6 +57,20 @@ partners:
   - webdezigns-client-intake-stack-stack
   rank: 2
   priority: high
+  affiliate:
+    active: true
+    program_name: Webdezigns White-Label Referral
+    commission: $500 per referred client
+    commission_type: flat
+    commission_flat: 500
+    avg_deal_size: 500
+    monthly_leads: 4
+    monthly_potential: 2000
+    status: active
+    notes: Refer clients who need websites. Strong fit for our network — every business
+      we touch is a potential referral.
+    affiliate_url: https://webdezigns.ai
+    signup_url: https://webdezigns.ai/referral
 - id: echo
   name: ECHO Network
   slug: echo-network
@@ -95,6 +109,20 @@ partners:
   projectIds: []
   rank: 5
   priority: medium
+  affiliate:
+    active: false
+    program_name: Apex Recruiting Referral
+    commission: 15% of first placement fee
+    commission_type: percentage
+    commission_pct: 15
+    avg_deal_size: 8000
+    monthly_leads: 1
+    monthly_potential: 1200
+    status: not_applied
+    notes: High-value placements. Even one referral per month is strong income. Good
+      fit when clients are hiring.
+    affiliate_url: ''
+    signup_url: ''
 - id: atlas-leadership
   name: Anton & Erik
   slug: atlas-leadership
@@ -191,6 +219,20 @@ partners:
   - dan-bauman-polar-sparkle-site
   rank: 8
   priority: medium
+  affiliate:
+    active: false
+    program_name: Legacy Capital Client Referral
+    commission: 8% of project value
+    commission_type: percentage
+    commission_pct: 8
+    avg_deal_size: 3500
+    monthly_leads: 2
+    monthly_potential: 560
+    status: active
+    notes: Referral arrangement with Dan Bauman — send education and services clients
+      their way.
+    affiliate_url: https://legacy-foundations-builder.lovable.app
+    signup_url: ''
 - id: admission-squad
   name: Admission Squad
   slug: admission-squad
@@ -232,6 +274,20 @@ partners:
   tags:
   - Strategic
   projectIds: []
+  affiliate:
+    active: false
+    program_name: Fix My Fees Revenue Recovery
+    commission: 20% of recovered revenue (first year)
+    commission_type: percentage
+    commission_pct: 20
+    avg_deal_size: 4000
+    monthly_leads: 2
+    monthly_potential: 1600
+    status: not_applied
+    notes: Healthcare fee negotiation tool — huge upside for our ECHO and credentialing
+      clients who are leaving money on the table. Top opportunity to activate.
+    affiliate_url: ''
+    signup_url: ''
 - id: stratpath
   name: Stratpath
   slug: stratpath
@@ -250,6 +306,20 @@ partners:
   - stratpath-version-2-stratpath
   rank: 10
   priority: medium
+  affiliate:
+    active: true
+    program_name: Stratpath Leadership Referral
+    commission: 10% of first contract value
+    commission_type: percentage
+    commission_pct: 10
+    avg_deal_size: 6000
+    monthly_leads: 2
+    monthly_potential: 1200
+    status: active
+    notes: GTM and leadership advisory referrals. High deal size — great for enterprise
+      intros.
+    affiliate_url: https://www.stratpath.com
+    signup_url: https://www.stratpath.com/partners
 - id: vensure
   name: Vensure
   slug: vensure
@@ -324,6 +394,20 @@ partners:
   - mike-raiche-24social7
   rank: 12
   priority: medium
+  affiliate:
+    active: false
+    program_name: 24social7 Marketing Referral
+    commission: 15% of first campaign value
+    commission_type: percentage
+    commission_pct: 15
+    avg_deal_size: 2500
+    monthly_leads: 3
+    monthly_potential: 1125
+    status: pending
+    notes: Marketing campaigns for clients who need social/influencer work after we
+      build their sites. Natural upsell.
+    affiliate_url: https://24social7.com
+    signup_url: https://24social7.com/partners
 - id: tells
   name: Tells
   slug: tells
@@ -396,6 +480,20 @@ partners:
   - kenny-salyer-benefitsforyoullc
   rank: 13
   priority: medium
+  affiliate:
+    active: true
+    program_name: Benefits For You Referral
+    commission: $75 per qualified insurance lead
+    commission_type: flat
+    commission_flat: 75
+    avg_deal_size: 75
+    monthly_leads: 8
+    monthly_potential: 600
+    status: active
+    notes: Refer clients needing group benefits or individual insurance. Good volume
+      given our client base.
+    affiliate_url: https://benefitsforyoullc.com
+    signup_url: https://benefitsforyoullc.com/referral
 - id: keith-trautman
   name: Keith Trautman
   slug: keith-trautman
@@ -410,6 +508,19 @@ partners:
   - Strategic
   projectIds:
   - keith-trautman-www
+  affiliate:
+    active: true
+    program_name: Keith Insurance Referral
+    commission: $100 per policy sold
+    commission_type: flat
+    commission_flat: 100
+    avg_deal_size: 100
+    monthly_leads: 5
+    monthly_potential: 500
+    status: active
+    notes: Midwest-focused insurance referrals. Clean flat-rate model, easy to track.
+    affiliate_url: https://www.keiththeinsuranceguy.com
+    signup_url: https://www.keiththeinsuranceguy.com/referral
 - id: ink-slinger
   name: Ink Slinger
   slug: ink-slinger
@@ -438,6 +549,20 @@ partners:
   tags:
   - Strategic
   projectIds: []
+  affiliate:
+    active: false
+    program_name: Nurturebeast CRM Affiliate
+    commission: 20% recurring monthly commission
+    commission_type: percentage
+    commission_pct: 20
+    avg_deal_size: 300
+    monthly_leads: 5
+    monthly_potential: 300
+    status: not_applied
+    notes: Recurring SaaS commissions add up fast. Our clients all need CRM — this
+      is a natural recommend.
+    affiliate_url: ''
+    signup_url: ''
 - id: ganesh
   name: Ganesh
   slug: ganesh
