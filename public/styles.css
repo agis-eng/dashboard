@@ -1236,3 +1236,91 @@ details.activity-card[open] > summary .activity-chevron { transform: rotate(90de
   gap: 0.75rem;
   flex-wrap: wrap;
 }
+
+
+/* ── Priority select dropdown on tiles ── */
+.priority-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--border);
+}
+.priority-select {
+  flex: 1;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.78rem;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.priority-select:hover,
+.priority-select:focus {
+  border-color: var(--accent);
+}
+.priority-select option {
+  background: #1e2130;
+  color: var(--text);
+}
+.priority-save-status {
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+.priority-save-status.saving { color: var(--muted); }
+.priority-save-status.saved  { color: #4ade80; }
+.priority-save-status.error  { color: #f87171; }
+
+/* ── Affiliate inline editor ── */
+.aff-edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 640px) {
+  .aff-edit-grid { grid-template-columns: 1fr; }
+}
+.aff-edit-full {
+  grid-column: 1 / -1;
+}
+.aff-edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.aff-edit-field label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.aff-edit-field input,
+.aff-edit-field select,
+.aff-edit-field textarea {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  color: var(--text);
+  font-size: 0.875rem;
+  padding: 0.45rem 0.75rem;
+  outline: none;
+  transition: border-color 0.15s;
+  font-family: inherit;
+  resize: vertical;
+}
+.aff-edit-field input:focus,
+.aff-edit-field select:focus,
+.aff-edit-field textarea:focus {
+  border-color: var(--accent);
+  background: rgba(255,255,255,0.09);
+}
+.aff-edit-field select option {
+  background: #1e2130;
+}
