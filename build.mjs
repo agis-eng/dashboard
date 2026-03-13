@@ -63,6 +63,25 @@ const opportunitiesData = await loadYaml('opportunities.yaml');
 const settings     = await loadYaml('settings.yaml').settings || {};
 const voiceMemosRaw = await loadYaml('voice_memos.yaml', 'voice_memos');
 const tasksData    = await loadYaml('tasks.yaml', 'tasks');
+const callNotesRaw = await loadYaml('call-notes.yaml', 'calls');
+
+// Group call notes by project_id and partner_id (sorted newest first)
+const callsByProject = {};
+const callsByPartner = {};
+for (const call of callNotesRaw || []) {
+  if (call.project_id) {
+    if (!callsByProject[call.project_id]) callsByProject[call.project_id] = [];
+    callsByProject[call.project_id].push(call);
+  }
+  if (call.partner_id) {
+    if (!callsByPartner[call.partner_id]) callsByPartner[call.partner_id] = [];
+    callsByPartner[call.partner_id].push(call);
+  }
+}
+for (const k of Object.keys(callsByProject))
+  callsByProject[k].sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+for (const k of Object.keys(callsByPartner))
+  callsByPartner[k].sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
 // Sort memos newest first
 const voiceMemos = (voiceMemosRaw || [])
@@ -194,13 +213,20 @@ const clientsForSidebar = clientsData.map(client => ({
   portalPath:   `clients/${client.slug}.html`
 })).sort((a, b) => a.name.localeCompare(b.name));
 
-// Attach voice memos to projects
+// Attach voice memos and call notes to projects
 const projectsWithMemos = projects.map(project => {
   const memos = voiceMemos.filter(m =>
     m.project_match &&
     project.name.toLowerCase().includes(m.project_match.toLowerCase())
   );
-  return { ...project, voiceMemos: memos, memoCount: memos.length };
+  const projectCalls = callsByProject[project.id] || [];
+  return {
+    ...project,
+    voiceMemos: memos,
+    memoCount: memos.length,
+    callCount: projectCalls.length,
+    lastCallDate: projectCalls.length > 0 ? projectCalls[0].date : null,
+  };
 });
 
 // ── Build pages ───────────────────────────────────────────────────────────
@@ -272,11 +298,12 @@ if (partners.length) {
   await writePage(path.join('partners', 'index.html'), partnersHtml);
 
   for (const partner of partners) {
+    const partnerCalls = (callsByPartner[partner.id] || []);
     const partnerHtml = renderPage('layout.njk', {
       title: partner.name,
       subtitle: partner.summary,
       generatedAt, basePath: '../', showNav: true, activeNav: 'partners',
-      content: renderPage('partner.njk', { partner, projects: partner.featuredProjects })
+      content: renderPage('partner.njk', { partner, projects: partner.featuredProjects, calls: partnerCalls })
     });
     await writePage(path.join('partners', `${partner.slug}.html`), partnerHtml);
   }
@@ -284,11 +311,15 @@ if (partners.length) {
 
 for (const client of clientsData) {
   const clientProjects = projects.filter(p => p.clientId === client.id);
+  // Collect all Fathom calls for this client's projects
+  const clientCalls = clientProjects
+    .flatMap(p => callsByProject[p.id] || [])
+    .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
   const html = renderPage('layout.njk', {
     title: `${client.name} portal`,
     subtitle: 'Latest builds + links',
     generatedAt, basePath: '../',
-    content: renderPage('client.njk', { client, projects: clientProjects, settings })
+    content: renderPage('client.njk', { client, projects: clientProjects, settings, calls: clientCalls })
   });
   await writePage(path.join('clients', `${client.slug}.html`), html);
 }

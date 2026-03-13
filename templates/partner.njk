@@ -17,14 +17,16 @@
       {% if partner.partnershipType %}<div><dt>Partnership</dt><dd>{{ partner.partnershipType }}</dd></div>{% endif %}
       <div><dt>Region</dt><dd>{{ partner.region or '—' }}</dd></div>
       <div><dt>Focus areas</dt><dd>{{ (partner.focusAreas and partner.focusAreas | join(', ')) or '—' }}</dd></div>
-      <div id="partner-call-stats-row" style="display:none">
+      {% if calls and calls.length %}
+      <div>
         <dt>Last call</dt>
-        <dd id="partner-last-call-val">—</dd>
+        <dd>{{ calls[0].date }}</dd>
       </div>
-      <div id="partner-call-count-row" style="display:none">
+      <div>
         <dt>Total calls</dt>
-        <dd id="partner-call-count-val">—</dd>
+        <dd>{{ calls | length }}</dd>
       </div>
+      {% endif %}
     </dl>
   </div>
 </section>
@@ -199,16 +201,64 @@
   <p class="empty-state" data-search-empty="partner-projects-{{ partner.slug }}">No projects match that search.</p>
 </section>
 
-<!-- ── Notes & Transcripts (loaded dynamically from Notion) ────────────── -->
+<!-- ── Fathom Call History (static) ──────────────────────────────────── -->
+{% if calls and calls.length %}
+<section class="call-history-section" id="partner-call-history">
+  <div class="section-header">
+    <div>
+      <h3>📞 Call History</h3>
+      <p class="muted">{{ calls | length }} recording{{ 's' if calls | length != 1 }} · Last call {{ calls[0].date }}</p>
+    </div>
+  </div>
+  <div class="call-cards">
+    {% for call in calls %}
+    <details class="call-card">
+      <summary class="call-card-header">
+        <span class="call-icon">📞</span>
+        <span class="call-date">{{ call.date }}</span>
+        <span class="call-title">{{ call.title }}</span>
+        <span class="call-chevron">▸</span>
+      </summary>
+      <div class="call-card-body">
+        {% if call.participants and call.participants | length %}
+        <p class="call-participants">👥 {{ call.participants | join(', ') }}</p>
+        {% endif %}
+        {% if call.key_takeaways and call.key_takeaways | length %}
+        <div class="call-section">
+          <h5>Key Takeaways</h5>
+          <ul class="call-list">
+            {% for kt in call.key_takeaways %}<li>{{ kt }}</li>{% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+        {% if call.next_steps and call.next_steps | length %}
+        <div class="call-section">
+          <h5>Next Steps</h5>
+          <ul class="call-list">
+            {% for ns in call.next_steps %}<li>{{ ns }}</li>{% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+        <div class="call-footer">
+          {% if call.share_url %}<a href="{{ call.share_url }}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">▶ View recording</a>{% endif %}
+          {% if call.fathom_url %}<a href="{{ call.fathom_url }}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">Full transcript</a>{% endif %}
+        </div>
+      </div>
+    </details>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- ── Notes (manual, saved to Notion) ───────────────────────────────── -->
 <section class="notion-activity" id="partner-notion-activity">
   <div class="section-header">
     <div>
-      <h3>Notes &amp; Call History</h3>
+      <h3>Notes</h3>
       <p class="muted" id="partner-activity-subtitle">Loading…</p>
     </div>
   </div>
 
-  <!-- Submit a note (internal team only) -->
   <div class="note-form-wrap">
     <details class="note-form-toggle">
       <summary class="btn btn-secondary">+ Add a note</summary>
@@ -223,19 +273,12 @@
     </details>
   </div>
 
-  <!-- Notes list -->
   <div id="partner-notes-section" style="display:none">
     <h4 class="activity-group-label">Notes</h4>
     <div id="partner-notes-list" class="activity-list"></div>
   </div>
 
-  <!-- Transcripts list -->
-  <div id="partner-transcripts-section" style="display:none">
-    <h4 class="activity-group-label">Call Transcripts</h4>
-    <div id="partner-transcripts-list" class="activity-list"></div>
-  </div>
-
-  <p class="muted" id="partner-activity-empty" style="display:none">No notes or calls recorded yet.</p>
+  <p class="muted" id="partner-activity-empty" style="display:none">No notes yet.</p>
 </section>
 
 <script>

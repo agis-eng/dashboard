@@ -56,6 +56,9 @@
               <span class="muted">🎙️ {{ project.memoCount }} memo{% if project.memoCount != 1 %}s{% endif %}</span>
             {% endif %}
           {% endif %}
+          {% if project.callCount > 0 %}
+            <span class="call-chip">📞 {{ project.callCount }} call{% if project.callCount != 1 %}s{% endif %}</span>
+          {% endif %}
         </div>
         <div class="priority-control" onclick="event.stopPropagation()" data-noportal>
           <select class="priority-select"

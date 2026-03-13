@@ -47,14 +47,16 @@
         <dd><a href="{{ client.linkedin }}" target="_blank" rel="noopener">Profile</a></dd>
       </div>
       {% endif %}
-      <div id="call-stats-row" style="display:none">
+      {% if calls and calls.length %}
+      <div>
         <dt>Last call</dt>
-        <dd id="last-call-val">—</dd>
+        <dd>{{ calls[0].date }}</dd>
       </div>
-      <div id="call-count-row" style="display:none">
+      <div>
         <dt>Total calls</dt>
-        <dd id="call-count-val">—</dd>
+        <dd>{{ calls | length }}</dd>
       </div>
+      {% endif %}
     </dl>
   </div>
   <div class="button-stack">
@@ -90,16 +92,64 @@
 {% endfor %}
 </section>
 
-<!-- ── Notes & Transcripts (loaded dynamically from Notion) ────────────── -->
+<!-- ── Fathom Call History (static) ──────────────────────────────────── -->
+{% if calls and calls.length %}
+<section class="call-history-section" id="call-history">
+  <div class="section-header">
+    <div>
+      <h3>📞 Call History</h3>
+      <p class="muted">{{ calls | length }} recording{{ 's' if calls | length != 1 }} · Last call {{ calls[0].date }}</p>
+    </div>
+  </div>
+  <div class="call-cards">
+    {% for call in calls %}
+    <details class="call-card">
+      <summary class="call-card-header">
+        <span class="call-icon">📞</span>
+        <span class="call-date">{{ call.date }}</span>
+        <span class="call-title">{{ call.title }}</span>
+        <span class="call-chevron">▸</span>
+      </summary>
+      <div class="call-card-body">
+        {% if call.participants and call.participants | length %}
+        <p class="call-participants">👥 {{ call.participants | join(', ') }}</p>
+        {% endif %}
+        {% if call.key_takeaways and call.key_takeaways | length %}
+        <div class="call-section">
+          <h5>Key Takeaways</h5>
+          <ul class="call-list">
+            {% for kt in call.key_takeaways %}<li>{{ kt }}</li>{% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+        {% if call.next_steps and call.next_steps | length %}
+        <div class="call-section">
+          <h5>Next Steps</h5>
+          <ul class="call-list">
+            {% for ns in call.next_steps %}<li>{{ ns }}</li>{% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+        <div class="call-footer">
+          {% if call.share_url %}<a href="{{ call.share_url }}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">▶ View recording</a>{% endif %}
+          {% if call.fathom_url %}<a href="{{ call.fathom_url }}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">Full transcript</a>{% endif %}
+        </div>
+      </div>
+    </details>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- ── Notes (manual, saved to Notion) ───────────────────────────────── -->
 <section class="notion-activity" id="notion-activity">
   <div class="section-header">
     <div>
-      <h3>Notes &amp; Call History</h3>
+      <h3>Notes</h3>
       <p class="muted" id="activity-subtitle">Loading…</p>
     </div>
   </div>
 
-  <!-- Submit a note -->
   <div class="note-form-wrap">
     <details class="note-form-toggle">
       <summary class="btn btn-secondary">+ Add a note</summary>
@@ -114,19 +164,12 @@
     </details>
   </div>
 
-  <!-- Notes list -->
   <div id="notes-section" style="display:none">
     <h4 class="activity-group-label">Notes</h4>
     <div id="notes-list" class="activity-list"></div>
   </div>
 
-  <!-- Transcripts list -->
-  <div id="transcripts-section" style="display:none">
-    <h4 class="activity-group-label">Call Transcripts</h4>
-    <div id="transcripts-list" class="activity-list"></div>
-  </div>
-
-  <p class="muted" id="activity-empty" style="display:none">No notes or calls recorded yet.</p>
+  <p class="muted" id="activity-empty" style="display:none">No notes yet.</p>
 </section>
 
 <script>
@@ -136,55 +179,29 @@ function atlasLogout() {
   window.location.href = '../login.html';
 }
 
-// ── Load notes + transcripts from Notion API ────────────────────────────
+// ── Load notes from Notion API ───────────────────────────────────────────
 (function loadNotionActivity() {
   var slug = '{{ client.slug }}';
   fetch('/api/notion-clients?slug=' + encodeURIComponent(slug))
     .then(function(r) { return r.json(); })
     .then(function(data) {
-      // Update call stats in contact row
-      if (data.lastCall) {
-        document.getElementById('last-call-val').textContent = data.lastCall;
-        document.getElementById('call-stats-row').style.display = '';
-      }
-      if (data.callCount) {
-        document.getElementById('call-count-val').textContent = data.callCount;
-        document.getElementById('call-count-row').style.display = '';
-      }
-
       var notes = data.notes || [];
-      var transcripts = data.transcripts || [];
-      var total = notes.length + transcripts.length;
-
       document.getElementById('activity-subtitle').textContent =
-        total === 0 ? 'No activity yet' :
-        notes.length + ' note' + (notes.length !== 1 ? 's' : '') +
-        ' · ' + transcripts.length + ' call' + (transcripts.length !== 1 ? 's' : '');
-
-      if (total === 0) {
+        notes.length === 0 ? 'No notes yet' :
+        notes.length + ' note' + (notes.length !== 1 ? 's' : '');
+      if (notes.length === 0) {
         document.getElementById('activity-empty').style.display = '';
         return;
       }
-
-      if (notes.length > 0) {
-        var notesList = document.getElementById('notes-list');
-        notes.forEach(function(note) {
-          notesList.appendChild(buildNoteCard(note));
-        });
-        document.getElementById('notes-section').style.display = '';
-      }
-
-      if (transcripts.length > 0) {
-        var txList = document.getElementById('transcripts-list');
-        transcripts.forEach(function(tx) {
-          txList.appendChild(buildTranscriptCard(tx));
-        });
-        document.getElementById('transcripts-section').style.display = '';
-      }
+      var notesList = document.getElementById('notes-list');
+      notes.forEach(function(note) {
+        notesList.appendChild(buildNoteCard(note));
+      });
+      document.getElementById('notes-section').style.display = '';
     })
     .catch(function(err) {
-      document.getElementById('activity-subtitle').textContent = 'Could not load activity';
-      console.warn('Notion activity load error:', err);
+      document.getElementById('activity-subtitle').textContent = 'Could not load notes';
+      console.warn('Notion notes load error:', err);
     });
 })();
 
@@ -204,22 +221,6 @@ function buildNoteCard(note) {
     '<div class="activity-body">' +
       note.content.map(function(c) { return '<p>' + esc(c) + '</p>'; }).join('') +
     '</div>';
-  return el;
-}
-
-function buildTranscriptCard(tx) {
-  var el = document.createElement('details');
-  el.className = 'activity-card transcript-card';
-  var title = esc(tx.title || '');
-  var body = tx.content.map(function(c) { return '<p>' + esc(c) + '</p>'; }).join('');
-  el.innerHTML =
-    '<summary class="activity-card-header">' +
-      '<span class="activity-icon">📞</span>' +
-      '<span class="activity-date">' + esc(tx.date || '') + '</span>' +
-      '<span class="activity-title">' + title + '</span>' +
-      '<span class="activity-chevron">▸</span>' +
-    '</summary>' +
-    '<div class="activity-body transcript-body">' + (body || '<p class="muted">No transcript content.</p>') + '</div>';
   return el;
 }
 

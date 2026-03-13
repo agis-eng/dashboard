@@ -1449,3 +1449,127 @@ details.activity-card[open] > summary .activity-chevron { transform: rotate(90de
 .aff-edit-field select option {
   background: #1e2130;
 }
+
+/* ── Call History Cards ── */
+.call-history-section {
+  margin-top: 2rem;
+}
+.call-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.call-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+.call-card[open] {
+  border-color: rgba(139,92,246,0.4);
+}
+.call-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+.call-card-header::-webkit-details-marker { display: none; }
+.call-card-header:hover {
+  background: rgba(255,255,255,0.04);
+}
+.call-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+.call-date {
+  font-size: 0.75rem;
+  color: var(--muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.call-title {
+  flex: 1;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.call-chevron {
+  font-size: 0.75rem;
+  color: var(--muted);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.call-card[open] .call-chevron {
+  transform: rotate(90deg);
+}
+.call-card-body {
+  padding: 0.75rem 1rem 1rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.call-participants {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 0;
+}
+.call-section h5 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  margin: 0 0 0.4rem;
+}
+.call-list {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.call-list li {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+.call-footer {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding-top: 0.25rem;
+}
+.btn-sm {
+  font-size: 0.78rem;
+  padding: 0.3rem 0.7rem;
+}
+
+/* ── Call count chip on project tiles ── */
+.call-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+  background: rgba(139,92,246,0.12);
+  border: 1px solid rgba(139,92,246,0.25);
+  border-radius: 99px;
+  padding: 0.15rem 0.55rem;
+  text-decoration: none;
+}
+.call-chip:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(139,92,246,0.2);
+}
