@@ -678,3 +678,43 @@ projects:
   repoUrl: ''
   rank: 5
   priority: high
+- id: unmatched-texas-care-franchise
+  name: Texas Care Franchise
+  clientId: atlas
+  owner: Erik
+  stage: Lead
+  status: Franchise opportunity - weekly meetings
+  lastUpdate: '2026-03-13'
+  summary: Texas Care franchise expansion meetings
+- id: unmatched-von-echo-meetings
+  name: Von / ECHO Strategy
+  clientId: caring-echo-bridge
+  owner: Erik
+  stage: Internal
+  status: ECHO ecosystem strategy sessions with Von
+  lastUpdate: '2026-03-13'
+  summary: ECHO HCP strategy and onboarding meetings with VonMarie
+- id: unmatched-rasha-dedra
+  name: Rasha & Dedra Team
+  clientId: atlas
+  owner: Erik
+  stage: Lead
+  status: Team onboarding and intro calls
+  lastUpdate: '2026-03-13'
+  summary: Intro and team calls with Rasha, Dedra, and partners
+- id: unmatched-qmhp-iop
+  name: QMHP / IOP Outreach
+  clientId: caring-echo-bridge
+  owner: Erik
+  stage: Lead
+  status: QMHP and IOP partnership outreach
+  lastUpdate: '2026-03-13'
+  summary: Mental health provider outreach and IOP kickoff
+- id: unmatched-nurturebeast
+  name: NurtureBeast
+  clientId: atlas
+  owner: Erik
+  stage: Lead
+  status: NurtureBeast platform training and weekly calls
+  lastUpdate: '2026-03-13'
+  summary: NurtureBeast CRM training and weekly check-ins

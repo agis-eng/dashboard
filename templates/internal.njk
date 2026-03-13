@@ -72,12 +72,117 @@
             <option value="low"{% if project.priority == 'low' %} selected{% endif %}>○ Low</option>
           </select>
           <span class="priority-save-status" id="ps-{{ project.id }}"></span>
+          <button class="btn btn-ghost btn-sm edit-btn" onclick="openProjectEditor(this, event)" data-noportal
+                  data-id="{{ project.id }}"
+                  data-name="{{ project.name }}"
+                  data-status="{{ project.status }}"
+                  data-summary="{{ project.summary }}"
+                  data-owner="{{ project.owner }}"
+                  data-stage="{{ project.stage }}"
+                  data-preview="{{ project.previewUrl }}"
+                  data-repo="{{ project.repoUrl }}"
+                  data-contacts="{{ (project.contacts or []) | dump | escape }}">
+            ✏️ Edit
+          </button>
+        </div>
+
+        {# ── Inline editor panel ── #}
+        <div class="project-editor" id="editor-{{ project.id }}" style="display:none" data-noportal onclick="event.stopPropagation()">
+          <div class="editor-grid">
+            <div class="editor-field editor-full">
+              <label>Project name</label>
+              <input type="text" class="ef-name" placeholder="Project name">
+            </div>
+            <div class="editor-field">
+              <label>Owner</label>
+              <input type="text" class="ef-owner" placeholder="Owner">
+            </div>
+            <div class="editor-field">
+              <label>Stage</label>
+              <select class="ef-stage">
+                <option value="Lead">Lead</option>
+                <option value="Client">Client</option>
+                <option value="Internal">Internal</option>
+                <option value="Contractor">Contractor</option>
+                <option value="Paused">Paused</option>
+                <option value="Done">Done</option>
+              </select>
+            </div>
+            <div class="editor-field editor-full">
+              <label>Status / summary</label>
+              <input type="text" class="ef-status" placeholder="One-line status">
+            </div>
+            <div class="editor-field">
+              <label>Preview URL</label>
+              <input type="url" class="ef-preview" placeholder="https://">
+            </div>
+            <div class="editor-field">
+              <label>Repo URL</label>
+              <input type="url" class="ef-repo" placeholder="https://github.com/...">
+            </div>
+          </div>
+
+          <div class="editor-contacts-section">
+            <label class="editor-contacts-label">Contacts</label>
+            <div class="editor-contacts-list" id="cl-{{ project.id }}"></div>
+            <button type="button" class="btn btn-ghost btn-sm" onclick="addContactRow('{{ project.id }}')">+ Add contact</button>
+          </div>
+
+          <div class="editor-actions">
+            <button class="btn btn-primary btn-sm" onclick="saveProjectEditor('{{ project.id }}', this)">Save changes</button>
+            <button class="btn btn-ghost btn-sm" onclick="closeProjectEditor('{{ project.id }}')">Cancel</button>
+            <span class="editor-save-status" id="es-{{ project.id }}"></span>
+          </div>
         </div>
       </article>
     {% endfor %}
     </div>
     <p class="empty-state" data-search-empty="projects">No projects match that search.</p>
   </section>
+
+  {# ── Unmatched Calls Review Queue ── #}
+  {% if unmatchedCallGroups and unmatchedCallGroups.length %}
+  <section class="review-queue" id="review-queue">
+    <header class="section-header">
+      <div>
+        <h2>📋 Call Review Queue</h2>
+        <p class="muted">{{ unmatchedCallGroups.length }} named meeting group{% if unmatchedCallGroups.length != 1 %}s{% endif %} without a project — review and create stubs as needed.</p>
+      </div>
+    </header>
+    <div class="queue-groups">
+      {% for group in unmatchedCallGroups %}
+      <details class="queue-group" id="qg-{{ loop.index }}">
+        <summary class="queue-group-header">
+          <span class="queue-icon">📞</span>
+          <span class="queue-name">{{ group.name }}</span>
+          <span class="queue-meta muted">{{ group.count }} call{% if group.count != 1 %}s{% endif %} · Last: {{ group.lastDate }}</span>
+          <span class="queue-chevron">▸</span>
+        </summary>
+        <div class="queue-group-body">
+          <div class="queue-call-list">
+            {% for call in group.calls %}
+            <div class="queue-call-item">
+              <span class="call-date">{{ call.date }}</span>
+              <span class="call-title">{{ call.title }}</span>
+              {% if call.key_takeaways and call.key_takeaways.length %}
+              <ul class="call-list queue-takeaways">
+                {% for kt in call.key_takeaways %}{% if loop.index <= 3 %}<li>{{ kt }}</li>{% endif %}{% endfor %}
+              </ul>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+          <div class="queue-actions">
+            <button class="btn btn-primary btn-sm" onclick="openCreateProjectModal({{ loop.index }}, {{ group.name | dump }}, {{ group.recordingIds | dump }})">
+              + Create project stub
+            </button>
+          </div>
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
   <aside class="workspace-sidebar">
     <section class="panel panel-chat">
       <header class="chat-tab-header">
@@ -191,6 +296,7 @@
 </div>
 
 <script>
+/* ── Priority select ── */
 async function updatePriority(select) {
   var entityType = select.dataset.entityType;
   var entityId   = select.dataset.entityId;
@@ -230,4 +336,292 @@ async function updatePriority(select) {
     statusEl.className = 'priority-save-status error';
   }
 }
+
+/* ── Project inline editor ── */
+function openProjectEditor(btn, evt) {
+  evt.stopPropagation();
+  var id = btn.dataset.id;
+  var editor = document.getElementById('editor-' + id);
+  if (!editor) return;
+  // Close any other open editors
+  document.querySelectorAll('.project-editor').forEach(function(e) {
+    if (e !== editor) e.style.display = 'none';
+  });
+  // Populate fields
+  editor.querySelector('.ef-name').value    = btn.dataset.name    || '';
+  editor.querySelector('.ef-owner').value   = btn.dataset.owner   || '';
+  editor.querySelector('.ef-status').value  = btn.dataset.status  || '';
+  editor.querySelector('.ef-preview').value = btn.dataset.preview || '';
+  editor.querySelector('.ef-repo').value    = btn.dataset.repo    || '';
+  // Stage select
+  var stageEl = editor.querySelector('.ef-stage');
+  stageEl.value = btn.dataset.stage || 'Lead';
+  // Contacts
+  var contacts = [];
+  try { contacts = JSON.parse(btn.dataset.contacts || '[]'); } catch(e) {}
+  renderContactRows(id, contacts);
+  editor.style.display = 'block';
+  editor.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function closeProjectEditor(id) {
+  var editor = document.getElementById('editor-' + id);
+  if (editor) editor.style.display = 'none';
+}
+
+function renderContactRows(projectId, contacts) {
+  var list = document.getElementById('cl-' + projectId);
+  if (!list) return;
+  list.innerHTML = '';
+  (contacts || []).forEach(function(c, i) {
+    list.appendChild(makeContactRow(projectId, c, i));
+  });
+}
+
+function makeContactRow(projectId, c, idx) {
+  var row = document.createElement('div');
+  row.className = 'contact-row';
+  row.dataset.idx = idx;
+  row.innerHTML =
+    '<input type="text"  class="cr-name"  placeholder="Name"  value="' + esc(c.name  || '') + '">' +
+    '<input type="email" class="cr-email" placeholder="Email" value="' + esc(c.email || '') + '">' +
+    '<input type="tel"   class="cr-phone" placeholder="Phone" value="' + esc(c.phone || '') + '">' +
+    '<input type="text"  class="cr-role"  placeholder="Role"  value="' + esc(c.role  || '') + '">' +
+    '<button type="button" class="btn btn-ghost btn-sm cr-del" onclick="removeContactRow(this)">✕</button>';
+  return row;
+}
+
+function esc(s) { return String(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+function addContactRow(projectId) {
+  var list = document.getElementById('cl-' + projectId);
+  if (!list) return;
+  var idx = list.children.length;
+  list.appendChild(makeContactRow(projectId, {}, idx));
+}
+
+function removeContactRow(btn) { btn.closest('.contact-row').remove(); }
+
+function collectContacts(projectId) {
+  var list = document.getElementById('cl-' + projectId);
+  if (!list) return [];
+  return Array.from(list.querySelectorAll('.contact-row'))
+    .map(function(row) {
+      var name  = row.querySelector('.cr-name').value.trim();
+      var email = row.querySelector('.cr-email').value.trim();
+      var phone = row.querySelector('.cr-phone').value.trim();
+      var role  = row.querySelector('.cr-role').value.trim();
+      if (!name && !email && !phone) return null;
+      var c = {};
+      if (name)  c.name  = name;
+      if (email) c.email = email;
+      if (phone) c.phone = phone;
+      if (role)  c.role  = role;
+      return c;
+    })
+    .filter(Boolean);
+}
+
+async function saveProjectEditor(id, btn) {
+  var editor = document.getElementById('editor-' + id);
+  var statusEl = document.getElementById('es-' + id);
+  statusEl.textContent = '⟳ Saving…';
+  statusEl.style.color = 'var(--muted)';
+  btn.disabled = true;
+
+  var updates = {
+    name:       editor.querySelector('.ef-name').value.trim(),
+    owner:      editor.querySelector('.ef-owner').value.trim(),
+    stage:      editor.querySelector('.ef-stage').value,
+    status:     editor.querySelector('.ef-status').value.trim(),
+    previewUrl: editor.querySelector('.ef-preview').value.trim() || null,
+    repoUrl:    editor.querySelector('.ef-repo').value.trim() || null,
+    contacts:   collectContacts(id),
+    lastUpdate: new Date().toISOString().slice(0, 10),
+  };
+  if (!updates.contacts.length) delete updates.contacts;
+
+  try {
+    var r = await fetch('/api/update-field', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ entityType: 'project', entityId: id, updates: updates })
+    });
+    var d = await r.json();
+    if (d.ok) {
+      statusEl.textContent = '✓ Saved — rebuilding…';
+      statusEl.style.color = '#4ade80';
+      // Update the edit button's data attrs so re-open shows fresh data
+      var editBtn = editor.previousElementSibling && editor.previousElementSibling.querySelector('.edit-btn')
+                 || document.querySelector('[data-id="' + id + '"]');
+      if (editBtn) {
+        editBtn.dataset.name    = updates.name;
+        editBtn.dataset.owner   = updates.owner;
+        editBtn.dataset.stage   = updates.stage;
+        editBtn.dataset.status  = updates.status;
+        editBtn.dataset.preview = updates.previewUrl || '';
+        editBtn.dataset.repo    = updates.repoUrl    || '';
+        editBtn.dataset.contacts = JSON.stringify(updates.contacts || []);
+        // Update visible card fields immediately
+        var card = editor.closest('.card');
+        if (card) {
+          var h2 = card.querySelector('h2'); if (h2) h2.textContent = updates.name;
+          var summ = card.querySelector('.card-header .muted'); if (summ) summ.textContent = updates.status;
+          var stagePill = card.querySelector('.status-pill');
+          if (stagePill) { stagePill.textContent = updates.stage; stagePill.className = 'status-pill ' + updates.stage.toLowerCase().replace(/ /g, '-'); }
+          var ownerDd = card.querySelector('.meta dd'); if (ownerDd) ownerDd.textContent = updates.owner;
+        }
+      }
+      setTimeout(function() { statusEl.textContent = ''; editor.style.display = 'none'; }, 2500);
+    } else {
+      statusEl.textContent = '✗ ' + (d.error || 'Error');
+      statusEl.style.color = '#f87171';
+    }
+  } catch(e) {
+    statusEl.textContent = '✗ ' + e.message;
+    statusEl.style.color = '#f87171';
+  }
+  btn.disabled = false;
+}
+
+/* ── Create project modal ── */
+function openCreateProjectModal(idx, name, recordingIds) {
+  var modal = document.getElementById('create-project-modal');
+  modal.querySelector('#cp-name').value = name;
+  modal.querySelector('#cp-owner').value = 'Erik';
+  modal.querySelector('#cp-stage').value = 'Lead';
+  modal.querySelector('#cp-summary').value = '';
+  modal.querySelector('#cp-recording-ids').value = JSON.stringify(recordingIds);
+  document.getElementById('cp-contacts-list').innerHTML = '';
+  document.getElementById('cp-status').textContent = '';
+  modal.style.display = 'flex';
+}
+
+function closeCreateModal() {
+  document.getElementById('create-project-modal').style.display = 'none';
+}
+
+function addCpContactRow() {
+  var list = document.getElementById('cp-contacts-list');
+  var row = document.createElement('div');
+  row.className = 'contact-row';
+  row.innerHTML =
+    '<input type="text"  class="cr-name"  placeholder="Name">' +
+    '<input type="email" class="cr-email" placeholder="Email">' +
+    '<input type="tel"   class="cr-phone" placeholder="Phone">' +
+    '<input type="text"  class="cr-role"  placeholder="Role">' +
+    '<button type="button" class="btn btn-ghost btn-sm" onclick="removeContactRow(this)">✕</button>';
+  list.appendChild(row);
+}
+
+function collectCpContacts() {
+  return Array.from(document.querySelectorAll('#cp-contacts-list .contact-row'))
+    .map(function(row) {
+      var name  = row.querySelector('.cr-name').value.trim();
+      var email = row.querySelector('.cr-email').value.trim();
+      var phone = row.querySelector('.cr-phone').value.trim();
+      var role  = row.querySelector('.cr-role').value.trim();
+      if (!name && !email && !phone) return null;
+      var c = {};
+      if (name)  c.name  = name;
+      if (email) c.email = email;
+      if (phone) c.phone = phone;
+      if (role)  c.role  = role;
+      return c;
+    }).filter(Boolean);
+}
+
+async function submitCreateProject(btn) {
+  var modal = document.getElementById('create-project-modal');
+  var statusEl = document.getElementById('cp-status');
+  var name = modal.querySelector('#cp-name').value.trim();
+  if (!name) { statusEl.textContent = 'Name is required'; statusEl.style.color = '#f87171'; return; }
+  btn.disabled = true;
+  statusEl.textContent = '⟳ Creating…';
+  statusEl.style.color = 'var(--muted)';
+  var payload = {
+    name:       name,
+    owner:      modal.querySelector('#cp-owner').value.trim() || 'Erik',
+    stage:      modal.querySelector('#cp-stage').value,
+    summary:    modal.querySelector('#cp-summary').value.trim(),
+    contacts:   collectCpContacts(),
+    linkCallIds: JSON.parse(modal.querySelector('#cp-recording-ids').value || '[]'),
+  };
+  try {
+    var r = await fetch('/api/update-field', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'create-project', ...payload })
+    });
+    var d = await r.json();
+    if (d.ok) {
+      statusEl.textContent = '✓ Created "' + d.name + '" — rebuilding…';
+      statusEl.style.color = '#4ade80';
+      setTimeout(closeCreateModal, 2500);
+    } else {
+      statusEl.textContent = '✗ ' + (d.error || 'Error');
+      statusEl.style.color = '#f87171';
+      btn.disabled = false;
+    }
+  } catch(e) {
+    statusEl.textContent = '✗ ' + e.message;
+    statusEl.style.color = '#f87171';
+    btn.disabled = false;
+  }
+}
+
+// Close modal on backdrop click
+document.addEventListener('DOMContentLoaded', function() {
+  var modal = document.getElementById('create-project-modal');
+  if (modal) modal.addEventListener('click', function(e) {
+    if (e.target === modal) closeCreateModal();
+  });
+});
 </script>
+
+{# ── Create project modal ── #}
+<div id="create-project-modal" class="modal-backdrop" style="display:none" role="dialog" aria-modal="true">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <header class="modal-header">
+      <h3>Create project stub</h3>
+      <button class="modal-close" onclick="closeCreateModal()">✕</button>
+    </header>
+    <div class="modal-body">
+      <div class="editor-grid">
+        <div class="editor-field editor-full">
+          <label>Project name</label>
+          <input id="cp-name" type="text" placeholder="e.g. Texas Care Franchise">
+        </div>
+        <div class="editor-field">
+          <label>Owner</label>
+          <input id="cp-owner" type="text" placeholder="Erik">
+        </div>
+        <div class="editor-field">
+          <label>Stage</label>
+          <select id="cp-stage">
+            <option value="Lead">Lead</option>
+            <option value="Client">Client</option>
+            <option value="Internal">Internal</option>
+            <option value="Contractor">Contractor</option>
+            <option value="Paused">Paused</option>
+          </select>
+        </div>
+        <div class="editor-field editor-full">
+          <label>Summary</label>
+          <input id="cp-summary" type="text" placeholder="Brief description">
+        </div>
+      </div>
+      <div class="editor-contacts-section">
+        <label class="editor-contacts-label">Contacts <span class="muted">(optional)</span></label>
+        <div id="cp-contacts-list"></div>
+        <button type="button" class="btn btn-ghost btn-sm" onclick="addCpContactRow()">+ Add contact</button>
+      </div>
+      <input type="hidden" id="cp-recording-ids">
+    </div>
+    <footer class="modal-footer">
+      <button class="btn btn-primary" onclick="submitCreateProject(this)">Create project</button>
+      <button class="btn btn-ghost" onclick="closeCreateModal()">Cancel</button>
+      <span id="cp-status" style="font-size:0.8rem;margin-left:0.5rem"></span>
+    </footer>
+  </div>
+</div>

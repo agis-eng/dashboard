@@ -37,6 +37,8 @@ function setNested(obj, path, value) {
   const lastKey = keys[keys.length - 1];
   if (value === null || value === '') {
     delete cur[lastKey];
+  } else if (Array.isArray(value)) {
+    cur[lastKey] = value;
   } else {
     // Coerce numeric strings to numbers
     const num = Number(value);
@@ -44,24 +46,40 @@ function setNested(obj, path, value) {
   }
 }
 
+function slugify(str) {
+  return str.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').replace(/-+/g, '-');
+}
+
+// ── Handler: routes to update-field or create-project logic based on action ──
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  if (!GITHUB_TOKEN) return res.status(500).json({ error: 'GITHUB_TOKEN not set' });
 
-  if (!GITHUB_TOKEN) {
-    return res.status(500).json({ error: 'GITHUB_TOKEN environment variable not set' });
+  // Route: if action=create-project (also accepts requests from /api/create-project path)
+  const isCreate = req.body?.action === 'create-project'
+    || (req.url || '').includes('create-project');
+
+  if (isCreate) {
+    return handleCreateProject(req, res);
   }
+  return handleUpdateField(req, res);
+}
 
+async function handleUpdateField(req, res) {
   const { entityType, entityId, updates } = req.body || {};
   if (!entityType || !entityId || !updates) {
     return res.status(400).json({ error: 'Missing entityType, entityId, or updates' });
   }
 
-  const yamlFile = entityType === 'project' ? 'data/projects.yaml' : 'data/partners.yaml';
-  const rootKey  = entityType === 'project' ? 'projects' : 'partners';
+  const fileMap = { project: 'data/projects.yaml', partner: 'data/partners.yaml', client: 'data/clients.yaml' };
+  const keyMap  = { project: 'projects', partner: 'partners', client: 'clients' };
+  const yamlFile = fileMap[entityType];
+  const rootKey  = keyMap[entityType];
+  if (!yamlFile) return res.status(400).json({ error: `Unknown entityType: ${entityType}` });
 
   try {
     const { content, sha } = await ghGet(yamlFile);
@@ -85,6 +103,59 @@ export default async function handler(req, res) {
     }
   } catch (err) {
     console.error('update-field error:', err);
+    return res.status(500).json({ error: err.message });
+  }
+}
+
+async function handleCreateProject(req, res) {
+  const { name, summary, owner, stage, status, contacts, linkCallIds } = req.body || {};
+  if (!name) return res.status(400).json({ error: 'Missing project name' });
+
+  const slug = slugify(name);
+  const projectId = `unmatched-${slug}`;
+  const today = new Date().toISOString().slice(0, 10);
+
+  try {
+    // 1. Add project to projects.yaml
+    const { content: projContent, sha: projSha } = await ghGet('data/projects.yaml');
+    const projData = parse(projContent);
+    if (projData.projects.find(p => p.id === projectId)) {
+      return res.status(409).json({ error: 'Project already exists', id: projectId });
+    }
+    const newProject = {
+      id: projectId, name,
+      clientId: 'atlas',
+      owner: owner || 'Erik',
+      stage: stage || 'Lead',
+      status: status || 'Unmatched call stub',
+      lastUpdate: today,
+      summary: summary || `Auto-created from call recordings: ${name}`,
+    };
+    if (contacts && contacts.length) newProject.contacts = contacts;
+    projData.projects.push(newProject);
+    const projResult = await ghPut('data/projects.yaml', stringify(projData, { lineWidth: 0 }), projSha,
+      `dashboard: create project stub "${name}" from call recordings`);
+    if (!projResult.content) {
+      return res.status(500).json({ error: 'Failed to save project', detail: projResult.message });
+    }
+
+    // 2. Link calls if provided
+    if (linkCallIds && linkCallIds.length) {
+      const { content: callContent, sha: callSha } = await ghGet('data/call-notes.yaml');
+      const callData = parse(callContent);
+      let updated = 0;
+      for (const call of callData.calls) {
+        if (linkCallIds.includes(call.recording_id)) { call.project_id = projectId; updated++; }
+      }
+      if (updated > 0) {
+        await ghPut('data/call-notes.yaml', stringify(callData, { lineWidth: 0 }), callSha,
+          `dashboard: link ${updated} calls to project "${name}"`);
+      }
+    }
+
+    return res.status(200).json({ ok: true, id: projectId, name });
+  } catch (err) {
+    console.error('create-project error:', err);
     return res.status(500).json({ error: err.message });
   }
 }

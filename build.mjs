@@ -213,6 +213,28 @@ const clientsForSidebar = clientsData.map(client => ({
   portalPath:   `clients/${client.slug}.html`
 })).sort((a, b) => a.name.localeCompare(b.name));
 
+// Group unmatched calls (no project or partner) by meeting name for review queue
+const unmatchedCallsRaw = (callNotesRaw || []).filter(c => !c.project_id && !c.partner_id);
+const unmatchedGroups = {};
+for (const call of unmatchedCallsRaw) {
+  const groupName = call.meeting_name || call.title || 'Unknown';
+  if (!unmatchedGroups[groupName]) unmatchedGroups[groupName] = [];
+  unmatchedGroups[groupName].push(call);
+}
+const unmatchedCallGroups = Object.entries(unmatchedGroups)
+  .filter(([name]) => name !== 'Impromptu Zoom Meeting' && name !== 'Impromptu Google Meet Meeting' && name !== 'Zoom Meeting')
+  .map(([name, calls]) => {
+    const sorted = calls.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+    return {
+      name,
+      calls: sorted,
+      count: sorted.length,
+      lastDate: sorted[0]?.date,
+      recordingIds: sorted.map(c => c.recording_id),
+    };
+  })
+  .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+
 // Attach voice memos and call notes to projects
 const projectsWithMemos = projects.map(project => {
   const memos = voiceMemos.filter(m =>
@@ -236,7 +258,7 @@ const internalHtml = renderPage('layout.njk', {
   generatedAt, basePath: './', includeChat: true, showNav: true, activeNav: 'projects',
   content: renderPage('internal.njk', {
     projects: projectsWithMemos, requests, settings, stats, generatedAt,
-    clients: clientsForSidebar, recentMemos
+    clients: clientsForSidebar, recentMemos, unmatchedCallGroups
   })
 });
 await writePage('index.html', internalHtml);
