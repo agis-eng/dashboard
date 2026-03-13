@@ -21,6 +21,14 @@ const loadYaml = async (fileName, key) => {
 const slugify = (value = '') => value.toString().toLowerCase()
   .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
+// Sort by rank (ranked items first, ascending), then alphabetically
+const sortByRank = (a, b) => {
+  const ra = a.rank ?? Infinity;
+  const rb = b.rank ?? Infinity;
+  if (ra !== rb) return ra - rb;
+  return (a.name || '').localeCompare(b.name || '');
+};
+
 await fs.emptyDir(distDir);
 await fs.copy(publicDir, path.join(distDir));
 await fs.emptyDir(path.join(distDir, 'clients'));
@@ -42,7 +50,6 @@ const settings = await loadYaml('settings.yaml').settings || {};
 const voiceMemosRaw = await loadYaml('voice_memos.yaml', 'voice_memos');
 const tasksData    = await loadYaml('tasks.yaml', 'tasks');
 
-
 // Sort memos newest first, keep 20 for sidebar
 const voiceMemos = (voiceMemosRaw || [])
   .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0))
@@ -53,10 +60,12 @@ const recentMemos = voiceMemos.slice(0, 8);
 const clientsMap = new Map(clientsData.map(client => [client.id, client]));
 const projectsMap = new Map(projectsData.map(project => [project.id, project]));
 
-const projects = projectsData.map(project => ({
-  ...project,
-  client: clientsMap.get(project.clientId) ?? { name: 'Unknown', slug: 'unknown' }
-}));
+const projects = projectsData
+  .map(project => ({
+    ...project,
+    client: clientsMap.get(project.clientId) ?? { name: 'Unknown', slug: 'unknown' }
+  }))
+  .sort(sortByRank);
 
 const partners = (partnersData || []).map(partner => {
   const projectIds = partner.projectIds || [];
@@ -69,7 +78,7 @@ const partners = (partnersData || []).map(partner => {
     featuredProjects,
     projectCount: featuredProjects.length
   };
-}).sort((a, b) => a.name.localeCompare(b.name));
+}).sort(sortByRank);
 
 const requests = (requestsData || [])
   .filter(request => (request.status || '').toLowerCase() !== 'done')
@@ -83,7 +92,6 @@ const requests = (requestsData || [])
     submittedAtFormatted: request.submittedAt ? format(new Date(request.submittedAt), 'MMM d, h:mm a') : '—'
   };
 }).sort((a, b) => new Date(b.submittedAt || 0) - new Date(a.submittedAt || 0));
-
 
 // Tasks stats
 const now7 = new Date(); now7.setDate(now7.getDate() + 7);
@@ -139,7 +147,6 @@ const internalHtml = renderPage('layout.njk', {
   content: renderPage('internal.njk', { projects: projectsWithMemos, requests, settings, stats, generatedAt, clients: clientsForSidebar, recentMemos })
 });
 await writePage('index.html', internalHtml);
-
 
 // Tasks page
 await fs.emptyDir(path.join(distDir, 'tasks'));
