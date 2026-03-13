@@ -12,10 +12,17 @@
 <div class="grid partner-grid" data-search-list="partners">
   {% for partner in partners %}
   <a class="card-link" href="./{{ partner.slug }}.html">
-    <article class="card partner-card" data-search-item="partners" data-search-text="{{ (partner.name + ' ' + (partner.summary or '') + ' ' + (partner.region or '') + ' ' + (partner.tags | join(' '))) | lower }}">
+    <article class="card partner-card{% if partner.priority %} priority-{{ partner.priority }}{% endif %}"
+             data-search-item="partners"
+             data-search-text="{{ (partner.name + ' ' + (partner.summary or '') + ' ' + (partner.region or '') + ' ' + (partner.tags | join(' '))) | lower }}">
       <header class="card-header">
         <div>
-          <h3>{{ partner.name }}</h3>
+          <div class="card-title-row">
+            <h3>{{ partner.name }}</h3>
+            {% if partner.priority == 'high' %}
+              <span class="priority-badge priority-badge-high" title="High priority">★</span>
+            {% endif %}
+          </div>
           <p class="muted">{{ partner.summary }}</p>
         </div>
         <span class="status-pill">{{ partner.projectCount }} project{% if partner.projectCount != 1 %}s{% endif %}</span>
