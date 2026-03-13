@@ -30,49 +30,135 @@
 </section>
 
 {# ── Affiliate Program Section ── #}
-{% if partner.affiliate %}
-<section class="partner-affiliate">
-  <header class="section-header">
-    <div>
-      <h3>Affiliate Program</h3>
-      <p class="muted">{{ partner.affiliate.program_name }}</p>
-    </div>
-    <span class="aff-status-badge status-{{ partner.affiliate.status }}">
-      {% if partner.affiliate.status == 'active' %}✓ Active
-      {% elif partner.affiliate.status == 'pending' %}⏳ Pending
-      {% else %}→ Apply now{% endif %}
-    </span>
-  </header>
+<section class="partner-affiliate" id="affiliate-section">
+  {# ── VIEW MODE ── #}
+  <div id="aff-view">
+    <header class="section-header">
+      <div>
+        {% if partner.affiliate %}
+          <h3>Affiliate Program</h3>
+          <p class="muted">{{ partner.affiliate.program_name or 'Untitled program' }}</p>
+        {% else %}
+          <h3>Affiliate Program</h3>
+          <p class="muted">No affiliate program added yet.</p>
+        {% endif %}
+      </div>
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        {% if partner.affiliate %}
+          <span class="aff-status-badge status-{{ partner.affiliate.status }}">
+            {% if partner.affiliate.status == 'active' %}✓ Active
+            {% elif partner.affiliate.status == 'pending' %}⏳ Pending
+            {% else %}→ Apply now{% endif %}
+          </span>
+        {% endif %}
+        <button class="btn btn-secondary btn-sm" onclick="showAffEdit()">
+          {% if partner.affiliate %}✏️ Edit{% else %}+ Add affiliate program{% endif %}
+        </button>
+      </div>
+    </header>
 
-  <div class="aff-detail-metrics">
-    <div class="aff-detail-metric">
-      <span class="aff-detail-val">{{ partner.affiliate.commission }}</span>
-      <span class="aff-detail-label">Commission structure</span>
+    {% if partner.affiliate %}
+    <div class="aff-detail-metrics">
+      <div class="aff-detail-metric">
+        <span class="aff-detail-val">{{ partner.affiliate.commission }}</span>
+        <span class="aff-detail-label">Commission structure</span>
+      </div>
+      <div class="aff-detail-metric">
+        <span class="aff-detail-val">${{ partner.affiliate.avg_deal_size }}</span>
+        <span class="aff-detail-label">Avg deal size</span>
+      </div>
+      <div class="aff-detail-metric">
+        <span class="aff-detail-val">{{ partner.affiliate.monthly_leads }}/mo</span>
+        <span class="aff-detail-label">Est. monthly leads</span>
+      </div>
+      <div class="aff-detail-metric highlight">
+        <span class="aff-detail-val aff-potential" id="aff-view-potential">${{ partner.affiliate.monthly_potential }}</span>
+        <span class="aff-detail-label">Est. monthly revenue</span>
+      </div>
     </div>
-    <div class="aff-detail-metric">
-      <span class="aff-detail-val">${{ partner.affiliate.avg_deal_size }}</span>
-      <span class="aff-detail-label">Avg deal size</span>
+    {% if partner.affiliate.notes %}
+    <p class="aff-program-notes" id="aff-view-notes">{{ partner.affiliate.notes }}</p>
+    {% endif %}
+    <div class="aff-program-links">
+      {% if partner.affiliate.affiliate_url %}<a href="{{ partner.affiliate.affiliate_url }}" target="_blank" class="btn btn-secondary">Program page →</a>{% endif %}
+      {% if partner.affiliate.signup_url and partner.affiliate.status != 'active' %}<a href="{{ partner.affiliate.signup_url }}" target="_blank" class="btn">Apply to program →</a>{% endif %}
     </div>
-    <div class="aff-detail-metric">
-      <span class="aff-detail-val">{{ partner.affiliate.monthly_leads }}/mo</span>
-      <span class="aff-detail-label">Est. monthly leads</span>
-    </div>
-    <div class="aff-detail-metric highlight">
-      <span class="aff-detail-val aff-potential">${{ partner.affiliate.monthly_potential }}</span>
-      <span class="aff-detail-label">Est. monthly revenue</span>
-    </div>
+    {% endif %}
   </div>
 
-  {% if partner.affiliate.notes %}
-  <p class="aff-program-notes">{{ partner.affiliate.notes }}</p>
-  {% endif %}
+  {# ── EDIT MODE ── #}
+  <div id="aff-edit" style="display:none;">
+    <header class="section-header" style="margin-bottom:1.25rem;">
+      <div>
+        <h3>Edit Affiliate Program</h3>
+        <p class="muted">Changes save directly to the dashboard YAML and rebuild.</p>
+      </div>
+      <div style="display:flex;gap:0.5rem;align-items:center;">
+        <span class="priority-save-status" id="aff-save-status"></span>
+        <button class="btn btn-secondary btn-sm" onclick="hideAffEdit()">Cancel</button>
+        <button class="btn btn-sm" onclick="saveAffEdit()">💾 Save</button>
+      </div>
+    </header>
 
-  <div class="aff-program-links">
-    {% if partner.affiliate.affiliate_url %}<a href="{{ partner.affiliate.affiliate_url }}" target="_blank" class="btn btn-secondary">Program page →</a>{% endif %}
-    {% if partner.affiliate.signup_url and partner.affiliate.status != 'active' %}<a href="{{ partner.affiliate.signup_url }}" target="_blank" class="btn">Apply to program →</a>{% endif %}
+    <div class="aff-edit-grid">
+      <div class="aff-edit-field">
+        <label>Program name</label>
+        <input type="text" id="aff-program_name" value="{{ partner.affiliate.program_name or '' }}" placeholder="e.g. Webdezigns White-Label Referral" />
+      </div>
+      <div class="aff-edit-field">
+        <label>Status</label>
+        <select id="aff-status">
+          <option value="active"{% if partner.affiliate.status == 'active' %} selected{% endif %}>✓ Active</option>
+          <option value="pending"{% if partner.affiliate.status == 'pending' %} selected{% endif %}>⏳ Pending</option>
+          <option value="not_applied"{% if partner.affiliate.status == 'not_applied' or not partner.affiliate.status %} selected{% endif %}>→ Not applied</option>
+        </select>
+      </div>
+      <div class="aff-edit-field">
+        <label>Commission type</label>
+        <select id="aff-commission_type" onchange="toggleCommissionFields()">
+          <option value="percentage"{% if partner.affiliate.commission_type == 'percentage' %} selected{% endif %}>Percentage %</option>
+          <option value="flat"{% if partner.affiliate.commission_type == 'flat' %} selected{% endif %}>Flat fee $</option>
+        </select>
+      </div>
+      <div class="aff-edit-field" id="aff-pct-field"{% if partner.affiliate.commission_type == 'flat' %} style="display:none"{% endif %}>
+        <label>Commission %</label>
+        <input type="number" id="aff-commission_pct" value="{{ partner.affiliate.commission_pct or '' }}" placeholder="e.g. 20" min="0" max="100" step="0.5" />
+      </div>
+      <div class="aff-edit-field" id="aff-flat-field"{% if partner.affiliate.commission_type != 'flat' %} style="display:none"{% endif %}>
+        <label>Flat fee per lead ($)</label>
+        <input type="number" id="aff-commission_flat" value="{{ partner.affiliate.commission_flat or '' }}" placeholder="e.g. 500" min="0" />
+      </div>
+      <div class="aff-edit-field">
+        <label>Commission label (display text)</label>
+        <input type="text" id="aff-commission" value="{{ partner.affiliate.commission or '' }}" placeholder="e.g. $500 per referred client" />
+      </div>
+      <div class="aff-edit-field">
+        <label>Avg deal size ($)</label>
+        <input type="number" id="aff-avg_deal_size" value="{{ partner.affiliate.avg_deal_size or '' }}" placeholder="e.g. 2000" min="0" />
+      </div>
+      <div class="aff-edit-field">
+        <label>Est. monthly leads</label>
+        <input type="number" id="aff-monthly_leads" value="{{ partner.affiliate.monthly_leads or '' }}" placeholder="e.g. 4" min="0" oninput="recalcPotential()" />
+      </div>
+      <div class="aff-edit-field">
+        <label>Est. monthly revenue ($) <span class="muted" style="font-weight:400;">(auto-calculated or override)</span></label>
+        <input type="number" id="aff-monthly_potential" value="{{ partner.affiliate.monthly_potential or '' }}" placeholder="Auto" min="0" />
+      </div>
+      <div class="aff-edit-field aff-edit-full">
+        <label>Notes</label>
+        <textarea id="aff-notes" rows="3" placeholder="Internal notes about this program…">{{ partner.affiliate.notes or '' }}</textarea>
+      </div>
+      <div class="aff-edit-field">
+        <label>Affiliate / program page URL</label>
+        <input type="url" id="aff-affiliate_url" value="{{ partner.affiliate.affiliate_url or '' }}" placeholder="https://…" />
+      </div>
+      <div class="aff-edit-field">
+        <label>Sign-up / apply URL</label>
+        <input type="url" id="aff-signup_url" value="{{ partner.affiliate.signup_url or '' }}" placeholder="https://…" />
+      </div>
+    </div>
   </div>
 </section>
-{% endif %}
 
 <section class="partner-projects">
   <header class="section-header">
@@ -153,6 +239,100 @@
 </section>
 
 <script>
+var PARTNER_ID   = '{{ partner.id }}';
+var ENTITY_TYPE  = 'partner';
+
+// ── Affiliate edit toggle ─────────────────────────────────────────────
+function showAffEdit() {
+  document.getElementById('aff-view').style.display = 'none';
+  document.getElementById('aff-edit').style.display = '';
+}
+function hideAffEdit() {
+  document.getElementById('aff-edit').style.display = 'none';
+  document.getElementById('aff-view').style.display = '';
+}
+function toggleCommissionFields() {
+  var type = document.getElementById('aff-commission_type').value;
+  document.getElementById('aff-pct-field').style.display  = type === 'percentage' ? '' : 'none';
+  document.getElementById('aff-flat-field').style.display = type === 'flat' ? '' : 'none';
+  recalcPotential();
+}
+function recalcPotential() {
+  var type    = document.getElementById('aff-commission_type').value;
+  var leads   = parseFloat(document.getElementById('aff-monthly_leads').value) || 0;
+  var pct     = parseFloat(document.getElementById('aff-commission_pct').value) || 0;
+  var flat    = parseFloat(document.getElementById('aff-commission_flat').value) || 0;
+  var deal    = parseFloat(document.getElementById('aff-avg_deal_size').value) || 0;
+  var potEl   = document.getElementById('aff-monthly_potential');
+  if (!potEl.value || potEl.dataset.autoCalc === 'true') {
+    var calc = type === 'flat' ? Math.round(flat * leads) : Math.round(pct / 100 * deal * leads);
+    if (calc > 0) { potEl.value = calc; potEl.dataset.autoCalc = 'true'; }
+  }
+}
+
+async function saveAffEdit() {
+  var statusEl = document.getElementById('aff-save-status');
+  statusEl.textContent = '⟳ Saving…';
+  statusEl.className = 'priority-save-status saving';
+
+  var type = document.getElementById('aff-commission_type').value;
+  var pct  = parseFloat(document.getElementById('aff-commission_pct').value)  || null;
+  var flat = parseFloat(document.getElementById('aff-commission_flat').value) || null;
+  var leads = parseFloat(document.getElementById('aff-monthly_leads').value) || null;
+  var deal  = parseFloat(document.getElementById('aff-avg_deal_size').value) || null;
+  var pot   = parseFloat(document.getElementById('aff-monthly_potential').value) || null;
+  if (!pot && leads && (pct || flat)) {
+    pot = type === 'flat' ? Math.round(flat * leads) : Math.round(pct / 100 * deal * leads);
+  }
+
+  var updates = {
+    'affiliate.program_name':    document.getElementById('aff-program_name').value.trim() || null,
+    'affiliate.status':          document.getElementById('aff-status').value,
+    'affiliate.commission_type': type,
+    'affiliate.commission':      document.getElementById('aff-commission').value.trim() || null,
+    'affiliate.commission_pct':  type === 'percentage' ? pct : null,
+    'affiliate.commission_flat': type === 'flat' ? flat : null,
+    'affiliate.avg_deal_size':   deal,
+    'affiliate.monthly_leads':   leads,
+    'affiliate.monthly_potential': pot,
+    'affiliate.notes':           document.getElementById('aff-notes').value.trim() || null,
+    'affiliate.affiliate_url':   document.getElementById('aff-affiliate_url').value.trim() || null,
+    'affiliate.signup_url':      document.getElementById('aff-signup_url').value.trim() || null,
+    'affiliate.active':          document.getElementById('aff-status').value === 'active'
+  };
+
+  try {
+    var r = await fetch('/api/update-field', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ entityType: ENTITY_TYPE, entityId: PARTNER_ID, updates: updates })
+    });
+    var d = await r.json();
+    if (d.ok) {
+      statusEl.textContent = '✓ Saved! Rebuilding…';
+      statusEl.className = 'priority-save-status saved';
+      // Update view mode fields
+      refreshAffView(updates, pot);
+      setTimeout(function() { hideAffEdit(); statusEl.textContent = ''; }, 2500);
+    } else {
+      statusEl.textContent = '✗ Error: ' + (d.error || 'unknown');
+      statusEl.className = 'priority-save-status error';
+    }
+  } catch(e) {
+    statusEl.textContent = '✗ Network error';
+    statusEl.className = 'priority-save-status error';
+  }
+}
+
+function refreshAffView(updates, pot) {
+  // Refresh the static view with new values without requiring page reload
+  var viewEl = document.getElementById('aff-view');
+  var potEl  = document.getElementById('aff-view-potential');
+  if (potEl && pot) potEl.textContent = '$' + pot;
+  var notesEl = document.getElementById('aff-view-notes');
+  if (notesEl && updates['affiliate.notes']) notesEl.textContent = updates['affiliate.notes'];
+}
+
 // ── Load partner notes + transcripts from Notion API ────────────────────
 (function loadPartnerNotionActivity() {
   var slug = '{{ partner.slug }}';
