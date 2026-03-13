@@ -964,3 +964,35 @@ details.activity-card[open] > summary .activity-chevron { transform: rotate(90de
 }
 
 .task-notion-link:hover { color: var(--accent); }
+
+
+/* ── Priority ranking system ──────────────────────────────────────────────── */
+.card.priority-high {
+  border-left: 3px solid #f59e0b;
+  position: relative;
+}
+.card.priority-medium {
+  border-left: 3px solid var(--accent-2);
+}
+.card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.priority-badge-high {
+  background: rgba(245, 158, 11, 0.18);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  letter-spacing: 0.02em;
+}
