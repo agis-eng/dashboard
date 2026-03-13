@@ -1,48 +1,118 @@
 tasks:
-  - id: task-atlas-dashboard
-    title: "Build Atlas dashboard tasks page"
+  - id: notion-32259b38371a81e1
+    title: Chelimitless website redesign
     status: in-progress
     priority: high
-    type: internal
-    platforms: []
-    project: "Atlas"
-    client: "Atlas HQ"
-    assignee: Erik
-    due_date: null
-    notes: "Kanban board + Notion sync for the Project Control Room dashboard"
-    tags: [dashboard, dev]
-    notion_url: ""
-
-  - id: task-tiktok-content-q2
-    title: "TikTok content calendar — Q2 2026"
-    status: backlog
-    priority: high
-    type: content
-    platforms: [TikTok]
-    project: "Capture Build Connect"
-    client: "Capture Build Connect"
+    type: website
+    platforms: [Website]
+    project: Chelimitless
+    client: Che Limitless
     assignee: Anton
-    due_date: "2026-03-20"
-    notes: "Short-form content plan for April–June. Focus on before/after website reveals."
-    tags: [content, social]
-    notion_url: ""
-
-  - id: task-amazon-logoclear
-    title: "Amazon listing optimization — LogoClear"
+    due_date: null
+    notes: New homepage hero, services section rebuild, mobile optimization pass
+    tags: [website, design]
+    notion_url: "https://www.notion.so/Chelimitless-website-redesign-32259b38371a81e1a142e7a575781515"
+    updated_at: "2026-03-13T12:26:00.000Z"
+  - id: notion-32259b38371a81d8
+    title: NanoBanana — Walmart listing review
+    status: review
+    priority: high
+    type: ecommerce
+    platforms: [Walmart]
+    project: NanoBanana
+    client: NanoBanana
+    assignee: Anton
+    due_date: 2026-03-15
+    notes: Check all 12 SKUs for suppressed listings, update images to Walmart spec 1500x1500
+    tags: [walmart, ecommerce]
+    notion_url: "https://www.notion.so/NanoBanana-Walmart-listing-review-32259b38371a81d8bcc5ecc7bc824e99"
+    updated_at: "2026-03-13T12:26:00.000Z"
+  - id: notion-32259b38371a8117
+    title: Amazon listing optimization — LogoClear
     status: in-progress
     priority: high
     type: ecommerce
     platforms: [Amazon]
-    project: "LogoClear"
-    client: "LogoClear"
+    project: LogoClear
+    client: LogoClear
     assignee: Anton
     due_date: null
-    notes: "Refresh product titles, bullet points, A+ content. Target keyword: logo removal kit."
+    notes: "Refresh product titles, bullet points, A+ content. Target keyword: logo removal kit"
     tags: [amazon, ecommerce]
-    notion_url: ""
-
-  - id: task-weekly-client-digest
-    title: "Weekly client status digest"
+    notion_url: "https://www.notion.so/Amazon-listing-optimization-LogoClear-32259b38371a811798ded802a5642b08"
+    updated_at: "2026-03-13T12:26:00.000Z"
+  - id: notion-32259b38371a81ef
+    title: TikTok content calendar — Q2 2026
+    status: backlog
+    priority: high
+    type: content
+    platforms: [TikTok]
+    project: Capture Build Connect
+    client: Capture Build Connect
+    assignee: Anton
+    due_date: 2026-03-20
+    notes: Short-form content plan for April–June. Focus on before/after website reveals
+    tags: [content, social]
+    notion_url: "https://www.notion.so/TikTok-content-calendar-Q2-2026-32259b38371a81ef8279de559797c97f"
+    updated_at: "2026-03-13T12:26:00.000Z"
+  - id: notion-32259b38371a81a0
+    title: Build Atlas dashboard tasks page
+    status: in-progress
+    priority: high
+    type: internal
+    platforms: [Website]
+    project: Atlas
+    client: Atlas HQ
+    assignee: Erik
+    due_date: null
+    notes: Kanban board + Notion sync for the Project Control Room dashboard
+    tags: [dashboard, dev]
+    notion_url: "https://www.notion.so/Build-Atlas-dashboard-tasks-page-32259b38371a81a0b858d353aeea295c"
+    updated_at: "2026-03-13T12:26:00.000Z"
+  - id: notion-32259b38371a81e3
+    title: AI agent strategy doc
+    status: backlog
+    priority: medium
+    type: strategy
+    platforms: []
+    project: Atlas
+    client: Atlas HQ
+    assignee: Erik
+    due_date: null
+    notes: "Map out all planned automations: idea generator, content creator, trend scout, project summarizer"
+    tags: [strategy, ai]
+    notion_url: "https://www.notion.so/AI-agent-strategy-doc-32259b38371a81e39c26c8f207a04f52"
+    updated_at: "2026-03-13T12:26:00.000Z"
+  - id: notion-32259b38371a8111
+    title: eBay store audit — Dan Bauman
+    status: backlog
+    priority: medium
+    type: ecommerce
+    platforms: [eBay]
+    project: Dan Bauman
+    client: Dan Bauman
+    assignee: Anton
+    due_date: null
+    notes: "Full store health check: titles, pricing, shipping policies, return rate"
+    tags: [ebay, ecommerce]
+    notion_url: "https://www.notion.so/eBay-store-audit-Dan-Bauman-32259b38371a81119062f2e1018950a1"
+    updated_at: "2026-03-13T12:26:00.000Z"
+  - id: notion-32259b38371a8131
+    title: Facebook Marketplace automation setup
+    status: backlog
+    priority: medium
+    type: ecommerce
+    platforms: [Facebook Marketplace]
+    project: ""
+    client: ""
+    assignee: Erik
+    due_date: 2026-03-25
+    notes: Evaluate listing tools for automating FB Marketplace product posts across client accounts
+    tags: [facebook, automation]
+    notion_url: "https://www.notion.so/Facebook-Marketplace-automation-setup-32259b38371a8131b397d89bb884e00f"
+    updated_at: "2026-03-13T12:26:00.000Z"
+  - id: notion-32259b38371a81a3
+    title: Weekly client status digest
     status: recurring
     priority: medium
     type: admin
@@ -51,82 +121,12 @@ tasks:
     client: ""
     assignee: Anton
     due_date: null
-    notes: "Every Friday: compile project updates across all active clients and send summary."
+    notes: "Every Friday: compile project updates across all active clients and send summary"
     tags: [recurring, admin]
-    notion_url: ""
-
-  - id: task-nanobanana-walmart
-    title: "NanoBanana — Walmart listing review"
-    status: review
-    priority: high
-    type: ecommerce
-    platforms: [Walmart]
-    project: "NanoBanana"
-    client: "NanoBanana"
-    assignee: Anton
-    due_date: "2026-03-15"
-    notes: "Check all 12 SKUs for suppressed listings, update images to Walmart spec 1500x1500."
-    tags: [walmart, ecommerce]
-    notion_url: ""
-
-  - id: task-chelimitless-redesign
-    title: "Chelimitless website redesign"
-    status: in-progress
-    priority: high
-    type: website
-    platforms: [Website]
-    project: "Chelimitless"
-    client: "Che Limitless"
-    assignee: Anton
-    due_date: null
-    notes: "New homepage hero, services section rebuild, mobile optimization pass."
-    tags: [website, design]
-    notion_url: ""
-
-  - id: task-fb-marketplace-automation
-    title: "Facebook Marketplace automation setup"
-    status: backlog
-    priority: medium
-    type: ecommerce
-    platforms: [Facebook Marketplace]
-    project: ""
-    client: ""
-    assignee: Erik
-    due_date: "2026-03-25"
-    notes: "Evaluate listing tools for automating FB Marketplace product posts across client accounts."
-    tags: [facebook, automation]
-    notion_url: ""
-
-  - id: task-ebay-audit-dan-bauman
-    title: "eBay store audit — Dan Bauman"
-    status: backlog
-    priority: medium
-    type: ecommerce
-    platforms: [eBay]
-    project: "Dan Bauman"
-    client: "Dan Bauman"
-    assignee: Anton
-    due_date: null
-    notes: "Full store health check: titles, pricing, shipping policies, return rate."
-    tags: [ebay, ecommerce]
-    notion_url: ""
-
-  - id: task-ai-agent-strategy
-    title: "AI agent strategy doc"
-    status: backlog
-    priority: medium
-    type: strategy
-    platforms: []
-    project: "Atlas"
-    client: "Atlas HQ"
-    assignee: Erik
-    due_date: null
-    notes: "Map out all planned automations: idea generator, content creator, trend scout, project summarizer."
-    tags: [strategy, ai]
-    notion_url: ""
-
-  - id: task-gsc-setup
-    title: "Google Search Console setup — client sites"
+    notion_url: "https://www.notion.so/Weekly-client-status-digest-32259b38371a81a3ad4afd2a785835a4"
+    updated_at: "2026-03-13T12:26:00.000Z"
+  - id: notion-32259b38371a8184
+    title: Google Search Console setup — client sites
     status: backlog
     priority: low
     type: marketing
@@ -135,6 +135,7 @@ tasks:
     client: ""
     assignee: Alex
     due_date: null
-    notes: "Verify and connect GSC for all active client websites. Share access with clients via portal."
+    notes: Verify and connect GSC for all active client websites. Share access with clients via portal
     tags: [seo, marketing]
-    notion_url: ""
+    notion_url: "https://www.notion.so/Google-Search-Console-setup-client-sites-32259b38371a8184b4c8dc4a51b5de3d"
+    updated_at: "2026-03-13T12:26:00.000Z"
