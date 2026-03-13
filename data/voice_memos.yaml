@@ -1,0 +1,11 @@
+voice_memos:
+- id: "test-entry"
+  title: "Dashboard connected — voice memos will appear here"
+  date: "2026-03-12T22:37:29.603338"
+  type: business
+  speakers: "Atlas"
+  project_match: null
+  summary: "Voice memo processing is now wired up to this dashboard. New recordings will appear here automatically after each processing run."
+  notion_url: ""
+  topics: []
+  action_items: []
