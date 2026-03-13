@@ -11,44 +11,99 @@
 </section>
 <div class="grid partner-grid" data-search-list="partners">
   {% for partner in partners %}
-  <a class="card-link" href="./{{ partner.slug }}.html">
-    <article class="card partner-card{% if partner.priority %} priority-{{ partner.priority }}{% endif %}"
-             data-search-item="partners"
-             data-search-text="{{ (partner.name + ' ' + (partner.summary or '') + ' ' + (partner.region or '') + ' ' + (partner.tags | join(' '))) | lower }}">
-      <header class="card-header">
-        <div>
-          <div class="card-title-row">
-            <h3>{{ partner.name }}</h3>
-            {% if partner.priority == 'high' %}
-              <span class="priority-badge priority-badge-high" title="High priority">★</span>
-            {% endif %}
-          </div>
-          <p class="muted">{{ partner.summary }}</p>
+  <article class="card partner-card{% if partner.priority %} priority-{{ partner.priority }}{% endif %}"
+           data-search-item="partners"
+           data-search-text="{{ (partner.name + ' ' + (partner.summary or '') + ' ' + (partner.region or '') + ' ' + (partner.tags | join(' '))) | lower }}"
+           onclick="if(!event.target.closest('.priority-control'))location.href='./{{ partner.slug }}.html'"
+           style="cursor:pointer">
+    <header class="card-header">
+      <div>
+        <div class="card-title-row">
+          <h3>{{ partner.name }}</h3>
+          {% if partner.priority == 'high' %}
+            <span class="priority-badge priority-badge-high" title="High priority">★</span>
+          {% endif %}
         </div>
-        <span class="status-pill">{{ partner.projectCount }} project{% if partner.projectCount != 1 %}s{% endif %}</span>
-      </header>
-      {% if partner.logoUrl %}
-      <div class="thumb-wrapper small-thumb">
-        <img class="site-thumb" src="{{ partner.logoUrl }}" alt="{{ partner.name }} logo" loading="lazy" />
+        <p class="muted">{{ partner.summary }}</p>
       </div>
-      {% endif %}
-      <p>{{ partner.description }}</p>
-      <ul class="tag-list">
-        {% for tag in partner.tags or [] %}
-          <li>{{ tag }}</li>
-        {% endfor %}
-      </ul>
-      <div class="meta">
-        <div><dt>Region</dt><dd>{{ partner.region or '—' }}</dd></div>
-        <div><dt>Focus</dt><dd>{{ (partner.focusAreas and partner.focusAreas | join(', ')) or '—' }}</dd></div>
-        {% if partner.email %}<div><dt>Email</dt><dd>{{ partner.email }}</dd></div>{% endif %}
-        {% if partner.phone %}<div><dt>Phone</dt><dd>{{ partner.phone }}</dd></div>{% endif %}
-      </div>
-      <div class="links">
-        {% if partner.website %}<span>Visit site →</span>{% endif %}
-      </div>
-    </article>
-  </a>
+      <span class="status-pill">{{ partner.projectCount }} project{% if partner.projectCount != 1 %}s{% endif %}</span>
+    </header>
+    {% if partner.logoUrl %}
+    <div class="thumb-wrapper small-thumb">
+      <img class="site-thumb" src="{{ partner.logoUrl }}" alt="{{ partner.name }} logo" loading="lazy" />
+    </div>
+    {% endif %}
+    <p>{{ partner.description }}</p>
+    <ul class="tag-list">
+      {% for tag in partner.tags or [] %}
+        <li>{{ tag }}</li>
+      {% endfor %}
+    </ul>
+    <div class="meta">
+      <div><dt>Region</dt><dd>{{ partner.region or '—' }}</dd></div>
+      <div><dt>Focus</dt><dd>{{ (partner.focusAreas and partner.focusAreas | join(', ')) or '—' }}</dd></div>
+      {% if partner.email %}<div><dt>Email</dt><dd>{{ partner.email }}</dd></div>{% endif %}
+      {% if partner.phone %}<div><dt>Phone</dt><dd>{{ partner.phone }}</dd></div>{% endif %}
+    </div>
+    <div class="links">
+      {% if partner.website %}<span>Visit site →</span>{% endif %}
+    </div>
+    <div class="priority-control" onclick="event.stopPropagation()">
+      <select class="priority-select"
+              data-entity-type="partner"
+              data-entity-id="{{ partner.id }}"
+              onchange="updatePriority(this)"
+              onclick="event.stopPropagation()">
+        <option value="">— Priority —</option>
+        <option value="high"{% if partner.priority == 'high' %} selected{% endif %}>★ High</option>
+        <option value="medium"{% if partner.priority == 'medium' %} selected{% endif %}>◆ Medium</option>
+        <option value="low"{% if partner.priority == 'low' %} selected{% endif %}>○ Low</option>
+      </select>
+      <span class="priority-save-status" id="ps-{{ partner.id }}"></span>
+    </div>
+  </article>
   {% endfor %}
 </div>
 <p class="empty-state" data-search-empty="partners">No partners match that search.</p>
+
+<script>
+async function updatePriority(select) {
+  var entityType = select.dataset.entityType;
+  var entityId   = select.dataset.entityId;
+  var value      = select.value || null;
+  var statusEl   = document.getElementById('ps-' + entityId);
+  statusEl.textContent = '⟳';
+  statusEl.className = 'priority-save-status saving';
+  try {
+    var r = await fetch('/api/update-field', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ entityType: entityType, entityId: entityId, updates: { priority: value } })
+    });
+    var d = await r.json();
+    if (d.ok) {
+      statusEl.textContent = '✓ Saved';
+      statusEl.className = 'priority-save-status saved';
+      var card = select.closest('.card');
+      card.className = card.className.replace(/\bpriority-\w+\b/g, '').trim();
+      if (value) card.classList.add('priority-' + value);
+      var existingBadge = card.querySelector('.priority-badge');
+      if (existingBadge) existingBadge.remove();
+      if (value === 'high') {
+        var badge = document.createElement('span');
+        badge.className = 'priority-badge priority-badge-high';
+        badge.title = 'High priority';
+        badge.textContent = '★';
+        card.querySelector('.card-title-row').appendChild(badge);
+      }
+      setTimeout(function() { statusEl.textContent = ''; }, 2500);
+    } else {
+      statusEl.textContent = '✗ Error';
+      statusEl.className = 'priority-save-status error';
+    }
+  } catch(e) {
+    statusEl.textContent = '✗ Error';
+    statusEl.className = 'priority-save-status error';
+  }
+}
+</script>
