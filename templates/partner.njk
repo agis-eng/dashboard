@@ -29,6 +29,51 @@
   </div>
 </section>
 
+{# ── Affiliate Program Section ── #}
+{% if partner.affiliate %}
+<section class="partner-affiliate">
+  <header class="section-header">
+    <div>
+      <h3>Affiliate Program</h3>
+      <p class="muted">{{ partner.affiliate.program_name }}</p>
+    </div>
+    <span class="aff-status-badge status-{{ partner.affiliate.status }}">
+      {% if partner.affiliate.status == 'active' %}✓ Active
+      {% elif partner.affiliate.status == 'pending' %}⏳ Pending
+      {% else %}→ Apply now{% endif %}
+    </span>
+  </header>
+
+  <div class="aff-detail-metrics">
+    <div class="aff-detail-metric">
+      <span class="aff-detail-val">{{ partner.affiliate.commission }}</span>
+      <span class="aff-detail-label">Commission structure</span>
+    </div>
+    <div class="aff-detail-metric">
+      <span class="aff-detail-val">${{ partner.affiliate.avg_deal_size }}</span>
+      <span class="aff-detail-label">Avg deal size</span>
+    </div>
+    <div class="aff-detail-metric">
+      <span class="aff-detail-val">{{ partner.affiliate.monthly_leads }}/mo</span>
+      <span class="aff-detail-label">Est. monthly leads</span>
+    </div>
+    <div class="aff-detail-metric highlight">
+      <span class="aff-detail-val aff-potential">${{ partner.affiliate.monthly_potential }}</span>
+      <span class="aff-detail-label">Est. monthly revenue</span>
+    </div>
+  </div>
+
+  {% if partner.affiliate.notes %}
+  <p class="aff-program-notes">{{ partner.affiliate.notes }}</p>
+  {% endif %}
+
+  <div class="aff-program-links">
+    {% if partner.affiliate.affiliate_url %}<a href="{{ partner.affiliate.affiliate_url }}" target="_blank" class="btn btn-secondary">Program page →</a>{% endif %}
+    {% if partner.affiliate.signup_url and partner.affiliate.status != 'active' %}<a href="{{ partner.affiliate.signup_url }}" target="_blank" class="btn">Apply to program →</a>{% endif %}
+  </div>
+</section>
+{% endif %}
+
 <section class="partner-projects">
   <header class="section-header">
     <div>
