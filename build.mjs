@@ -32,6 +32,7 @@ env.addFilter('date', (value, fmt = "MMM d, yyyy") => {
   const date = typeof value === "string" ? new Date(value) : value;
   return format(date, fmt);
 });
+env.addFilter('where', (arr, key, val) => (arr || []).filter(item => item[key] === val));
 
 const clientsData = await loadYaml('clients.yaml', 'clients');
 const projectsData = await loadYaml('projects.yaml', 'projects');
