@@ -19,10 +19,18 @@
     </header>
     <div class="grid project-grid" data-search-list="projects">
     {% for project in projects %}
-      <article class="card" data-portal="./clients/{{ project.client.slug }}.html" data-search-item="projects" data-search-text="{{ (project.name + ' ' + (project.summary or '') + ' ' + (project.owner or '') + ' ' + (project.client.name or '') + ' ' + (project.stage or '') + ' ' + (project.status or '')) | lower }}">
+      <article class="card{% if project.priority %} priority-{{ project.priority }}{% endif %}"
+               data-portal="./clients/{{ project.client.slug }}.html"
+               data-search-item="projects"
+               data-search-text="{{ (project.name + ' ' + (project.summary or '') + ' ' + (project.owner or '') + ' ' + (project.client.name or '') + ' ' + (project.stage or '') + ' ' + (project.status or '')) | lower }}">
         <div class="card-header">
           <div>
-            <h2>{{ project.name }}</h2>
+            <div class="card-title-row">
+              <h2>{{ project.name }}</h2>
+              {% if project.priority == 'high' %}
+                <span class="priority-badge priority-badge-high" title="High priority">★</span>
+              {% endif %}
+            </div>
             <p class="muted">{{ project.summary }}</p>
           </div>
           <span class="status-pill {{ project.stage | lower | replace(' ', '-') }}">{{ project.stage }}</span>
