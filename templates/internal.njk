@@ -73,6 +73,12 @@
           {% if project.callCount > 0 %}
             <span class="call-chip">📞 {{ project.callCount }} call{% if project.callCount != 1 %}s{% endif %}</span>
           {% endif %}
+          {% if project.brain %}
+            {% set brainTotal = ((project.brain.links or []) | length) + ((project.brain.notes or []) | length) %}
+            {% if brainTotal > 0 %}
+              <span class="brain-chip" title="{{ (project.brain.links or []) | length }} link(s), {{ (project.brain.notes or []) | length }} note(s)">🧠 {{ brainTotal }}</span>
+            {% endif %}
+          {% endif %}
         </div>
         <div class="priority-control" onclick="event.stopPropagation()" data-noportal>
           <select class="priority-select"
@@ -95,13 +101,15 @@
                   data-stage="{{ project.stage }}"
                   data-preview="{{ project.previewUrl }}"
                   data-repo="{{ project.repoUrl }}"
-                  data-contacts="{{ (project.contacts or []) | dump | escape }}">
+                  data-contacts="{{ (project.contacts or []) | dump | escape }}"
+                  data-brain-links="{{ (project.brain.links if project.brain else []) | dump | escape }}"
+                  data-brain-notes="{{ (project.brain.notes if project.brain else []) | dump | escape }}">
             ✏️ Edit
           </button>
         </div>
 
         {# ── Inline editor panel ── #}
-        <div class="project-editor" id="editor-{{ project.id }}" style="display:none" data-noportal onclick="event.stopPropagation()">
+        <div class="project-editor" id="editor-{{ project.id }}" style="display:none" data-noportal data-project-id="{{ project.id }}" onclick="event.stopPropagation()">
           <div class="editor-grid">
             <div class="editor-field editor-full">
               <label>Project name</label>
@@ -152,6 +160,34 @@
             <div class="editor-contacts-list" id="cl-{{ project.id }}"></div>
             <button type="button" class="btn btn-ghost btn-sm" onclick="addContactRow('{{ project.id }}')">+ Add contact</button>
           </div>
+
+          {# ── Project Brain section ── #}
+          <details class="brain-section" id="brain-{{ project.id }}">
+            <summary class="brain-toggle">🧠 Project Brain <span class="brain-badge" id="bb-{{ project.id }}"></span></summary>
+            <div class="brain-panel">
+              <div class="brain-links-section">
+                <div class="brain-sub-header">
+                  <span class="brain-sub-title">🔗 Links &amp; resources</span>
+                  <button type="button" class="btn btn-ghost btn-sm" onclick="addBrainLink('{{ project.id }}')">+ Add link</button>
+                </div>
+                <div class="brain-links-list" id="bl-{{ project.id }}"></div>
+              </div>
+              <div class="brain-notes-section">
+                <div class="brain-sub-header">
+                  <span class="brain-sub-title">📝 Notes &amp; context</span>
+                  <div class="brain-add-btns">
+                    <button type="button" class="btn btn-ghost btn-sm" onclick="addBrainNote('{{ project.id }}')">+ Add note</button>
+                    <label class="btn btn-ghost btn-sm brain-upload-label">
+                      📎 Upload file
+                      <input type="file" accept=".txt,.md,.html,.csv,.json" style="display:none" onchange="uploadBrainFile(this, '{{ project.id }}')">
+                    </label>
+                  </div>
+                </div>
+                <div class="brain-notes-list" id="bn-{{ project.id }}"></div>
+                <p class="brain-hint muted">Supports .txt, .md, .html, .csv · Paste any text as a note</p>
+              </div>
+            </div>
+          </details>
 
           <div class="editor-actions">
             <button class="btn btn-primary btn-sm" onclick="saveProjectEditor('{{ project.id }}', this)">Save changes</button>
@@ -439,6 +475,15 @@ function openProjectEditor(btn, evt) {
   var contacts = [];
   try { contacts = JSON.parse(btn.dataset.contacts || '[]'); } catch(e) {}
   renderContactRows(id, contacts);
+  // Brain data
+  var brainLinks = [], brainNotes = [];
+  try { brainLinks = JSON.parse(btn.dataset.brainLinks || '[]'); } catch(e) {}
+  try { brainNotes = JSON.parse(btn.dataset.brainNotes || '[]'); } catch(e) {}
+  renderBrainLinks(id, brainLinks);
+  renderBrainNotes(id, brainNotes);
+  // Auto-open brain section if it has content
+  var brainDetails = document.getElementById('brain-' + id);
+  if (brainDetails && (brainLinks.length || brainNotes.length)) brainDetails.open = true;
   editor.style.display = 'block';
   editor.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
@@ -524,6 +569,11 @@ async function saveProjectEditor(id, btn) {
   };
   if (clientId && clientId !== '__new__') updates.clientId = clientId;
   if (!updates.contacts.length) delete updates.contacts;
+  // Brain data
+  var brainLinks = collectBrainLinks(id);
+  var brainNotes = collectBrainNotes(id);
+  updates['brain.links'] = brainLinks.length ? brainLinks : null;
+  updates['brain.notes'] = brainNotes.length ? brainNotes : null;
 
   try {
     var r = await fetch('/api/update-field', {
@@ -546,6 +596,8 @@ async function saveProjectEditor(id, btn) {
         editBtn.dataset.preview = updates.previewUrl || '';
         editBtn.dataset.repo    = updates.repoUrl    || '';
         editBtn.dataset.contacts = JSON.stringify(updates.contacts || []);
+        editBtn.dataset.brainLinks = JSON.stringify(brainLinks);
+        editBtn.dataset.brainNotes = JSON.stringify(brainNotes);
         // Update visible card fields immediately
         var card = editor.closest('.card');
         if (card) {
@@ -704,6 +756,130 @@ document.addEventListener('DOMContentLoaded', function() {
     if (e.target === modal) closeCreateModal();
   });
 });
+
+/* ── Project Brain ── */
+function renderBrainLinks(projectId, links) {
+  var list = document.getElementById('bl-' + projectId);
+  if (!list) return;
+  list.innerHTML = '';
+  (links || []).forEach(function(link, i) { list.appendChild(makeBrainLinkRow(link, i)); });
+  updateBrainBadge(projectId);
+}
+
+function renderBrainNotes(projectId, notes) {
+  var list = document.getElementById('bn-' + projectId);
+  if (!list) return;
+  list.innerHTML = '';
+  (notes || []).forEach(function(note, i) { list.appendChild(makeBrainNoteCard(note, i)); });
+  updateBrainBadge(projectId);
+}
+
+function updateBrainBadge(projectId) {
+  var badge = document.getElementById('bb-' + projectId);
+  if (!badge) return;
+  var lc = (document.getElementById('bl-' + projectId) || { children: [] }).children.length;
+  var nc = (document.getElementById('bn-' + projectId) || { children: [] }).children.length;
+  var t = lc + nc;
+  badge.textContent = t > 0 ? '(' + t + ')' : '';
+}
+
+function makeBrainLinkRow(link, idx) {
+  var row = document.createElement('div');
+  row.className = 'brain-link-row';
+  row.dataset.idx = idx;
+  var lbl = document.createElement('input');
+  lbl.type = 'text'; lbl.className = 'bl-label'; lbl.placeholder = 'Label (e.g. Client Portal)'; lbl.value = link.label || '';
+  var url = document.createElement('input');
+  url.type = 'url'; url.className = 'bl-url'; url.placeholder = 'https://...'; url.value = link.url || '';
+  var del = document.createElement('button');
+  del.type = 'button'; del.className = 'btn btn-ghost btn-sm'; del.textContent = '✕';
+  del.onclick = function() { removeBrainItem(del); };
+  row.appendChild(lbl); row.appendChild(url); row.appendChild(del);
+  return row;
+}
+
+function makeBrainNoteCard(note, idx) {
+  var card = document.createElement('div');
+  card.className = 'brain-note-card';
+  card.dataset.idx = idx;
+  var hdr = document.createElement('div');
+  hdr.className = 'brain-note-header';
+  var ttl = document.createElement('input');
+  ttl.type = 'text'; ttl.className = 'bn-title'; ttl.placeholder = 'Title (optional)'; ttl.value = note.title || '';
+  var del = document.createElement('button');
+  del.type = 'button'; del.className = 'btn btn-ghost btn-sm'; del.textContent = '✕';
+  del.onclick = function() { removeBrainItem(del); };
+  hdr.appendChild(ttl); hdr.appendChild(del);
+  var ta = document.createElement('textarea');
+  ta.className = 'bn-content'; ta.placeholder = 'Paste text, notes, context, docs…'; ta.rows = 5; ta.value = note.content || '';
+  card.appendChild(hdr); card.appendChild(ta);
+  if (note.date) {
+    var dt = document.createElement('div');
+    dt.className = 'brain-note-date muted'; dt.textContent = 'Added: ' + note.date;
+    card.appendChild(dt);
+  }
+  return card;
+}
+
+function addBrainLink(projectId) {
+  var list = document.getElementById('bl-' + projectId);
+  if (!list) return;
+  list.appendChild(makeBrainLinkRow({}, list.children.length));
+  updateBrainBadge(projectId);
+}
+
+function addBrainNote(projectId, prefill) {
+  var list = document.getElementById('bn-' + projectId);
+  if (!list) return;
+  list.appendChild(makeBrainNoteCard(prefill || {}, list.children.length));
+  updateBrainBadge(projectId);
+  // Auto-expand brain section
+  var brainDetails = list.closest('details.brain-section');
+  if (brainDetails) brainDetails.open = true;
+}
+
+function uploadBrainFile(input, projectId) {
+  var file = input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    addBrainNote(projectId, {
+      title: file.name,
+      content: e.target.result,
+      date: new Date().toISOString().slice(0, 10)
+    });
+  };
+  reader.readAsText(file);
+  input.value = '';
+}
+
+function removeBrainItem(btn) {
+  var item = btn.closest('.brain-link-row, .brain-note-card');
+  if (!item) return;
+  var editor = btn.closest('.project-editor');
+  item.remove();
+  if (editor && editor.dataset.projectId) updateBrainBadge(editor.dataset.projectId);
+}
+
+function collectBrainLinks(projectId) {
+  var list = document.getElementById('bl-' + projectId);
+  if (!list) return [];
+  return Array.from(list.querySelectorAll('.brain-link-row')).map(function(r) {
+    var lbl = r.querySelector('.bl-label').value.trim();
+    var url = r.querySelector('.bl-url').value.trim();
+    return url ? { label: lbl || url, url: url } : null;
+  }).filter(Boolean);
+}
+
+function collectBrainNotes(projectId) {
+  var list = document.getElementById('bn-' + projectId);
+  if (!list) return [];
+  return Array.from(list.querySelectorAll('.brain-note-card')).map(function(c) {
+    var title   = c.querySelector('.bn-title').value.trim();
+    var content = c.querySelector('.bn-content').value.trim();
+    return content ? { title: title || 'Untitled', content: content, date: new Date().toISOString().slice(0, 10) } : null;
+  }).filter(Boolean);
+}
 </script>
 
 {# ── Create project modal ── #}
