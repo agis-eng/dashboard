@@ -1843,3 +1843,58 @@ details.activity-card[open] > summary .activity-chevron { transform: rotate(90de
   opacity: 0.7;
   margin-left: 0.15rem;
 }
+
+/* ── Call mover (move call to different project) ── */
+.call-mover {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.5rem 0.75rem;
+  background: rgba(139,92,246,0.07);
+  border-radius: 7px;
+  margin-top: 0.25rem;
+}
+.call-mover-select {
+  flex: 1;
+  min-width: 180px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.82rem;
+  padding: 0.3rem 0.6rem;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+.call-mover-select:focus { border-color: var(--accent); }
+.call-mover-select option { background: #1e2130; }
+.call-mover-status { font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+.call-move-btn { opacity: 0.6; }
+.call-move-btn:hover { opacity: 1; }
+
+/* ── Queue attach row ── */
+.queue-attach {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.35rem;
+}
+.queue-attach-select {
+  flex: 1;
+  min-width: 180px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.82rem;
+  padding: 0.3rem 0.6rem;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+.queue-attach-select:focus { border-color: var(--accent); }
+.queue-attach-select option { background: #1e2130; }
+.queue-attach-status { font-size: 0.78rem; font-weight: 600; white-space: nowrap; }

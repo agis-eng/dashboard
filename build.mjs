@@ -325,7 +325,7 @@ if (partners.length) {
       title: partner.name,
       subtitle: partner.summary,
       generatedAt, basePath: '../', showNav: true, activeNav: 'partners',
-      content: renderPage('partner.njk', { partner, projects: partner.featuredProjects, calls: partnerCalls })
+      content: renderPage('partner.njk', { partner, projects: partner.featuredProjects, calls: partnerCalls, allProjects: projects })
     });
     await writePage(path.join('partners', `${partner.slug}.html`), partnerHtml);
   }
@@ -341,7 +341,7 @@ for (const client of clientsData) {
     title: `${client.name} portal`,
     subtitle: 'Latest builds + links',
     generatedAt, basePath: '../',
-    content: renderPage('client.njk', { client, projects: clientProjects, settings, calls: clientCalls })
+    content: renderPage('client.njk', { client, projects: clientProjects, settings, calls: clientCalls, allProjects: projects })
   });
   await writePage(path.join('clients', `${client.slug}.html`), html);
 }

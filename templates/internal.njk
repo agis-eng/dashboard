@@ -201,6 +201,16 @@
             <button class="btn btn-primary btn-sm" onclick="openCreateProjectModal({{ loop.index }}, {{ group.name | dump }}, {{ group.recordingIds | dump }})">
               + Create project stub
             </button>
+            <div class="queue-attach">
+              <select class="queue-attach-select" id="qa-{{ loop.index }}">
+                <option value="">↗ Attach to existing project…</option>
+                {% for p in projects | sort(attribute='name') %}
+                <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endfor %}
+              </select>
+              <button class="btn btn-ghost btn-sm" onclick="attachCallsToProject({{ loop.index }}, {{ group.recordingIds | dump }})">Attach</button>
+              <span class="queue-attach-status" id="qas-{{ loop.index }}"></span>
+            </div>
           </div>
         </div>
       </details>
@@ -652,6 +662,38 @@ async function submitCreateProject(btn) {
     statusEl.textContent = '✗ ' + e.message;
     statusEl.style.color = '#f87171';
     btn.disabled = false;
+  }
+}
+
+/* ── Attach calls to existing project (review queue) ── */
+async function attachCallsToProject(idx, recordingIds) {
+  var sel = document.getElementById('qa-' + idx);
+  var statusEl = document.getElementById('qas-' + idx);
+  var projectId = sel ? sel.value : '';
+  if (!projectId) { statusEl.textContent = 'Pick a project first'; statusEl.style.color = '#f87171'; setTimeout(function(){ statusEl.textContent=''; }, 2000); return; }
+  var projectName = sel.options[sel.selectedIndex].text;
+  statusEl.textContent = '⟳ Linking…';
+  statusEl.style.color = 'var(--muted)';
+  try {
+    var r = await fetch('/api/update-field', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'link-calls', callIds: recordingIds.map(String), projectId: projectId })
+    });
+    var d = await r.json();
+    if (d.ok) {
+      statusEl.textContent = '✓ ' + d.updated + ' call' + (d.updated !== 1 ? 's' : '') + ' → ' + projectName;
+      statusEl.style.color = '#4ade80';
+      // Collapse and fade out the group after a moment
+      var group = document.getElementById('qg-' + idx);
+      if (group) setTimeout(function() { group.style.opacity = '0.35'; group.style.pointerEvents = 'none'; }, 1500);
+    } else {
+      statusEl.textContent = '✗ ' + (d.error || 'Error');
+      statusEl.style.color = '#f87171';
+    }
+  } catch(e) {
+    statusEl.textContent = '✗ ' + e.message;
+    statusEl.style.color = '#f87171';
   }
 }
 

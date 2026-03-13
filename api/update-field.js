@@ -59,13 +59,9 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   if (!GITHUB_TOKEN) return res.status(500).json({ error: 'GITHUB_TOKEN not set' });
 
-  // Route: if action=create-project (also accepts requests from /api/create-project path)
-  const isCreate = req.body?.action === 'create-project'
-    || (req.url || '').includes('create-project');
-
-  if (isCreate) {
-    return handleCreateProject(req, res);
-  }
+  const action = req.body?.action;
+  if (action === 'create-project') return handleCreateProject(req, res);
+  if (action === 'link-calls')     return handleLinkCalls(req, res);
   return handleUpdateField(req, res);
 }
 
@@ -183,6 +179,41 @@ async function handleCreateProject(req, res) {
     return res.status(200).json({ ok: true, id: projectId, name, clientId: resolvedClientId });
   } catch (err) {
     console.error('create-project error:', err);
+    return res.status(500).json({ error: err.message });
+  }
+}
+
+async function handleLinkCalls(req, res) {
+  // Attach a set of calls (by recording_id) to a project or partner
+  const { callIds, projectId, partnerId, clearProject, clearPartner } = req.body || {};
+  if (!callIds || !callIds.length) return res.status(400).json({ error: 'Missing callIds' });
+  if (!projectId && !partnerId && !clearProject && !clearPartner) {
+    return res.status(400).json({ error: 'Must provide projectId, partnerId, or clear flag' });
+  }
+  try {
+    const { content, sha } = await ghGet('data/call-notes.yaml');
+    const data = parse(content);
+    let updated = 0;
+    for (const call of data.calls) {
+      if (callIds.includes(String(call.recording_id))) {
+        if (projectId)    call.project_id  = projectId;
+        if (partnerId)    call.partner_id  = partnerId;
+        if (clearProject) delete call.project_id;
+        if (clearPartner) delete call.partner_id;
+        updated++;
+      }
+    }
+    if (updated === 0) return res.status(404).json({ error: 'No matching calls found' });
+    const label = projectId || partnerId || 'unlinked';
+    const result = await ghPut('data/call-notes.yaml', stringify(data, { lineWidth: 0 }), sha,
+      `dashboard: link ${updated} call${updated !== 1 ? 's' : ''} to ${label}`);
+    if (result.content) {
+      return res.status(200).json({ ok: true, updated, label });
+    } else {
+      return res.status(500).json({ error: 'GitHub push failed', detail: result.message });
+    }
+  } catch (err) {
+    console.error('link-calls error:', err);
     return res.status(500).json({ error: err.message });
   }
 }

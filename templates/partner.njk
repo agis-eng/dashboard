@@ -242,6 +242,22 @@
         <div class="call-footer">
           {% if call.share_url %}<a href="{{ call.share_url }}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">▶ View recording</a>{% endif %}
           {% if call.fathom_url %}<a href="{{ call.fathom_url }}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">Full transcript</a>{% endif %}
+          <button class="btn btn-ghost btn-sm call-move-btn"
+                  onclick="toggleCallMover(this, '{{ call.recording_id }}')"
+                  data-rid="{{ call.recording_id }}">📁 Move</button>
+        </div>
+        <div class="call-mover" id="cm-{{ call.recording_id }}" style="display:none">
+          <select class="call-mover-select">
+            <option value="">— Move to project —</option>
+            {% if allProjects %}
+            {% for p in allProjects | sort(attribute='name') %}
+            <option value="{{ p.id }}"{% if p.id == call.project_id %} selected{% endif %}>{{ p.name }}</option>
+            {% endfor %}
+            {% endif %}
+            <option value="__new__">＋ Create new project…</option>
+          </select>
+          <button class="btn btn-primary btn-sm" onclick="moveCall('{{ call.recording_id }}', this)">Move</button>
+          <span class="call-mover-status" id="cms-{{ call.recording_id }}"></span>
         </div>
       </div>
     </details>
@@ -499,5 +515,47 @@ async function submitNote(event, slug, dbType) {
   status.style.display = '';
   btn.disabled = false;
   btn.textContent = 'Save note';
+}
+
+/* ── Move call to different project ── */
+function toggleCallMover(btn, rid) {
+  var mover = document.getElementById('cm-' + rid);
+  if (!mover) return;
+  mover.style.display = mover.style.display === 'none' ? 'flex' : 'none';
+}
+
+async function moveCall(rid, btn) {
+  var mover = document.getElementById('cm-' + rid);
+  var sel = mover.querySelector('.call-mover-select');
+  var statusEl = document.getElementById('cms-' + rid);
+  var projectId = sel ? sel.value : '';
+  if (!projectId) { statusEl.textContent = 'Pick a project'; statusEl.style.color = '#f87171'; return; }
+  var projectName = sel.options[sel.selectedIndex].text;
+  btn.disabled = true;
+  statusEl.textContent = '⟳';
+  statusEl.style.color = 'var(--muted)';
+  try {
+    var r = await fetch('/api/update-field', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'link-calls', callIds: [String(rid)], projectId: projectId })
+    });
+    var d = await r.json();
+    if (d.ok) {
+      statusEl.textContent = '✓ Moved to ' + projectName;
+      statusEl.style.color = '#4ade80';
+      var card = mover.closest('.call-card');
+      if (card) card.style.opacity = '0.45';
+      mover.style.display = 'none';
+    } else {
+      statusEl.textContent = '✗ ' + (d.error || 'Error');
+      statusEl.style.color = '#f87171';
+      btn.disabled = false;
+    }
+  } catch(e) {
+    statusEl.textContent = '✗ ' + e.message;
+    statusEl.style.color = '#f87171';
+    btn.disabled = false;
+  }
 }
 </script>
