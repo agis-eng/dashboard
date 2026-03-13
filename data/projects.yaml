@@ -45,6 +45,20 @@ projects:
   repoUrl: ''
   rank: 3
   priority: high
+  affiliate:
+    active: false
+    program_name: Capture Build Connect Referral
+    commission: 12% of new client value
+    commission_type: percentage
+    commission_pct: 12
+    avg_deal_size: 2000
+    monthly_leads: 2
+    monthly_potential: 480
+    status: pending
+    notes: Refer businesses that need a full capture → build → connect pipeline. Great
+      fit for our agency clients post-launch.
+    affiliate_url: https://capture-build-connect.lovable.app
+    signup_url: ''
 - id: caring-echo-bridge-caring-echo-bridge
   name: Caring Echo Bridge
   clientId: caring-echo-bridge
@@ -308,6 +322,20 @@ projects:
   summary: AI-powered logo cleanup + creation tool backed by Gemini.
   rank: 1
   priority: high
+  affiliate:
+    active: true
+    program_name: LogoClear Affiliate Program
+    commission: 30% recurring monthly
+    commission_type: percentage
+    commission_pct: 30
+    avg_deal_size: 49
+    monthly_leads: 15
+    monthly_potential: 220
+    status: active
+    notes: 'Our own product. Drive affiliate partners to promote LogoClear — every
+      new subscriber earns 30% recurring. Priority: build affiliate landing page.'
+    affiliate_url: https://logoclear.vercel.app
+    signup_url: https://logoclear.vercel.app/affiliate
 - id: love-portal
   name: Lovable Client Portal
   clientId: atlas
