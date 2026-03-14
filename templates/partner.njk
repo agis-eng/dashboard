@@ -31,6 +31,47 @@
   </div>
 </section>
 
+{# ── Partner Brain ── #}
+<section class="partner-brain-section" id="partner-brain-section">
+  <div class="section-header">
+    <div>
+      <h3>🧠 Partner Brain</h3>
+      <p class="muted" id="partner-brain-subtitle">Links, resources &amp; context for this partner</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.75rem;">
+      <span class="brain-save-status" id="bss-{{ partner.id }}"></span>
+      <button class="btn btn-primary btn-sm" onclick="saveBrainFromPage('{{ partner.id }}', 'partner', this)">💾 Save brain</button>
+    </div>
+  </div>
+
+  <details class="brain-section" id="brain-{{ partner.id }}" open>
+    <summary class="brain-toggle">Brain contents <span class="brain-badge" id="bb-{{ partner.id }}"></span></summary>
+    <div class="brain-panel">
+      <div class="brain-links-section">
+        <div class="brain-sub-header">
+          <span class="brain-sub-title">🔗 Links &amp; resources</span>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="addBrainLink('{{ partner.id }}')">+ Add link</button>
+        </div>
+        <div class="brain-links-list" id="bl-{{ partner.id }}"></div>
+      </div>
+      <div class="brain-notes-section">
+        <div class="brain-sub-header">
+          <span class="brain-sub-title">📝 Notes &amp; context</span>
+          <div class="brain-add-btns">
+            <button type="button" class="btn btn-ghost btn-sm" onclick="addBrainNote('{{ partner.id }}')">+ Add note</button>
+            <label class="btn btn-ghost btn-sm brain-upload-label">
+              📎 Upload file
+              <input type="file" accept=".txt,.md,.html,.csv,.json" style="display:none" onchange="uploadBrainFile(this, '{{ partner.id }}')">
+            </label>
+          </div>
+        </div>
+        <div class="brain-notes-list" id="bn-{{ partner.id }}"></div>
+        <p class="brain-hint muted">Supports .txt, .md, .html, .csv · Paste any text as a note</p>
+      </div>
+    </div>
+  </details>
+</section>
+
 {# ── Affiliate Program Section ── #}
 <section class="partner-affiliate" id="affiliate-section">
   {# ── VIEW MODE ── #}
@@ -558,4 +599,158 @@ async function moveCall(rid, btn) {
     btn.disabled = false;
   }
 }
+
+// ── Partner Brain init ────────────────────────────────────────────────
+(function initPartnerBrain() {
+  var partnerId = '{{ partner.id }}';
+  var links = {{ (partner.brain.links if partner.brain else []) | dump }};
+  var notes = {{ (partner.brain.notes if partner.brain else []) | dump }};
+  renderBrainLinks(partnerId, links || []);
+  renderBrainNotes(partnerId, notes || []);
+  // Update subtitle
+  var total = (links || []).length + (notes || []).length;
+  var subtitle = document.getElementById('partner-brain-subtitle');
+  if (subtitle) {
+    subtitle.textContent = total > 0
+      ? (links || []).length + ' link' + ((links || []).length !== 1 ? 's' : '') + ' · ' + (notes || []).length + ' note' + ((notes || []).length !== 1 ? 's' : '')
+      : 'No brain content yet — add links and notes below';
+  }
+})();
+
+/* ── Brain (links + notes) ── */
+function renderBrainLinks(entityId, links) {
+  var list = document.getElementById('bl-' + entityId);
+  if (!list) return;
+  list.innerHTML = '';
+  (links || []).forEach(function(l, i) { list.appendChild(makeBrainLinkRow(entityId, l, i)); });
+  updateBrainBadge(entityId);
+}
+
+function renderBrainNotes(entityId, notes) {
+  var list = document.getElementById('bn-' + entityId);
+  if (!list) return;
+  list.innerHTML = '';
+  (notes || []).forEach(function(n, i) { list.appendChild(makeBrainNoteRow(entityId, n, i)); });
+  updateBrainBadge(entityId);
+}
+
+function makeBrainLinkRow(entityId, l, idx) {
+  var row = document.createElement('div');
+  row.className = 'brain-link-row';
+  row.dataset.idx = idx;
+  row.innerHTML =
+    '<input type="url"  class="bl-url"   placeholder="https://" value="' + esc(l.url   || '') + '">' +
+    '<input type="text" class="bl-label" placeholder="Label"    value="' + esc(l.label || '') + '">' +
+    '<button type="button" class="btn btn-ghost btn-sm" onclick="removeBrainRow(this)">✕</button>';
+  return row;
+}
+
+function makeBrainNoteRow(entityId, n, idx) {
+  var row = document.createElement('div');
+  row.className = 'brain-note-row';
+  row.dataset.idx = idx;
+  var text = typeof n === 'string' ? n : (n.text || '');
+  row.innerHTML =
+    '<textarea class="bn-text" placeholder="Note or context…" rows="3">' + esc(text) + '</textarea>' +
+    '<button type="button" class="btn btn-ghost btn-sm" onclick="removeBrainRow(this)">✕</button>';
+  return row;
+}
+
+function addBrainLink(entityId) {
+  var list = document.getElementById('bl-' + entityId);
+  if (!list) return;
+  list.appendChild(makeBrainLinkRow(entityId, {}, list.children.length));
+}
+
+function addBrainNote(entityId) {
+  var list = document.getElementById('bn-' + entityId);
+  if (!list) return;
+  list.appendChild(makeBrainNoteRow(entityId, '', list.children.length));
+}
+
+function removeBrainRow(btn) {
+  var row = btn.closest('.brain-link-row, .brain-note-row');
+  if (row) row.remove();
+}
+
+function collectBrainLinks(entityId) {
+  var list = document.getElementById('bl-' + entityId);
+  if (!list) return [];
+  return Array.from(list.querySelectorAll('.brain-link-row')).map(function(row) {
+    var url   = row.querySelector('.bl-url').value.trim();
+    var label = row.querySelector('.bl-label').value.trim();
+    if (!url) return null;
+    return { url: url, label: label || url };
+  }).filter(Boolean);
+}
+
+function collectBrainNotes(entityId) {
+  var list = document.getElementById('bn-' + entityId);
+  if (!list) return [];
+  return Array.from(list.querySelectorAll('.brain-note-row')).map(function(row) {
+    var text = row.querySelector('.bn-text').value.trim();
+    return text || null;
+  }).filter(Boolean);
+}
+
+function updateBrainBadge(entityId) {
+  var badge = document.getElementById('bb-' + entityId);
+  if (!badge) return;
+  var linkCount = (document.getElementById('bl-' + entityId) || { children: [] }).children.length;
+  var noteCount = (document.getElementById('bn-' + entityId) || { children: [] }).children.length;
+  var total = linkCount + noteCount;
+  badge.textContent = total > 0 ? '(' + total + ')' : '';
+}
+
+async function uploadBrainFile(input, entityId) {
+  var file = input.files[0];
+  if (!file) return;
+  var text = await file.text();
+  var list = document.getElementById('bn-' + entityId);
+  if (!list) return;
+  list.appendChild(makeBrainNoteRow(entityId, text.slice(0, 8000), list.children.length));
+  updateBrainBadge(entityId);
+  input.value = '';
+}
+
+async function saveBrainFromPage(entityId, entityType, btn) {
+  var statusEl = document.getElementById('bss-' + entityId);
+  btn.disabled = true;
+  if (statusEl) { statusEl.textContent = '⟳ Saving…'; statusEl.style.color = 'var(--muted)'; }
+
+  var links = collectBrainLinks(entityId);
+  var notes = collectBrainNotes(entityId);
+
+  try {
+    var r = await fetch('/api/update-field', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        entityType: entityType,
+        entityId:   entityId,
+        updates: {
+          'brain.links': links.length ? links : null,
+          'brain.notes': notes.length ? notes : null
+        }
+      })
+    });
+    var d = await r.json();
+    if (d.ok) {
+      if (statusEl) { statusEl.textContent = '✓ Saved!'; statusEl.style.color = '#4ade80'; }
+      updateBrainBadge(entityId);
+      // Update subtitle with new counts
+      var subtitle = document.getElementById('partner-brain-subtitle');
+      if (subtitle) {
+        subtitle.textContent = links.length + ' link' + (links.length !== 1 ? 's' : '') + ' · ' + notes.length + ' note' + (notes.length !== 1 ? 's' : '');
+      }
+      setTimeout(function() { if (statusEl) statusEl.textContent = ''; }, 3000);
+    } else {
+      if (statusEl) { statusEl.textContent = '✗ ' + (d.error || 'Error'); statusEl.style.color = '#f87171'; }
+    }
+  } catch(e) {
+    if (statusEl) { statusEl.textContent = '✗ Network error'; statusEl.style.color = '#f87171'; }
+  }
+  btn.disabled = false;
+}
+
 </script>

@@ -86,6 +86,37 @@
       {% if project.previewUrl %}<a href="{{ project.previewUrl }}" target="_blank">Open site</a>{% endif %}
       <a href="{{ client.requestUrl or settings.defaultRequestUrl }}" class="secondary" target="_blank">Request change</a>
     </div>
+    {# ── Project Brain ── #}
+    <details class="brain-section" id="brain-{{ project.id }}">
+      <summary class="brain-toggle">🧠 Project Brain <span class="brain-badge" id="bb-{{ project.id }}"></span></summary>
+      <div class="brain-panel">
+        <div class="brain-links-section">
+          <div class="brain-sub-header">
+            <span class="brain-sub-title">🔗 Links &amp; resources</span>
+            <button type="button" class="btn btn-ghost btn-sm" onclick="addBrainLink('{{ project.id }}')">+ Add link</button>
+          </div>
+          <div class="brain-links-list" id="bl-{{ project.id }}"></div>
+        </div>
+        <div class="brain-notes-section">
+          <div class="brain-sub-header">
+            <span class="brain-sub-title">📝 Notes &amp; context</span>
+            <div class="brain-add-btns">
+              <button type="button" class="btn btn-ghost btn-sm" onclick="addBrainNote('{{ project.id }}')">+ Add note</button>
+              <label class="btn btn-ghost btn-sm brain-upload-label">
+                📎 Upload file
+                <input type="file" accept=".txt,.md,.html,.csv,.json" style="display:none" onchange="uploadBrainFile(this, '{{ project.id }}')">
+              </label>
+            </div>
+          </div>
+          <div class="brain-notes-list" id="bn-{{ project.id }}"></div>
+          <p class="brain-hint muted">Supports .txt, .md, .html, .csv · Paste any text as a note</p>
+        </div>
+        <div class="brain-actions">
+          <button class="btn btn-primary btn-sm" onclick="saveBrainFromPage('{{ project.id }}', 'project', this)">💾 Save brain</button>
+          <span class="brain-save-status" id="bss-{{ project.id }}"></span>
+        </div>
+      </div>
+    </details>
   </article>
 {% else %}
   <p class="muted">No live projects yet.</p>
@@ -334,4 +365,157 @@ async function moveCall(rid, btn) {
     btn.disabled = false;
   }
 }
+
+// ── Brain init for all projects on this page ──────────────────────────
+(function initProjectBrains() {
+  var brainData = {
+    {% for project in projects %}
+    '{{ project.id }}': {
+      links: {{ (project.brain.links if project.brain else []) | dump }},
+      notes: {{ (project.brain.notes if project.brain else []) | dump }}
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  };
+  Object.keys(brainData).forEach(function(id) {
+    var d = brainData[id];
+    renderBrainLinks(id, d.links || []);
+    renderBrainNotes(id, d.notes || []);
+    var brainDetails = document.getElementById('brain-' + id);
+    if (brainDetails && ((d.links && d.links.length) || (d.notes && d.notes.length))) {
+      brainDetails.open = true;
+    }
+  });
+})();
+
+/* ── Brain (links + notes) ── */
+function renderBrainLinks(projectId, links) {
+  var list = document.getElementById('bl-' + projectId);
+  if (!list) return;
+  list.innerHTML = '';
+  (links || []).forEach(function(l, i) { list.appendChild(makeBrainLinkRow(projectId, l, i)); });
+  updateBrainBadge(projectId);
+}
+
+function renderBrainNotes(projectId, notes) {
+  var list = document.getElementById('bn-' + projectId);
+  if (!list) return;
+  list.innerHTML = '';
+  (notes || []).forEach(function(n, i) { list.appendChild(makeBrainNoteRow(projectId, n, i)); });
+  updateBrainBadge(projectId);
+}
+
+function makeBrainLinkRow(projectId, l, idx) {
+  var row = document.createElement('div');
+  row.className = 'brain-link-row';
+  row.dataset.idx = idx;
+  row.innerHTML =
+    '<input type="url"  class="bl-url"   placeholder="https://" value="' + esc(l.url   || '') + '">' +
+    '<input type="text" class="bl-label" placeholder="Label"    value="' + esc(l.label || '') + '">' +
+    '<button type="button" class="btn btn-ghost btn-sm" onclick="removeBrainRow(this)">✕</button>';
+  return row;
+}
+
+function makeBrainNoteRow(projectId, n, idx) {
+  var row = document.createElement('div');
+  row.className = 'brain-note-row';
+  row.dataset.idx = idx;
+  var text = typeof n === 'string' ? n : (n.text || '');
+  row.innerHTML =
+    '<textarea class="bn-text" placeholder="Note or context…" rows="3">' + esc(text) + '</textarea>' +
+    '<button type="button" class="btn btn-ghost btn-sm" onclick="removeBrainRow(this)">✕</button>';
+  return row;
+}
+
+function addBrainLink(projectId) {
+  var list = document.getElementById('bl-' + projectId);
+  if (!list) return;
+  list.appendChild(makeBrainLinkRow(projectId, {}, list.children.length));
+}
+
+function addBrainNote(projectId) {
+  var list = document.getElementById('bn-' + projectId);
+  if (!list) return;
+  list.appendChild(makeBrainNoteRow(projectId, '', list.children.length));
+}
+
+function removeBrainRow(btn) {
+  var row = btn.closest('.brain-link-row, .brain-note-row');
+  if (row) row.remove();
+}
+
+function collectBrainLinks(projectId) {
+  var list = document.getElementById('bl-' + projectId);
+  if (!list) return [];
+  return Array.from(list.querySelectorAll('.brain-link-row')).map(function(row) {
+    var url   = row.querySelector('.bl-url').value.trim();
+    var label = row.querySelector('.bl-label').value.trim();
+    if (!url) return null;
+    return { url: url, label: label || url };
+  }).filter(Boolean);
+}
+
+function collectBrainNotes(projectId) {
+  var list = document.getElementById('bn-' + projectId);
+  if (!list) return [];
+  return Array.from(list.querySelectorAll('.brain-note-row')).map(function(row) {
+    var text = row.querySelector('.bn-text').value.trim();
+    return text || null;
+  }).filter(Boolean);
+}
+
+function updateBrainBadge(projectId) {
+  var badge = document.getElementById('bb-' + projectId);
+  if (!badge) return;
+  var linkCount = (document.getElementById('bl-' + projectId) || { children: [] }).children.length;
+  var noteCount = (document.getElementById('bn-' + projectId) || { children: [] }).children.length;
+  var total = linkCount + noteCount;
+  badge.textContent = total > 0 ? '(' + total + ')' : '';
+}
+
+async function uploadBrainFile(input, projectId) {
+  var file = input.files[0];
+  if (!file) return;
+  var text = await file.text();
+  var list = document.getElementById('bn-' + projectId);
+  if (!list) return;
+  list.appendChild(makeBrainNoteRow(projectId, text.slice(0, 8000), list.children.length));
+  updateBrainBadge(projectId);
+  input.value = '';
+}
+
+async function saveBrainFromPage(entityId, entityType, btn) {
+  var statusEl = document.getElementById('bss-' + entityId);
+  btn.disabled = true;
+  if (statusEl) { statusEl.textContent = '⟳ Saving…'; statusEl.style.color = 'var(--muted)'; }
+
+  var links = collectBrainLinks(entityId);
+  var notes = collectBrainNotes(entityId);
+
+  try {
+    var r = await fetch('/api/update-field', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        entityType: entityType,
+        entityId:   entityId,
+        updates: {
+          'brain.links': links.length ? links : null,
+          'brain.notes': notes.length ? notes : null
+        }
+      })
+    });
+    var d = await r.json();
+    if (d.ok) {
+      if (statusEl) { statusEl.textContent = '✓ Saved!'; statusEl.style.color = '#4ade80'; }
+      updateBrainBadge(entityId);
+      setTimeout(function() { if (statusEl) statusEl.textContent = ''; }, 3000);
+    } else {
+      if (statusEl) { statusEl.textContent = '✗ ' + (d.error || 'Error'); statusEl.style.color = '#f87171'; }
+    }
+  } catch(e) {
+    if (statusEl) { statusEl.textContent = '✗ Network error'; statusEl.style.color = '#f87171'; }
+  }
+  btn.disabled = false;
+}
+
 </script>
