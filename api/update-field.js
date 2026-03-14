@@ -109,7 +109,7 @@ async function handleCreateProject(req, res) {
   if (!name) return res.status(400).json({ error: 'Missing project name' });
 
   const slug = slugify(name);
-  const projectId = `proj-${slug}`;
+  let projectId = `proj-${slug}`;
   const today = new Date().toISOString().slice(0, 10);
 
   try {
@@ -141,7 +141,7 @@ async function handleCreateProject(req, res) {
     if (projData.projects.find(p => p.id === projectId)) {
       // Append a short unique suffix to avoid collision
       const suffix = Date.now().toString(36).slice(-4);
-      return res.status(409).json({ error: 'Project ID already exists — try a more specific name', id: projectId });
+      projectId = `${projectId}-${suffix}`;
     }
     const newProject = {
       id: projectId,
