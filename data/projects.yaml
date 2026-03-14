@@ -320,7 +320,7 @@ projects:
     repoUrl: https://github.com/agis-eng/logoclear
     summary: AI-powered logo cleanup + creation tool backed by Gemini.
     rank: 1
-    priority: high
+    priority: low
     affiliate:
       active: true
       program_name: LogoClear Affiliate Program
