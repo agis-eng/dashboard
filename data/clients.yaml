@@ -363,3 +363,10 @@ clients:
     notes: Added via dashboard
     summary: Peter is a referral from The TX asian girl
     requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Peter%20Burns
+  - id: pho
+    name: Pho
+    slug: pho
+    contact: agis@manifestbot.ai
+    notes: Added via dashboard
+    summary: Pho Marketing Partner
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Pho
