@@ -67,8 +67,7 @@ clients:
     slug: chip-smith-hammersmith
     contact: agis@manifestbot.ai
     notes: Direct Clients
-    summary: "Active Client. *Note: Strategic overlap with ECHO/KD Foundation
-      partnership.*"
+    summary: "Active Client. *Note: Strategic overlap with ECHO/KD Foundation partnership.*"
     requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Chip%20Smith%20(Hammersmith)
   - id: clyde-rath
     name: Clyde Rath
@@ -348,8 +347,7 @@ clients:
     slug: webdezigns-client-intake-stack
     contact: agis@manifestbot.ai
     notes: Manifestic Internal
-    summary: Internal system for Webdezigns clients to submit project requirements
-      (needs/wants).
+    summary: Internal system for Webdezigns clients to submit project requirements (needs/wants).
     requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Webdezigns%20Client%20Intake%20Stack
   - id: webdezigns-core-agency-site
     name: Webdezigns Core Agency Site
@@ -358,3 +356,10 @@ clients:
     notes: Manifestic Internal
     summary: Active
     requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Webdezigns%20Core%20Agency%20Site
+  - id: peter-burns
+    name: Peter Burns
+    slug: peter-burns
+    contact: agis@manifestbot.ai
+    notes: Added via dashboard
+    summary: Peter is a referral from The TX asian girl
+    requestUrl: mailto:agis@manifestbot.ai?subject=Change%20Request%20-%20Peter%20Burns
