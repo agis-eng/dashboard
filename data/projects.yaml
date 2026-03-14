@@ -1,731 +1,737 @@
 projects:
-- id: mike-raiche-24social7
-  name: 24social7
-  clientId: mike-raiche
-  owner: Anton
-  stage: Client
-  status: Active Client
-  lastUpdate: 2026-03-05
-  summary: Active Client
-  previewUrl: https://24social7.com
-  liveUrl: https://24social7.com
-  repoUrl: ''
-- id: action-real-estate-actionrealestate
-  name: Actionrealestate
-  clientId: action-real-estate
-  owner: Anton
-  stage: Contractor
-  status: Contractor project via Will Bisette.
-  lastUpdate: 2026-03-05
-  summary: Contractor project via Will Bisette.
-  previewUrl: https://actionrealestate.lovable.app/
-  liveUrl: https://actionrealestate.lovable.app/
-  repoUrl: ''
-- id: kenny-salyer-benefitsforyoullc
-  name: Benefitsforyoullc
-  clientId: kenny-salyer
-  owner: Anton
-  stage: Client
-  status: Active Client
-  lastUpdate: 2026-03-05
-  summary: Active Client
-  previewUrl: https://benefitsforyoullc.com/
-  liveUrl: https://benefitsforyoullc.com/
-  repoUrl: ''
-- id: capture-build-connect-capture-build-connect
-  name: Capture Build Connect
-  clientId: capture-build-connect
-  owner: Anton
-  stage: Internal
-  status: Active
-  lastUpdate: 2026-03-05
-  summary: Active
-  previewUrl: https://capture-build-connect.lovable.app
-  liveUrl: https://capture-build-connect.lovable.app
-  repoUrl: ''
-  rank: 3
-  priority: high
-  affiliate:
-    active: false
-    program_name: Capture Build Connect Referral
-    commission: 12% of new client value
-    commission_type: percentage
-    commission_pct: 12
-    avg_deal_size: 2000
-    monthly_leads: 2
-    monthly_potential: 480
-    status: pending
-    notes: Refer businesses that need a full capture → build → connect pipeline. Great
-      fit for our agency clients post-launch.
-    affiliate_url: https://capture-build-connect.lovable.app
-    signup_url: ''
-- id: caring-echo-bridge-caring-echo-bridge
-  name: Caring Echo Bridge
-  clientId: caring-echo-bridge
-  owner: Anton
-  stage: Internal
-  status: ECHO ecosystem. Empwr (Private labeled).
-  lastUpdate: 2026-03-05
-  summary: ECHO ecosystem. Empwr (Private labeled).
-  previewUrl: https://caring-echo-bridge.lovable.app/
-  liveUrl: https://caring-echo-bridge.lovable.app/
-  repoUrl: ''
-- id: che-limitless-chelimitless
-  name: Chelimitless
-  clientId: che-limitless
-  owner: Anton
-  stage: Internal
-  status: Internal. Anton's company, partnership with Erik.
-  lastUpdate: 2026-03-05
-  summary: Internal. Anton's company, partnership with Erik.
-  previewUrl: https://chelimitless.com/
-  liveUrl: https://chelimitless.com/
-  repoUrl: ''
-  rank: 2
-  priority: high
-- id: brentlee-paddi-thomas-contact-spark-gate
-  name: Contact Spark Gate
-  clientId: brentlee-paddi-thomas
-  owner: Anton
-  stage: Client
-  status: Active Client
-  lastUpdate: 2026-03-05
-  summary: Active Client
-  previewUrl: https://contact-spark-gate.lovable.app/
-  liveUrl: https://contact-spark-gate.lovable.app/
-  repoUrl: ''
-- id: echo-credentialing-credentialing
-  name: Credentialing
-  clientId: echo-credentialing
-  owner: Anton
-  stage: Internal
-  status: ECHO ecosystem. Credentialing project.
-  lastUpdate: 2026-03-05
-  summary: ECHO ecosystem. Credentialing project.
-  previewUrl: https://credentialing.echohcp.com
-  liveUrl: https://credentialing.echohcp.com
-  repoUrl: ''
-- id: dilotiko-ai-network-dilotikoainetwork
-  name: Dilotikoainetwork
-  clientId: dilotiko-ai-network
-  owner: Anton
-  stage: Internal
-  status: Active
-  lastUpdate: 2026-03-05
-  summary: Active
-  previewUrl: https://dilotikoainetwork.com
-  liveUrl: https://dilotikoainetwork.com
-  repoUrl: ''
-  rank: 6
-  priority: high
-- id: dr-liza-jones-drlizajones
-  name: Drlizajones
-  clientId: dr-liza-jones
-  owner: Anton
-  stage: Client
-  status: Active Client
-  lastUpdate: 2026-03-05
-  summary: Active Client
-  previewUrl: https://drlizajones.webdezigns.ai/
-  liveUrl: https://drlizajones.webdezigns.ai/
-  repoUrl: ''
-- id: ellie-hocking-elliesbrightbeginnings
-  name: Elliesbrightbeginnings
-  clientId: ellie-hocking
-  owner: Anton
-  stage: Client
-  status: Active Client (Anton's daughter)
-  lastUpdate: 2026-03-05
-  summary: Active Client (Anton's daughter)
-  previewUrl: https://elliesbrightbeginnings.webdezigns.ai/
-  liveUrl: https://elliesbrightbeginnings.webdezigns.ai/
-  repoUrl: ''
-- id: embrace-our-causes-embrace-our-causes
-  name: Embrace Our Causes
-  clientId: embrace-our-causes
-  owner: Anton
-  stage: Internal
-  status: Active
-  lastUpdate: 2026-03-05
-  summary: Active
-  previewUrl: https://embrace-our-causes.lovable.app
-  liveUrl: https://embrace-our-causes.lovable.app
-  repoUrl: ''
-  rank: 12
-  priority: medium
-- id: dan-bauman-freedom-foundations-build
-  name: Freedom Foundations Build
-  clientId: dan-bauman
-  owner: Anton
-  stage: Client
-  status: Active Client (Project 1)
-  lastUpdate: 2026-03-05
-  summary: Active Client (Project 1)
-  previewUrl: https://freedom-foundations-build.lovable.app/
-  liveUrl: https://freedom-foundations-build.lovable.app/
-  repoUrl: ''
-- id: asian-food-magic-fun-asian-food-magic
-  name: Fun Asian Food Magic
-  clientId: asian-food-magic
-  owner: Anton
-  stage: Client
-  status: Active Client
-  lastUpdate: 2026-03-05
-  summary: Active Client
-  previewUrl: https://fun-asian-food-magic.lovable.app/
-  liveUrl: https://fun-asian-food-magic.lovable.app/
-  repoUrl: ''
-- id: fundraising-hub-fundraisinghub
-  name: Fundraisinghub
-  clientId: fundraising-hub
-  owner: Anton
-  stage: Internal
-  status: Active
-  lastUpdate: 2026-03-05
-  summary: Active
-  previewUrl: https://fundraisinghub.webdezigns
-  liveUrl: https://fundraisinghub.webdezigns
-  repoUrl: ''
-  rank: 10
-  priority: medium
-- id: george-hildreth-future-childcare-ai
-  name: Future Childcare Ai
-  clientId: george-hildreth
-  owner: Anton
-  stage: Client
-  status: Active Client (Project 2)
-  lastUpdate: 2026-03-05
-  summary: Active Client (Project 2)
-  previewUrl: https://future-childcare-ai.lovable.app
-  liveUrl: https://future-childcare-ai.lovable.app
-  repoUrl: ''
-- id: genius-landing-genius-landing
-  name: Genius Landing
-  clientId: genius-landing
-  owner: Anton
-  stage: Internal
-  status: Webdezigns ecosystem project.
-  lastUpdate: 2026-03-05
-  summary: Webdezigns ecosystem project.
-  previewUrl: https://genius-landing.lovable.app/
-  liveUrl: https://genius-landing.lovable.app/
-  repoUrl: ''
-- id: george-hildreth-ghrenterprises
-  name: Ghrenterprises
-  clientId: george-hildreth
-  owner: Anton
-  stage: Client
-  status: Active Client (Project 1)
-  lastUpdate: 2026-03-05
-  summary: Active Client (Project 1)
-  previewUrl: https://ghrenterprises.webdezigns.ai/
-  liveUrl: https://ghrenterprises.webdezigns.ai/
-  repoUrl: ''
-- id: chip-smith-hammersmith-hammersmith
-  name: Hammersmith
-  clientId: chip-smith-hammersmith
-  owner: Anton
-  stage: Client
-  status: 'Active Client. *Note: Strategic overlap with ECHO/KD Foundation partnership.*'
-  lastUpdate: 2026-03-05
-  summary: 'Active Client. *Note: Strategic overlap with ECHO/KD Foundation partnership.*'
-  previewUrl: https://hammersmith.webdezigns.ai/
-  liveUrl: https://hammersmith.webdezigns.ai/
-  repoUrl: ''
-- id: heather-helms-helms
-  name: Helms
-  clientId: heather-helms
-  owner: Anton
-  stage: Client
-  status: Active Client
-  lastUpdate: 2026-03-05
-  summary: Active Client
-  previewUrl: https://helms.webdezigns.ai/
-  liveUrl: https://helms.webdezigns.ai/
-  repoUrl: ''
-- id: jesse-halverson-jesse-house-quest
-  name: Jesse House Quest
-  clientId: jesse-halverson
-  owner: Anton
-  stage: Client
-  status: Active Client
-  lastUpdate: 2026-03-05
-  summary: Active Client
-  previewUrl: https://jesse-house-quest.lovable.app
-  liveUrl: https://jesse-house-quest.lovable.app
-  repoUrl: ''
-- id: jukebox-joy-jive-jukebox-joy-jive
-  name: Jukebox Joy Jive
-  clientId: jukebox-joy-jive
-  owner: Anton
-  stage: Client
-  status: Active Client
-  lastUpdate: 2026-03-05
-  summary: Active Client
-  previewUrl: https://jukebox-joy-jive.lovable.app/
-  liveUrl: https://jukebox-joy-jive.lovable.app/
-  repoUrl: ''
-- id: kd-foundation-kdfoundation
-  name: Kdfoundation
-  clientId: kd-foundation
-  owner: Anton
-  stage: Internal
-  status: ECHO ecosystem. Partnership with Justin Davis, Chip Smith, and Tripp Smith.
-  lastUpdate: 2026-03-05
-  summary: ECHO ecosystem. Partnership with Justin Davis, Chip Smith, and Tripp Smith.
-  previewUrl: https://kdfoundation.webdezigns.ai/
-  liveUrl: https://kdfoundation.webdezigns.ai/
-  repoUrl: ''
-- id: kooper-davis-foundation-kooperdavis
-  name: Kooperdavis
-  clientId: kooper-davis-foundation
-  owner: Anton
-  stage: Client
-  status: 'Active Client. *Note: Overlaps with Manifestic ECHO partnership.*'
-  lastUpdate: 2026-03-05
-  summary: 'Active Client. *Note: Overlaps with Manifestic ECHO partnership.*'
-  previewUrl: https://kooperdavis.lovable.app
-  liveUrl: https://kooperdavis.lovable.app
-  repoUrl: ''
-- id: dan-bauman-legacy-foundations-builder
-  name: Legacy Foundations Builder
-  clientId: dan-bauman
-  owner: Anton
-  stage: Client
-  status: Active Client (Project 2)
-  lastUpdate: 2026-03-05
-  summary: Active Client (Project 2)
-  previewUrl: https://legacy-foundations-builder.lovable.app/
-  liveUrl: https://legacy-foundations-builder.lovable.app/
-  repoUrl: ''
-- id: lisa-lisa-clean-estimate
-  name: Lisa Clean Estimate
-  clientId: lisa
-  owner: Anton
-  stage: Client
-  status: Active Client
-  lastUpdate: 2026-03-05
-  summary: Active Client
-  previewUrl: https://lisa-clean-estimate.lovable.app/
-  liveUrl: https://lisa-clean-estimate.lovable.app/
-  repoUrl: ''
-- id: logoclear
-  name: LogoClear AI
-  clientId: atlas
-  owner: Atlas
-  stage: Live
-  status: In progress
-  lastUpdate: 2026-03-05
-  previewUrl: https://logoclear.vercel.app
-  liveUrl: https://logoclear.vercel.app
-  repoUrl: https://github.com/agis-eng/logoclear
-  summary: AI-powered logo cleanup + creation tool backed by Gemini.
-  rank: 1
-  priority: high
-  affiliate:
-    active: true
-    program_name: LogoClear Affiliate Program
-    commission: 30% recurring monthly
-    commission_type: percentage
-    commission_pct: 30
-    avg_deal_size: 49
-    monthly_leads: 15
-    monthly_potential: 220
-    status: active
-    notes: 'Our own product. Drive affiliate partners to promote LogoClear — every
-      new subscriber earns 30% recurring. Priority: build affiliate landing page.'
-    affiliate_url: https://logoclear.vercel.app
-    signup_url: https://logoclear.vercel.app/affiliate
-- id: love-portal
-  name: Lovable Client Portal
-  clientId: atlas
-  owner: Atlas
-  stage: Design
-  status: In progress
-  lastUpdate: 2026-03-04
-  previewUrl: https://app.lovable.dev/preview/portal
-  liveUrl: https://portal.example.com
-  repoUrl: https://github.com/agis-eng/atlas-portal
-  summary: Internal dashboard concept showing projects + change queue.
-  rank: 7
-  priority: medium
-- id: lumen-site
-  name: Lumen Dental Microsite
-  clientId: lumen
-  owner: Anton
-  stage: QA
-  status: Ready for review
-  lastUpdate: 2026-03-03
-  previewUrl: https://app.lovable.dev/preview/lumen
-  liveUrl: https://lumen.here.now
-  repoUrl: https://github.com/agis-eng/lumen-site
-  summary: Dual-language site for appointment intake.
-  rank: 8
-  priority: medium
-- id: echo-management-management
-  name: Management
-  clientId: echo-management
-  owner: Anton
-  stage: Internal
-  status: Active
-  lastUpdate: 2026-03-05
-  summary: Active
-  previewUrl: https://management.echohcp.com
-  liveUrl: https://management.echohcp.com
-  repoUrl: ''
-- id: manifest-grow-mind-manifest-grow-mind
-  name: Manifest Grow Mind
-  clientId: manifest-grow-mind
-  owner: Anton
-  stage: Internal
-  status: Active
-  lastUpdate: 2026-03-05
-  summary: Active
-  previewUrl: https://manifest-grow-mind.lovable.app/
-  liveUrl: https://manifest-grow-mind.lovable.app/
-  repoUrl: ''
-  rank: 9
-  priority: medium
-- id: med-dream-weaver-med-dream-weaver
-  name: Med Dream Weaver
-  clientId: med-dream-weaver
-  owner: Anton
-  stage: Internal
-  status: Partner project with VonMarie Gastelo.
-  lastUpdate: 2026-03-05
-  summary: Partner project with VonMarie Gastelo.
-  previewUrl: https://med-dream-weaver.lovable.app/
-  liveUrl: https://med-dream-weaver.lovable.app/
-  repoUrl: ''
-- id: lazo-kim-pkl-range-express
-  name: Pkl Range Express
-  clientId: lazo-kim
-  owner: Anton
-  stage: Client
-  status: Active Client
-  lastUpdate: 2026-03-05
-  summary: Active Client
-  previewUrl: https://pkl-range-express.lovable.app
-  liveUrl: https://pkl-range-express.lovable.app
-  repoUrl: ''
-- id: taylor-southerton-pocket-renovate-ai
-  name: Pocket Renovate Ai
-  clientId: taylor-southerton
-  owner: Anton
-  stage: Client
-  status: Active Client
-  lastUpdate: 2026-03-05
-  summary: Active Client
-  previewUrl: https://pocket-renovate-ai.lovable.app/
-  liveUrl: https://pocket-renovate-ai.lovable.app/
-  repoUrl: ''
-- id: dan-bauman-polar-sparkle-site
-  name: Polar Sparkle Site
-  clientId: dan-bauman
-  owner: Anton
-  stage: Client
-  status: Active Client (Project 3)
-  lastUpdate: 2026-03-05
-  summary: Active Client (Project 3)
-  previewUrl: https://polar-sparkle-site.lovable.app/
-  liveUrl: https://polar-sparkle-site.lovable.app/
-  repoUrl: ''
-- id: psychedelic-art-dream-psychedelic-art-dream
-  name: Psychedelic Art Dream
-  clientId: psychedelic-art-dream
-  owner: Anton
-  stage: Internal
-  status: Active
-  lastUpdate: 2026-03-05
-  summary: Active
-  previewUrl: https://psychedelic-art-dream.lovable.app/
-  liveUrl: https://psychedelic-art-dream.lovable.app/
-  repoUrl: ''
-- id: radiant-hiring-partners-radiant-hiring-partners
-  name: Radiant Hiring Partners
-  clientId: radiant-hiring-partners
-  owner: Anton
-  stage: Internal
-  status: APEX project.
-  lastUpdate: 2026-03-05
-  summary: APEX project.
-  previewUrl: https://radiant-hiring-partners.lovable.app/
-  liveUrl: https://radiant-hiring-partners.lovable.app/
-  repoUrl: ''
-- id: clyde-rath-rathmn
-  name: Rathmn
-  clientId: clyde-rath
-  owner: Anton
-  stage: Client
-  status: Active Client
-  lastUpdate: 2026-03-05
-  summary: Active Client
-  previewUrl: https://rathmn.com
-  liveUrl: https://rathmn.com
-  repoUrl: ''
-- id: resonant-care-network-resonant-care-network
-  name: Resonant Care Network
-  clientId: resonant-care-network
-  owner: Anton
-  stage: Internal
-  status: ECHO ecosystem project.
-  lastUpdate: 2026-03-05
-  summary: ECHO ecosystem project.
-  previewUrl: https://resonant-care-network.lovable.app/
-  liveUrl: https://resonant-care-network.lovable.app/
-  repoUrl: ''
-- id: sight-replicate-web-sight-replicate-web
-  name: Sight Replicate Web
-  clientId: sight-replicate-web
-  owner: Anton
-  stage: Internal
-  status: Active
-  lastUpdate: 2026-03-05
-  summary: Active
-  previewUrl: https://sight-replicate-web.lovable.app/
-  liveUrl: https://sight-replicate-web.lovable.app/
-  repoUrl: ''
-- id: susan-smooth-credential
-  name: Smooth Credential
-  clientId: susan
-  owner: Anton
-  stage: Client
-  status: Active Client
-  lastUpdate: 2026-03-05
-  summary: Active Client
-  previewUrl: https://smooth-credential.lovable.app/
-  liveUrl: https://smooth-credential.lovable.app/
-  repoUrl: ''
-- id: john-griffin-snowbird-states-hub
-  name: Snowbird States Hub
-  clientId: john-griffin
-  owner: Anton
-  stage: Client
-  status: Active Client
-  lastUpdate: 2026-03-05
-  summary: Active Client
-  previewUrl: https://snowbird-states-hub.lovable.app
-  liveUrl: https://snowbird-states-hub.lovable.app
-  repoUrl: ''
-- id: carmen-solinasabor
-  name: Solinasabor
-  clientId: carmen
-  owner: Anton
-  stage: Client
-  status: Active Client
-  lastUpdate: 2026-03-05
-  summary: Active Client
-  previewUrl: https://solinasabor.webdezigns.ai
-  liveUrl: https://solinasabor.webdezigns.ai
-  repoUrl: ''
-- id: webdezigns-client-intake-stack-stack
-  name: Stack
-  clientId: webdezigns-client-intake-stack
-  owner: Anton
-  stage: Internal
-  status: Internal system for Webdezigns clients to submit project requirements (needs/wants).
-  lastUpdate: 2026-03-05
-  summary: Internal system for Webdezigns clients to submit project requirements (needs/wants).
-  previewUrl: https://stack.webdezigns.ai
-  liveUrl: https://stack.webdezigns.ai
-  repoUrl: ''
-- id: stratpath-version-2-stratpath
-  name: Stratpath
-  clientId: stratpath-version-2
-  owner: Anton
-  stage: Internal
-  status: Partner project with Mark Green. V2 site.
-  lastUpdate: 2026-03-05
-  summary: Partner project with Mark Green. V2 site.
-  previewUrl: https://stratpath.webdezigns.ai/
-  liveUrl: https://stratpath.webdezigns.ai/
-  repoUrl: ''
-  rank: 11
-  priority: medium
-- id: ted-associates-ted-associates
-  name: Ted Associates
-  clientId: ted-associates
-  owner: Anton
-  stage: Internal
-  status: Active
-  lastUpdate: 2026-03-05
-  summary: Active
-  previewUrl: https://ted-associates.com
-  liveUrl: https://ted-associates.com
-  repoUrl: ''
-- id: ted-care-compass-ted-care-compass
-  name: Ted Care Compass
-  clientId: ted-care-compass
-  owner: Anton
-  stage: Internal
-  status: Active
-  lastUpdate: 2026-03-05
-  summary: Active
-  previewUrl: https://ted-care-compass.lovable.app
-  liveUrl: https://ted-care-compass.lovable.app
-  repoUrl: ''
-- id: rich-storholm-twin-cities-revamp-look
-  name: Twin Cities Revamp Look
-  clientId: rich-storholm
-  owner: Anton
-  stage: Client
-  status: Active Client
-  lastUpdate: 2026-03-05
-  summary: Active Client
-  previewUrl: https://twin-cities-revamp-look.lovable.app/
-  liveUrl: https://twin-cities-revamp-look.lovable.app/
-  repoUrl: ''
-- id: a-plus-epoxy-v1aplusepoxy
-  name: V1aplusepoxy
-  clientId: a-plus-epoxy
-  owner: Anton
-  stage: Contractor
-  status: Contractor project via Will Bisette.
-  lastUpdate: 2026-03-05
-  summary: Contractor project via Will Bisette.
-  previewUrl: https://v1aplusepoxy.lovable.app/
-  liveUrl: https://v1aplusepoxy.lovable.app/
-  repoUrl: ''
-- id: view-to-vista-view-to-vista
-  name: View To Vista
-  clientId: view-to-vista
-  owner: Anton
-  stage: Internal
-  status: Active
-  lastUpdate: 2026-03-05
-  summary: Active
-  previewUrl: https://view-to-vista.lovable.app/
-  liveUrl: https://view-to-vista.lovable.app/
-  repoUrl: ''
-- id: webdezigns-core-agency-site-webdezigns
-  name: Webdezigns
-  clientId: webdezigns-core-agency-site
-  owner: Anton
-  stage: Internal
-  status: Active
-  lastUpdate: 2026-03-05
-  summary: Active
-  previewUrl: https://webdezigns.ai/
-  liveUrl: https://webdezigns.ai/
-  repoUrl: ''
-  rank: 4
-  priority: high
-- id: george-hildreth-womenofvision
-  name: Womenofvision
-  clientId: george-hildreth
-  owner: Anton
-  stage: Client
-  status: Active Client (Project 3)
-  lastUpdate: 2026-03-05
-  summary: Active Client (Project 3)
-  previewUrl: https://womenofvision.webdezigns.ai/
-  liveUrl: https://womenofvision.webdezigns.ai/
-  repoUrl: ''
-- id: keith-trautman-www
-  name: Www
-  clientId: keith-trautman
-  owner: Anton
-  stage: Client
-  status: Active Client
-  lastUpdate: 2026-03-05
-  summary: Active Client
-  previewUrl: https://www.keiththeinsuranceguy.com
-  liveUrl: https://www.keiththeinsuranceguy.com
-  repoUrl: ''
-- id: sam-www
-  name: Www
-  clientId: sam
-  owner: Anton
-  stage: Client
-  status: Active Client
-  lastUpdate: 2026-03-05
-  summary: Active Client
-  previewUrl: https://www.starmart.webdezigns.ai
-  liveUrl: https://www.starmart.webdezigns.ai
-  repoUrl: ''
-- id: stratpath-version-1-www
-  name: Www
-  clientId: stratpath-version-1
-  owner: Anton
-  stage: Internal
-  status: Partner project with Mark Green. V1 site.
-  lastUpdate: 2026-03-05
-  summary: Partner project with Mark Green. V1 site.
-  previewUrl: https://www.stratpath.com/
-  liveUrl: https://www.stratpath.com/
-  repoUrl: ''
-- id: mike-richman-z-mike-fight-club
-  name: Z Mike Fight Club
-  clientId: mike-richman
-  owner: Anton
-  stage: Client
-  status: Active Client
-  lastUpdate: 2026-03-05
-  summary: Active Client
-  previewUrl: https://z-mike-fight-club.lovable.app/
-  liveUrl: https://z-mike-fight-club.lovable.app/
-  repoUrl: ''
-- id: g-wallet-usdt
-  name: G-Wallet (USDT Global Wallet)
-  clientId: akilli-pollee
-  owner: Anton
-  stage: Design
-  status: Partner Project
-  lastUpdate: 2026-03-08
-  summary: Merchant-focused stablecoin settlement infrastructure platform.
-  previewUrl: ''
-  liveUrl: ''
-  repoUrl: ''
-  rank: 5
-  priority: high
-- id: fund-and-grow-partner
-  name: "Fund & Grow Partner Hub"
-  clientId: fund-and-grow
-  owner: Anton
-  stage: Partner
-  status: Affiliate partnership with Fund & Grow
-  lastUpdate: 2026-03-13
-  summary: Affiliate program focused on business funding pipelines for our clients.
-  previewUrl: https://fundandgrow.com
-  liveUrl: https://fundandgrow.com
-  repoUrl: ''
-- id: unmatched-texas-care-franchise
-  name: Texas Care Franchise
-  clientId: atlas
-  owner: Erik
-  stage: Lead
-  status: Franchise opportunity - weekly meetings
-  lastUpdate: '2026-03-13'
-  summary: Texas Care franchise expansion meetings
-- id: unmatched-von-echo-meetings
-  name: Von / ECHO Strategy
-  clientId: caring-echo-bridge
-  owner: Erik
-  stage: Internal
-  status: ECHO ecosystem strategy sessions with Von
-  lastUpdate: '2026-03-13'
-  summary: ECHO HCP strategy and onboarding meetings with VonMarie
-- id: unmatched-rasha-dedra
-  name: Rasha & Dedra Team
-  clientId: atlas
-  owner: Erik
-  stage: Lead
-  status: Team onboarding and intro calls
-  lastUpdate: '2026-03-13'
-  summary: Intro and team calls with Rasha, Dedra, and partners
-- id: unmatched-qmhp-iop
-  name: QMHP / IOP Outreach
-  clientId: caring-echo-bridge
-  owner: Erik
-  stage: Lead
-  status: QMHP and IOP partnership outreach
-  lastUpdate: '2026-03-13'
-  summary: Mental health provider outreach and IOP kickoff
-- id: unmatched-nurturebeast
-  name: NurtureBeast
-  clientId: atlas
-  owner: Erik
-  stage: Lead
-  status: NurtureBeast platform training and weekly calls
-  lastUpdate: '2026-03-13'
-  summary: NurtureBeast CRM training and weekly check-ins
+  - id: mike-raiche-24social7
+    name: 24social7
+    clientId: mike-raiche
+    owner: Anton
+    stage: Client
+    status: Active Client
+    lastUpdate: 2026-03-05
+    summary: Active Client
+    previewUrl: https://24social7.com
+    liveUrl: https://24social7.com
+    repoUrl: ""
+  - id: action-real-estate-actionrealestate
+    name: Actionrealestate
+    clientId: action-real-estate
+    owner: Anton
+    stage: Contractor
+    status: Contractor project via Will Bisette.
+    lastUpdate: 2026-03-05
+    summary: Contractor project via Will Bisette.
+    previewUrl: https://actionrealestate.lovable.app/
+    liveUrl: https://actionrealestate.lovable.app/
+    repoUrl: ""
+  - id: kenny-salyer-benefitsforyoullc
+    name: Benefitsforyoullc
+    clientId: kenny-salyer
+    owner: Anton
+    stage: Client
+    status: Active Client
+    lastUpdate: 2026-03-05
+    summary: Active Client
+    previewUrl: https://benefitsforyoullc.com/
+    liveUrl: https://benefitsforyoullc.com/
+    repoUrl: ""
+  - id: capture-build-connect-capture-build-connect
+    name: Capture Build Connect
+    clientId: capture-build-connect
+    owner: Anton
+    stage: Internal
+    status: Active
+    lastUpdate: 2026-03-05
+    summary: Active
+    previewUrl: https://capture-build-connect.lovable.app
+    liveUrl: https://capture-build-connect.lovable.app
+    repoUrl: ""
+    rank: 3
+    priority: high
+    affiliate:
+      active: false
+      program_name: Capture Build Connect Referral
+      commission: 12% of new client value
+      commission_type: percentage
+      commission_pct: 12
+      avg_deal_size: 2000
+      monthly_leads: 2
+      monthly_potential: 480
+      status: pending
+      notes: Refer businesses that need a full capture → build → connect pipeline. Great fit for our agency clients post-launch.
+      affiliate_url: https://capture-build-connect.lovable.app
+      signup_url: ""
+  - id: caring-echo-bridge-caring-echo-bridge
+    name: Caring Echo Bridge
+    clientId: caring-echo-bridge
+    owner: Anton
+    stage: Internal
+    status: ECHO ecosystem. Empwr (Private labeled).
+    lastUpdate: 2026-03-05
+    summary: ECHO ecosystem. Empwr (Private labeled).
+    previewUrl: https://caring-echo-bridge.lovable.app/
+    liveUrl: https://caring-echo-bridge.lovable.app/
+    repoUrl: ""
+  - id: che-limitless-chelimitless
+    name: Chelimitless
+    clientId: che-limitless
+    owner: Anton
+    stage: Internal
+    status: Internal. Anton's company, partnership with Erik.
+    lastUpdate: 2026-03-05
+    summary: Internal. Anton's company, partnership with Erik.
+    previewUrl: https://chelimitless.com/
+    liveUrl: https://chelimitless.com/
+    repoUrl: ""
+    rank: 2
+    priority: high
+  - id: brentlee-paddi-thomas-contact-spark-gate
+    name: Contact Spark Gate
+    clientId: brentlee-paddi-thomas
+    owner: Anton
+    stage: Client
+    status: Active Client
+    lastUpdate: 2026-03-05
+    summary: Active Client
+    previewUrl: https://contact-spark-gate.lovable.app/
+    liveUrl: https://contact-spark-gate.lovable.app/
+    repoUrl: ""
+  - id: echo-credentialing-credentialing
+    name: Credentialing
+    clientId: echo-credentialing
+    owner: Anton
+    stage: Internal
+    status: ECHO ecosystem. Credentialing project.
+    lastUpdate: 2026-03-05
+    summary: ECHO ecosystem. Credentialing project.
+    previewUrl: https://credentialing.echohcp.com
+    liveUrl: https://credentialing.echohcp.com
+    repoUrl: ""
+  - id: dilotiko-ai-network-dilotikoainetwork
+    name: Dilotikoainetwork
+    clientId: dilotiko-ai-network
+    owner: Anton
+    stage: Internal
+    status: Active
+    lastUpdate: 2026-03-05
+    summary: Active
+    previewUrl: https://dilotikoainetwork.com
+    liveUrl: https://dilotikoainetwork.com
+    repoUrl: ""
+    rank: 6
+    priority: high
+  - id: dr-liza-jones-drlizajones
+    name: Drlizajones
+    clientId: dr-liza-jones
+    owner: Anton
+    stage: Client
+    status: Active Client
+    lastUpdate: 2026-03-05
+    summary: Active Client
+    previewUrl: https://drlizajones.webdezigns.ai/
+    liveUrl: https://drlizajones.webdezigns.ai/
+    repoUrl: ""
+  - id: ellie-hocking-elliesbrightbeginnings
+    name: Elliesbrightbeginnings
+    clientId: ellie-hocking
+    owner: Anton
+    stage: Client
+    status: Active Client (Anton's daughter)
+    lastUpdate: 2026-03-05
+    summary: Active Client (Anton's daughter)
+    previewUrl: https://elliesbrightbeginnings.webdezigns.ai/
+    liveUrl: https://elliesbrightbeginnings.webdezigns.ai/
+    repoUrl: ""
+  - id: embrace-our-causes-embrace-our-causes
+    name: Embrace Our Causes
+    clientId: embrace-our-causes
+    owner: Anton
+    stage: Internal
+    status: Active
+    lastUpdate: 2026-03-05
+    summary: Active
+    previewUrl: https://embrace-our-causes.lovable.app
+    liveUrl: https://embrace-our-causes.lovable.app
+    repoUrl: ""
+    rank: 12
+    priority: medium
+  - id: dan-bauman-freedom-foundations-build
+    name: Freedom Foundations Build
+    clientId: dan-bauman
+    owner: Anton
+    stage: Client
+    status: Active Client (Project 1)
+    lastUpdate: 2026-03-05
+    summary: Active Client (Project 1)
+    previewUrl: https://freedom-foundations-build.lovable.app/
+    liveUrl: https://freedom-foundations-build.lovable.app/
+    repoUrl: ""
+  - id: asian-food-magic-fun-asian-food-magic
+    name: Fun Asian Food Magic
+    clientId: asian-food-magic
+    owner: Anton
+    stage: Client
+    status: Active Client
+    lastUpdate: 2026-03-05
+    summary: Active Client
+    previewUrl: https://fun-asian-food-magic.lovable.app/
+    liveUrl: https://fun-asian-food-magic.lovable.app/
+    repoUrl: ""
+  - id: fundraising-hub-fundraisinghub
+    name: Fundraisinghub
+    clientId: fundraising-hub
+    owner: Anton
+    stage: Internal
+    status: Active
+    lastUpdate: 2026-03-05
+    summary: Active
+    previewUrl: https://fundraisinghub.webdezigns
+    liveUrl: https://fundraisinghub.webdezigns
+    repoUrl: ""
+    rank: 10
+    priority: medium
+  - id: george-hildreth-future-childcare-ai
+    name: Future Childcare Ai
+    clientId: george-hildreth
+    owner: Anton
+    stage: Client
+    status: Active Client (Project 2)
+    lastUpdate: 2026-03-05
+    summary: Active Client (Project 2)
+    previewUrl: https://future-childcare-ai.lovable.app
+    liveUrl: https://future-childcare-ai.lovable.app
+    repoUrl: ""
+  - id: genius-landing-genius-landing
+    name: Genius Landing
+    clientId: genius-landing
+    owner: Anton
+    stage: Internal
+    status: Webdezigns ecosystem project.
+    lastUpdate: 2026-03-05
+    summary: Webdezigns ecosystem project.
+    previewUrl: https://genius-landing.lovable.app/
+    liveUrl: https://genius-landing.lovable.app/
+    repoUrl: ""
+  - id: george-hildreth-ghrenterprises
+    name: Ghrenterprises
+    clientId: george-hildreth
+    owner: Anton
+    stage: Client
+    status: Active Client (Project 1)
+    lastUpdate: 2026-03-05
+    summary: Active Client (Project 1)
+    previewUrl: https://ghrenterprises.webdezigns.ai/
+    liveUrl: https://ghrenterprises.webdezigns.ai/
+    repoUrl: ""
+  - id: chip-smith-hammersmith-hammersmith
+    name: Hammersmith
+    clientId: chip-smith-hammersmith
+    owner: Anton
+    stage: Client
+    status: "Active Client. *Note: Strategic overlap with ECHO/KD Foundation partnership.*"
+    lastUpdate: 2026-03-05
+    summary: "Active Client. *Note: Strategic overlap with ECHO/KD Foundation partnership.*"
+    previewUrl: https://hammersmith.webdezigns.ai/
+    liveUrl: https://hammersmith.webdezigns.ai/
+    repoUrl: ""
+  - id: heather-helms-helms
+    name: Helms
+    clientId: heather-helms
+    owner: Anton
+    stage: Client
+    status: Active Client
+    lastUpdate: 2026-03-05
+    summary: Active Client
+    previewUrl: https://helms.webdezigns.ai/
+    liveUrl: https://helms.webdezigns.ai/
+    repoUrl: ""
+  - id: jesse-halverson-jesse-house-quest
+    name: Jesse House Quest
+    clientId: jesse-halverson
+    owner: Anton
+    stage: Client
+    status: Active Client
+    lastUpdate: 2026-03-05
+    summary: Active Client
+    previewUrl: https://jesse-house-quest.lovable.app
+    liveUrl: https://jesse-house-quest.lovable.app
+    repoUrl: ""
+  - id: jukebox-joy-jive-jukebox-joy-jive
+    name: Jukebox Joy Jive
+    clientId: jukebox-joy-jive
+    owner: Anton
+    stage: Client
+    status: Active Client
+    lastUpdate: 2026-03-05
+    summary: Active Client
+    previewUrl: https://jukebox-joy-jive.lovable.app/
+    liveUrl: https://jukebox-joy-jive.lovable.app/
+    repoUrl: ""
+  - id: kd-foundation-kdfoundation
+    name: Kdfoundation
+    clientId: kd-foundation
+    owner: Anton
+    stage: Internal
+    status: ECHO ecosystem. Partnership with Justin Davis, Chip Smith, and Tripp Smith.
+    lastUpdate: 2026-03-05
+    summary: ECHO ecosystem. Partnership with Justin Davis, Chip Smith, and Tripp Smith.
+    previewUrl: https://kdfoundation.webdezigns.ai/
+    liveUrl: https://kdfoundation.webdezigns.ai/
+    repoUrl: ""
+  - id: kooper-davis-foundation-kooperdavis
+    name: Kooperdavis
+    clientId: kooper-davis-foundation
+    owner: Anton
+    stage: Client
+    status: "Active Client. *Note: Overlaps with Manifestic ECHO partnership.*"
+    lastUpdate: 2026-03-05
+    summary: "Active Client. *Note: Overlaps with Manifestic ECHO partnership.*"
+    previewUrl: https://kooperdavis.lovable.app
+    liveUrl: https://kooperdavis.lovable.app
+    repoUrl: ""
+  - id: dan-bauman-legacy-foundations-builder
+    name: Legacy Foundations Builder
+    clientId: dan-bauman
+    owner: Anton
+    stage: Client
+    status: Active Client (Project 2)
+    lastUpdate: 2026-03-05
+    summary: Active Client (Project 2)
+    previewUrl: https://legacy-foundations-builder.lovable.app/
+    liveUrl: https://legacy-foundations-builder.lovable.app/
+    repoUrl: ""
+  - id: lisa-lisa-clean-estimate
+    name: Lisa Clean Estimate
+    clientId: lisa
+    owner: Anton
+    stage: Client
+    status: Active Client
+    lastUpdate: 2026-03-05
+    summary: Active Client
+    previewUrl: https://lisa-clean-estimate.lovable.app/
+    liveUrl: https://lisa-clean-estimate.lovable.app/
+    repoUrl: ""
+  - id: logoclear
+    name: LogoClear AI
+    clientId: atlas
+    owner: Atlas
+    stage: Live
+    status: In progress
+    lastUpdate: 2026-03-05
+    previewUrl: https://logoclear.vercel.app
+    liveUrl: https://logoclear.vercel.app
+    repoUrl: https://github.com/agis-eng/logoclear
+    summary: AI-powered logo cleanup + creation tool backed by Gemini.
+    rank: 1
+    priority: high
+    affiliate:
+      active: true
+      program_name: LogoClear Affiliate Program
+      commission: 30% recurring monthly
+      commission_type: percentage
+      commission_pct: 30
+      avg_deal_size: 49
+      monthly_leads: 15
+      monthly_potential: 220
+      status: active
+      notes: "Our own product. Drive affiliate partners to promote LogoClear — every new subscriber earns 30% recurring. Priority: build affiliate landing page."
+      affiliate_url: https://logoclear.vercel.app
+      signup_url: https://logoclear.vercel.app/affiliate
+  - id: love-portal
+    name: Lovable Client Portal
+    clientId: atlas
+    owner: Atlas
+    stage: Design
+    status: In progress
+    lastUpdate: 2026-03-04
+    previewUrl: https://app.lovable.dev/preview/portal
+    liveUrl: https://portal.example.com
+    repoUrl: https://github.com/agis-eng/atlas-portal
+    summary: Internal dashboard concept showing projects + change queue.
+    rank: 7
+    priority: medium
+  - id: lumen-site
+    name: Lumen Dental Microsite
+    clientId: lumen
+    owner: Anton
+    stage: QA
+    status: Ready for review
+    lastUpdate: 2026-03-03
+    previewUrl: https://app.lovable.dev/preview/lumen
+    liveUrl: https://lumen.here.now
+    repoUrl: https://github.com/agis-eng/lumen-site
+    summary: Dual-language site for appointment intake.
+    rank: 8
+    priority: medium
+  - id: echo-management-management
+    name: Management
+    clientId: echo-management
+    owner: Anton
+    stage: Internal
+    status: Active
+    lastUpdate: 2026-03-05
+    summary: Active
+    previewUrl: https://management.echohcp.com
+    liveUrl: https://management.echohcp.com
+    repoUrl: ""
+  - id: manifest-grow-mind-manifest-grow-mind
+    name: Manifest Grow Mind
+    clientId: manifest-grow-mind
+    owner: Anton
+    stage: Internal
+    status: Active
+    lastUpdate: 2026-03-05
+    summary: Active
+    previewUrl: https://manifest-grow-mind.lovable.app/
+    liveUrl: https://manifest-grow-mind.lovable.app/
+    repoUrl: ""
+    rank: 9
+    priority: medium
+  - id: med-dream-weaver-med-dream-weaver
+    name: Med Dream Weaver
+    clientId: med-dream-weaver
+    owner: Anton
+    stage: Internal
+    status: Partner project with VonMarie Gastelo.
+    lastUpdate: 2026-03-05
+    summary: Partner project with VonMarie Gastelo.
+    previewUrl: https://med-dream-weaver.lovable.app/
+    liveUrl: https://med-dream-weaver.lovable.app/
+    repoUrl: ""
+  - id: lazo-kim-pkl-range-express
+    name: Pkl Range Express
+    clientId: lazo-kim
+    owner: Anton
+    stage: Client
+    status: Active Client
+    lastUpdate: 2026-03-05
+    summary: Active Client
+    previewUrl: https://pkl-range-express.lovable.app
+    liveUrl: https://pkl-range-express.lovable.app
+    repoUrl: ""
+  - id: taylor-southerton-pocket-renovate-ai
+    name: Pocket Renovate Ai
+    clientId: taylor-southerton
+    owner: Anton
+    stage: Client
+    status: Active Client
+    lastUpdate: 2026-03-05
+    summary: Active Client
+    previewUrl: https://pocket-renovate-ai.lovable.app/
+    liveUrl: https://pocket-renovate-ai.lovable.app/
+    repoUrl: ""
+  - id: dan-bauman-polar-sparkle-site
+    name: Polar Sparkle Site
+    clientId: dan-bauman
+    owner: Anton
+    stage: Client
+    status: Active Client (Project 3)
+    lastUpdate: 2026-03-05
+    summary: Active Client (Project 3)
+    previewUrl: https://polar-sparkle-site.lovable.app/
+    liveUrl: https://polar-sparkle-site.lovable.app/
+    repoUrl: ""
+  - id: psychedelic-art-dream-psychedelic-art-dream
+    name: Psychedelic Art Dream
+    clientId: psychedelic-art-dream
+    owner: Anton
+    stage: Internal
+    status: Active
+    lastUpdate: 2026-03-05
+    summary: Active
+    previewUrl: https://psychedelic-art-dream.lovable.app/
+    liveUrl: https://psychedelic-art-dream.lovable.app/
+    repoUrl: ""
+  - id: radiant-hiring-partners-radiant-hiring-partners
+    name: Radiant Hiring Partners
+    clientId: radiant-hiring-partners
+    owner: Anton
+    stage: Internal
+    status: APEX project.
+    lastUpdate: 2026-03-05
+    summary: APEX project.
+    previewUrl: https://radiant-hiring-partners.lovable.app/
+    liveUrl: https://radiant-hiring-partners.lovable.app/
+    repoUrl: ""
+  - id: clyde-rath-rathmn
+    name: Rathmn
+    clientId: clyde-rath
+    owner: Anton
+    stage: Client
+    status: Active Client
+    lastUpdate: 2026-03-05
+    summary: Active Client
+    previewUrl: https://rathmn.com
+    liveUrl: https://rathmn.com
+    repoUrl: ""
+  - id: resonant-care-network-resonant-care-network
+    name: Resonant Care Network
+    clientId: resonant-care-network
+    owner: Anton
+    stage: Internal
+    status: ECHO ecosystem project.
+    lastUpdate: 2026-03-05
+    summary: ECHO ecosystem project.
+    previewUrl: https://resonant-care-network.lovable.app/
+    liveUrl: https://resonant-care-network.lovable.app/
+    repoUrl: ""
+  - id: sight-replicate-web-sight-replicate-web
+    name: Sight Replicate Web
+    clientId: sight-replicate-web
+    owner: Anton
+    stage: Internal
+    status: Active
+    lastUpdate: 2026-03-05
+    summary: Active
+    previewUrl: https://sight-replicate-web.lovable.app/
+    liveUrl: https://sight-replicate-web.lovable.app/
+    repoUrl: ""
+  - id: susan-smooth-credential
+    name: Smooth Credential
+    clientId: susan
+    owner: Anton
+    stage: Client
+    status: Active Client
+    lastUpdate: 2026-03-05
+    summary: Active Client
+    previewUrl: https://smooth-credential.lovable.app/
+    liveUrl: https://smooth-credential.lovable.app/
+    repoUrl: ""
+  - id: john-griffin-snowbird-states-hub
+    name: Snowbird States Hub
+    clientId: john-griffin
+    owner: Anton
+    stage: Client
+    status: Active Client
+    lastUpdate: 2026-03-05
+    summary: Active Client
+    previewUrl: https://snowbird-states-hub.lovable.app
+    liveUrl: https://snowbird-states-hub.lovable.app
+    repoUrl: ""
+  - id: carmen-solinasabor
+    name: Solinasabor
+    clientId: carmen
+    owner: Anton
+    stage: Client
+    status: Active Client
+    lastUpdate: 2026-03-05
+    summary: Active Client
+    previewUrl: https://solinasabor.webdezigns.ai
+    liveUrl: https://solinasabor.webdezigns.ai
+    repoUrl: ""
+  - id: webdezigns-client-intake-stack-stack
+    name: Stack
+    clientId: webdezigns-client-intake-stack
+    owner: Anton
+    stage: Internal
+    status: Internal system for Webdezigns clients to submit project requirements (needs/wants).
+    lastUpdate: 2026-03-05
+    summary: Internal system for Webdezigns clients to submit project requirements (needs/wants).
+    previewUrl: https://stack.webdezigns.ai
+    liveUrl: https://stack.webdezigns.ai
+    repoUrl: ""
+  - id: stratpath-version-2-stratpath
+    name: Stratpath
+    clientId: stratpath-version-2
+    owner: Anton
+    stage: Internal
+    status: Partner project with Mark Green. V2 site.
+    lastUpdate: 2026-03-05
+    summary: Partner project with Mark Green. V2 site.
+    previewUrl: https://stratpath.webdezigns.ai/
+    liveUrl: https://stratpath.webdezigns.ai/
+    repoUrl: ""
+    rank: 11
+    priority: medium
+  - id: ted-associates-ted-associates
+    name: Ted Associates
+    clientId: ted-associates
+    owner: Anton
+    stage: Internal
+    status: Active
+    lastUpdate: 2026-03-05
+    summary: Active
+    previewUrl: https://ted-associates.com
+    liveUrl: https://ted-associates.com
+    repoUrl: ""
+  - id: ted-care-compass-ted-care-compass
+    name: Ted Care Compass
+    clientId: ted-care-compass
+    owner: Anton
+    stage: Internal
+    status: Active
+    lastUpdate: 2026-03-05
+    summary: Active
+    previewUrl: https://ted-care-compass.lovable.app
+    liveUrl: https://ted-care-compass.lovable.app
+    repoUrl: ""
+  - id: rich-storholm-twin-cities-revamp-look
+    name: Twin Cities Revamp Look
+    clientId: rich-storholm
+    owner: Anton
+    stage: Client
+    status: Active Client
+    lastUpdate: 2026-03-05
+    summary: Active Client
+    previewUrl: https://twin-cities-revamp-look.lovable.app/
+    liveUrl: https://twin-cities-revamp-look.lovable.app/
+    repoUrl: ""
+  - id: a-plus-epoxy-v1aplusepoxy
+    name: V1aplusepoxy
+    clientId: a-plus-epoxy
+    owner: Anton
+    stage: Contractor
+    status: Contractor project via Will Bisette.
+    lastUpdate: 2026-03-05
+    summary: Contractor project via Will Bisette.
+    previewUrl: https://v1aplusepoxy.lovable.app/
+    liveUrl: https://v1aplusepoxy.lovable.app/
+    repoUrl: ""
+  - id: view-to-vista-view-to-vista
+    name: View To Vista
+    clientId: view-to-vista
+    owner: Anton
+    stage: Internal
+    status: Active
+    lastUpdate: 2026-03-05
+    summary: Active
+    previewUrl: https://view-to-vista.lovable.app/
+    liveUrl: https://view-to-vista.lovable.app/
+    repoUrl: ""
+  - id: webdezigns-core-agency-site-webdezigns
+    name: Webdezigns
+    clientId: webdezigns-core-agency-site
+    owner: Anton
+    stage: Internal
+    status: Active
+    lastUpdate: 2026-03-05
+    summary: Active
+    previewUrl: https://webdezigns.ai/
+    liveUrl: https://webdezigns.ai/
+    repoUrl: ""
+    rank: 4
+    priority: high
+  - id: george-hildreth-womenofvision
+    name: Womenofvision
+    clientId: george-hildreth
+    owner: Anton
+    stage: Client
+    status: Active Client (Project 3)
+    lastUpdate: 2026-03-05
+    summary: Active Client (Project 3)
+    previewUrl: https://womenofvision.webdezigns.ai/
+    liveUrl: https://womenofvision.webdezigns.ai/
+    repoUrl: ""
+  - id: keith-trautman-www
+    name: Www
+    clientId: keith-trautman
+    owner: Anton
+    stage: Client
+    status: Active Client
+    lastUpdate: 2026-03-05
+    summary: Active Client
+    previewUrl: https://www.keiththeinsuranceguy.com
+    liveUrl: https://www.keiththeinsuranceguy.com
+    repoUrl: ""
+  - id: sam-www
+    name: Www
+    clientId: sam
+    owner: Anton
+    stage: Client
+    status: Active Client
+    lastUpdate: 2026-03-05
+    summary: Active Client
+    previewUrl: https://www.starmart.webdezigns.ai
+    liveUrl: https://www.starmart.webdezigns.ai
+    repoUrl: ""
+  - id: stratpath-version-1-www
+    name: Www
+    clientId: stratpath-version-1
+    owner: Anton
+    stage: Internal
+    status: Partner project with Mark Green. V1 site.
+    lastUpdate: 2026-03-05
+    summary: Partner project with Mark Green. V1 site.
+    previewUrl: https://www.stratpath.com/
+    liveUrl: https://www.stratpath.com/
+    repoUrl: ""
+  - id: mike-richman-z-mike-fight-club
+    name: Z Mike Fight Club
+    clientId: mike-richman
+    owner: Anton
+    stage: Client
+    status: Active Client
+    lastUpdate: 2026-03-05
+    summary: Active Client
+    previewUrl: https://z-mike-fight-club.lovable.app/
+    liveUrl: https://z-mike-fight-club.lovable.app/
+    repoUrl: ""
+  - id: g-wallet-usdt
+    name: G-Wallet (USDT Global Wallet)
+    clientId: akilli-pollee
+    owner: Anton
+    stage: Design
+    status: Partner Project
+    lastUpdate: 2026-03-08
+    summary: Merchant-focused stablecoin settlement infrastructure platform.
+    previewUrl: ""
+    liveUrl: ""
+    repoUrl: ""
+    rank: 5
+    priority: high
+  - id: fund-and-grow-partner
+    name: Fund & Grow Partner Hub
+    clientId: fund-and-grow
+    owner: Anton
+    stage: Partner
+    status: Affiliate partnership with Fund & Grow
+    lastUpdate: 2026-03-13
+    summary: Affiliate program focused on business funding pipelines for our clients.
+    previewUrl: https://fundandgrow.com
+    liveUrl: https://fundandgrow.com
+    repoUrl: ""
+  - id: unmatched-texas-care-franchise
+    name: Texas Care Franchise
+    clientId: atlas
+    owner: Erik
+    stage: Lead
+    status: Franchise opportunity - weekly meetings
+    lastUpdate: 2026-03-13
+    summary: Texas Care franchise expansion meetings
+  - id: unmatched-von-echo-meetings
+    name: Von / ECHO Strategy
+    clientId: caring-echo-bridge
+    owner: Erik
+    stage: Internal
+    status: ECHO ecosystem strategy sessions with Von
+    lastUpdate: 2026-03-13
+    summary: ECHO HCP strategy and onboarding meetings with VonMarie
+  - id: unmatched-rasha-dedra
+    name: Rasha & Dedra Team
+    clientId: atlas
+    owner: Erik
+    stage: Lead
+    status: Team onboarding and intro calls
+    lastUpdate: 2026-03-13
+    summary: Intro and team calls with Rasha, Dedra, and partners
+  - id: unmatched-qmhp-iop
+    name: QMHP / IOP Outreach
+    clientId: caring-echo-bridge
+    owner: Erik
+    stage: Lead
+    status: QMHP and IOP partnership outreach
+    lastUpdate: 2026-03-13
+    summary: Mental health provider outreach and IOP kickoff
+  - id: unmatched-nurturebeast
+    name: NurtureBeast
+    clientId: atlas
+    owner: Erik
+    stage: Lead
+    status: NurtureBeast platform training and weekly calls
+    lastUpdate: 2026-03-13
+    summary: NurtureBeast CRM training and weekly check-ins
+  - id: proj-tx-care-potential-investors
+    name: TX Care Potential Investors
+    clientId: atlas
+    owner: Erik
+    stage: Lead
+    status: TX Care Potential Investors
+    lastUpdate: 2026-03-14
+    summary: TX Care Potential Investors
