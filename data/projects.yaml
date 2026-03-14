@@ -743,3 +743,11 @@ projects:
     status: Peter Burns Funding
     lastUpdate: 2026-03-14
     summary: Peter is a referral from The TX asian girl
+  - id: proj-pho-marketing-partner
+    name: Pho Marketing Partner
+    clientId: pho
+    owner: Erik
+    stage: Lead
+    status: Pho Marketing Partner
+    lastUpdate: 2026-03-14
+    summary: Pho Marketing Partner
