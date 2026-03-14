@@ -1750,7 +1750,7 @@ calls:
     meeting_name: Meeting with Pho
     date: 2026-01-26
     participants: []
-    project_id: null
+    project_id: proj-pho-marketing-partner
     partner_id: null
     key_takeaways:
       - "Website Overhaul:: The FFF site will be updated with a family-friendly logo, event photos, and team bios to better reflect the foundation's"
