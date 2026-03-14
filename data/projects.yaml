@@ -33,16 +33,15 @@ projects:
     liveUrl: https://benefitsforyoullc.com/
     repoUrl: ""
   - id: capture-build-connect-capture-build-connect
-    name: Capture Build Connect
+    name: TED New Site
     clientId: capture-build-connect
     owner: Anton
     stage: Internal
     status: Active
-    lastUpdate: 2026-03-05
+    lastUpdate: 2026-03-14
     summary: Active
     previewUrl: https://capture-build-connect.lovable.app
     liveUrl: https://capture-build-connect.lovable.app
-    repoUrl: ""
     rank: 3
     priority: high
     affiliate:
@@ -58,6 +57,7 @@ projects:
       notes: Refer businesses that need a full capture → build → connect pipeline. Great fit for our agency clients post-launch.
       affiliate_url: https://capture-build-connect.lovable.app
       signup_url: ""
+    brain: {}
   - id: caring-echo-bridge-caring-echo-bridge
     name: Caring Echo Bridge
     clientId: caring-echo-bridge
