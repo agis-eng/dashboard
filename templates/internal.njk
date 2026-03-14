@@ -65,9 +65,9 @@
           {% if project.repoUrl %}<a href="{{ project.repoUrl }}" target="_blank" data-noportal>Repo</a>{% endif %}
           {% if project.memoCount > 0 %}
             {% if project.voiceMemos[0].notion_url %}
-              <a href="{{ project.voiceMemos[0].notion_url }}" target="_blank" data-noportal>🎙️ {{ project.memoCount }} memo{% if project.memoCount != 1 %}s{% endif %}</a>
+              <a href="{{ project.voiceMemos[0].notion_url }}" target="_blank" data-noportal>🎤 {{ project.memoCount }} memo{% if project.memoCount != 1 %}s{% endif %}</a>
             {% else %}
-              <span class="muted">🎙️ {{ project.memoCount }} memo{% if project.memoCount != 1 %}s{% endif %}</span>
+              <span class="muted">🎤 {{ project.memoCount }} memo{% if project.memoCount != 1 %}s{% endif %}</span>
             {% endif %}
           {% endif %}
           {% if project.callCount > 0 %}
@@ -637,6 +637,70 @@ function openCreateProjectModal(idx, name, recordingIds) {
   modal.style.display = 'flex';
 }
 
+
+/* ── Optimistic UI: inject new project card immediately on create ── */
+function injectNewProjectCard(projectId, payload) {
+  var grid = document.querySelector('.project-grid');
+  if (!grid) return;
+
+  var name       = payload.name       || '';
+  var summary    = payload.summary    || name;
+  var owner      = payload.owner      || 'Erik';
+  var stage      = payload.stage      || 'Lead';
+  var clientId   = payload.clientId   || 'atlas';
+  var previewUrl = payload.previewUrl || null;
+  var stageSlug  = stage.toLowerCase().replace(/\s+/g, '-');
+  var today      = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+  // Resolve client display name from the dropdown
+  var clientSel  = document.getElementById('cp-client');
+  var clientName = 'Unknown';
+  if (clientSel) {
+    var opt = clientSel.options[clientSel.selectedIndex];
+    if (opt) clientName = opt.text;
+  }
+
+  var article = document.createElement('article');
+  article.className = 'card';
+  article.setAttribute('data-search-item', 'projects');
+  article.setAttribute('data-stage', stageSlug);
+  article.setAttribute('data-search-text',
+    (name + ' ' + summary + ' ' + owner + ' ' + clientName + ' ' + stage).toLowerCase());
+
+  article.innerHTML =
+    '<div class="card-header">' +
+      '<div>' +
+        '<div class="card-title-row"><h2>' + esc(name) + '</h2></div>' +
+        '<p class="muted">' + esc(summary) + '</p>' +
+      '</div>' +
+      '<span class="status-pill ' + stageSlug + '">' + esc(stage) + '</span>' +
+    '</div>' +
+    '<dl class="meta">' +
+      '<div><dt>Owner</dt><dd>' + esc(owner) + '</dd></div>' +
+      '<div><dt>Client</dt><dd>' + esc(clientName) + '</dd></div>' +
+      '<div><dt>Status</dt><dd>' + esc(summary) + '</dd></div>' +
+      '<div><dt>Last update</dt><dd>' + today + '</dd></div>' +
+    '</dl>' +
+    (previewUrl ? '<div class="links"><a href="' + esc(previewUrl) + '" target="_blank" data-noportal>Preview</a></div>' : '') +
+    '<p class="muted" style="font-size:0.75rem;margin-top:0.5rem;opacity:0.6">⟳ Rebuilding — full details after next load</p>';
+
+  // Prepend to grid so it appears at the top
+  grid.insertBefore(article, grid.firstChild);
+
+  // Wire into search filter
+  var searchInput = document.querySelector('[data-search-input="projects"]');
+  if (searchInput) searchInput.dispatchEvent(new Event('input'));
+
+  // Update the subtitle count
+  var subtitle = document.querySelector('.section-header .muted');
+  if (subtitle) {
+    var m = subtitle.textContent.match(/(\d+) projects tracked across (\d+) clients/);
+    if (m) {
+      subtitle.textContent = (parseInt(m[1]) + 1) + ' projects tracked across ' + m[2] + ' clients.';
+    }
+  }
+}
+
 function closeCreateModal() {
   document.getElementById('create-project-modal').style.display = 'none';
 }
@@ -702,9 +766,10 @@ async function submitCreateProject(btn) {
     });
     var d = await r.json();
     if (d.ok) {
-      statusEl.textContent = '✓ Created "' + d.name + '" — rebuilding…';
+      statusEl.textContent = '✓ Created "' + d.name + '"';
       statusEl.style.color = '#4ade80';
-      setTimeout(closeCreateModal, 2500);
+      injectNewProjectCard(d.id, payload);
+      setTimeout(closeCreateModal, 1500);
     } else {
       statusEl.textContent = '✗ ' + (d.error || 'Error');
       statusEl.style.color = '#f87171';
@@ -738,7 +803,7 @@ async function attachCallsToProject(idx, recordingIds) {
       statusEl.style.color = '#4ade80';
       // Collapse and fade out the group after a moment
       var group = document.getElementById('qg-' + idx);
-      if (group) setTimeout(function() { group.style.opacity = '0.35'; group.style.pointerEvents = 'none'; }, 1500);
+      if (group) { setTimeout(function() { group.style.opacity = '0.4'; }, 1500); }
     } else {
       statusEl.textContent = '✗ ' + (d.error || 'Error');
       statusEl.style.color = '#f87171';
@@ -749,20 +814,12 @@ async function attachCallsToProject(idx, recordingIds) {
   }
 }
 
-// Close modal on backdrop click
-document.addEventListener('DOMContentLoaded', function() {
-  var modal = document.getElementById('create-project-modal');
-  if (modal) modal.addEventListener('click', function(e) {
-    if (e.target === modal) closeCreateModal();
-  });
-});
-
-/* ── Project Brain ── */
+/* ── Brain (links + notes) ── */
 function renderBrainLinks(projectId, links) {
   var list = document.getElementById('bl-' + projectId);
   if (!list) return;
   list.innerHTML = '';
-  (links || []).forEach(function(link, i) { list.appendChild(makeBrainLinkRow(link, i)); });
+  (links || []).forEach(function(l, i) { list.appendChild(makeBrainLinkRow(projectId, l, i)); });
   updateBrainBadge(projectId);
 }
 
@@ -770,133 +827,249 @@ function renderBrainNotes(projectId, notes) {
   var list = document.getElementById('bn-' + projectId);
   if (!list) return;
   list.innerHTML = '';
-  (notes || []).forEach(function(note, i) { list.appendChild(makeBrainNoteCard(note, i)); });
+  (notes || []).forEach(function(n, i) { list.appendChild(makeBrainNoteRow(projectId, n, i)); });
   updateBrainBadge(projectId);
 }
 
-function updateBrainBadge(projectId) {
-  var badge = document.getElementById('bb-' + projectId);
-  if (!badge) return;
-  var lc = (document.getElementById('bl-' + projectId) || { children: [] }).children.length;
-  var nc = (document.getElementById('bn-' + projectId) || { children: [] }).children.length;
-  var t = lc + nc;
-  badge.textContent = t > 0 ? '(' + t + ')' : '';
-}
-
-function makeBrainLinkRow(link, idx) {
+function makeBrainLinkRow(projectId, l, idx) {
   var row = document.createElement('div');
   row.className = 'brain-link-row';
   row.dataset.idx = idx;
-  var lbl = document.createElement('input');
-  lbl.type = 'text'; lbl.className = 'bl-label'; lbl.placeholder = 'Label (e.g. Client Portal)'; lbl.value = link.label || '';
-  var url = document.createElement('input');
-  url.type = 'url'; url.className = 'bl-url'; url.placeholder = 'https://...'; url.value = link.url || '';
-  var del = document.createElement('button');
-  del.type = 'button'; del.className = 'btn btn-ghost btn-sm'; del.textContent = '✕';
-  del.onclick = function() { removeBrainItem(del); };
-  row.appendChild(lbl); row.appendChild(url); row.appendChild(del);
+  row.innerHTML =
+    '<input type="url"  class="bl-url"   placeholder="https://" value="' + esc(l.url   || '') + '">' +
+    '<input type="text" class="bl-label" placeholder="Label"    value="' + esc(l.label || '') + '">' +
+    '<button type="button" class="btn btn-ghost btn-sm" onclick="removeBrainRow(this)">✕</button>';
   return row;
 }
 
-function makeBrainNoteCard(note, idx) {
-  var card = document.createElement('div');
-  card.className = 'brain-note-card';
-  card.dataset.idx = idx;
-  var hdr = document.createElement('div');
-  hdr.className = 'brain-note-header';
-  var ttl = document.createElement('input');
-  ttl.type = 'text'; ttl.className = 'bn-title'; ttl.placeholder = 'Title (optional)'; ttl.value = note.title || '';
-  var del = document.createElement('button');
-  del.type = 'button'; del.className = 'btn btn-ghost btn-sm'; del.textContent = '✕';
-  del.onclick = function() { removeBrainItem(del); };
-  hdr.appendChild(ttl); hdr.appendChild(del);
-  var ta = document.createElement('textarea');
-  ta.className = 'bn-content'; ta.placeholder = 'Paste text, notes, context, docs…'; ta.rows = 5; ta.value = note.content || '';
-  card.appendChild(hdr); card.appendChild(ta);
-  if (note.date) {
-    var dt = document.createElement('div');
-    dt.className = 'brain-note-date muted'; dt.textContent = 'Added: ' + note.date;
-    card.appendChild(dt);
-  }
-  return card;
+function makeBrainNoteRow(projectId, n, idx) {
+  var row = document.createElement('div');
+  row.className = 'brain-note-row';
+  row.dataset.idx = idx;
+  var text = typeof n === 'string' ? n : (n.text || '');
+  row.innerHTML =
+    '<textarea class="bn-text" placeholder="Note or context…" rows="3">' + esc(text) + '</textarea>' +
+    '<button type="button" class="btn btn-ghost btn-sm" onclick="removeBrainRow(this)">✕</button>';
+  return row;
 }
 
 function addBrainLink(projectId) {
   var list = document.getElementById('bl-' + projectId);
   if (!list) return;
-  list.appendChild(makeBrainLinkRow({}, list.children.length));
-  updateBrainBadge(projectId);
+  list.appendChild(makeBrainLinkRow(projectId, {}, list.children.length));
 }
 
-function addBrainNote(projectId, prefill) {
+function addBrainNote(projectId) {
   var list = document.getElementById('bn-' + projectId);
   if (!list) return;
-  list.appendChild(makeBrainNoteCard(prefill || {}, list.children.length));
-  updateBrainBadge(projectId);
-  // Auto-expand brain section
-  var brainDetails = list.closest('details.brain-section');
-  if (brainDetails) brainDetails.open = true;
+  list.appendChild(makeBrainNoteRow(projectId, '', list.children.length));
 }
 
-function uploadBrainFile(input, projectId) {
-  var file = input.files[0];
-  if (!file) return;
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    addBrainNote(projectId, {
-      title: file.name,
-      content: e.target.result,
-      date: new Date().toISOString().slice(0, 10)
-    });
-  };
-  reader.readAsText(file);
-  input.value = '';
-}
-
-function removeBrainItem(btn) {
-  var item = btn.closest('.brain-link-row, .brain-note-card');
-  if (!item) return;
-  var editor = btn.closest('.project-editor');
-  item.remove();
-  if (editor && editor.dataset.projectId) updateBrainBadge(editor.dataset.projectId);
+function removeBrainRow(btn) {
+  var row = btn.closest('.brain-link-row, .brain-note-row');
+  if (row) row.remove();
 }
 
 function collectBrainLinks(projectId) {
   var list = document.getElementById('bl-' + projectId);
   if (!list) return [];
-  return Array.from(list.querySelectorAll('.brain-link-row')).map(function(r) {
-    var lbl = r.querySelector('.bl-label').value.trim();
-    var url = r.querySelector('.bl-url').value.trim();
-    return url ? { label: lbl || url, url: url } : null;
+  return Array.from(list.querySelectorAll('.brain-link-row')).map(function(row) {
+    var url   = row.querySelector('.bl-url').value.trim();
+    var label = row.querySelector('.bl-label').value.trim();
+    if (!url) return null;
+    return { url: url, label: label || url };
   }).filter(Boolean);
 }
 
 function collectBrainNotes(projectId) {
   var list = document.getElementById('bn-' + projectId);
   if (!list) return [];
-  return Array.from(list.querySelectorAll('.brain-note-card')).map(function(c) {
-    var title   = c.querySelector('.bn-title').value.trim();
-    var content = c.querySelector('.bn-content').value.trim();
-    return content ? { title: title || 'Untitled', content: content, date: new Date().toISOString().slice(0, 10) } : null;
+  return Array.from(list.querySelectorAll('.brain-note-row')).map(function(row) {
+    var text = row.querySelector('.bn-text').value.trim();
+    return text || null;
   }).filter(Boolean);
+}
+
+function updateBrainBadge(projectId) {
+  var badge = document.getElementById('bb-' + projectId);
+  if (!badge) return;
+  var linkCount = (document.getElementById('bl-' + projectId) || { children: [] }).children.length;
+  var noteCount = (document.getElementById('bn-' + projectId) || { children: [] }).children.length;
+  var total = linkCount + noteCount;
+  badge.textContent = total > 0 ? '(' + total + ')' : '';
+}
+
+async function uploadBrainFile(input, projectId) {
+  var file = input.files[0];
+  if (!file) return;
+  var text = await file.text();
+  var list = document.getElementById('bn-' + projectId);
+  if (!list) return;
+  list.appendChild(makeBrainNoteRow(projectId, text.slice(0, 8000), list.children.length));
+  updateBrainBadge(projectId);
+  input.value = '';
+}
+
+/* ── Search filter (client list) ── */
+const initCardPortals = () => {
+  document.querySelectorAll('[data-portal]').forEach(card => {
+    card.addEventListener('click', event => {
+      if (event.target.closest('[data-noportal]')) return;
+      const url = card.getAttribute('data-portal');
+      if (url) window.open(url, '_blank');
+    });
+  });
+  document.querySelectorAll('[data-noportal]').forEach(link => {
+    link.addEventListener('click', event => event.stopPropagation());
+  });
+};
+
+const initSearchFilters = () => {
+  document.querySelectorAll('[data-search-input]').forEach(input => {
+    const group = input.getAttribute('data-search-input');
+    const list = document.querySelector(`[data-search-list="${group}"]`);
+    const items = list
+      ? Array.from(list.querySelectorAll(`[data-search-item="${group}"]`))
+      : Array.from(document.querySelectorAll(`[data-search-item="${group}"]`));
+    if (!items.length) return;
+    const emptyState = document.querySelector(`[data-search-empty="${group}"]`);
+    const counter = document.querySelector(`[data-search-count="${group}"]`);
+    const update = () => {
+      const query = input.value.trim().toLowerCase();
+      let visible = 0;
+      items.forEach(item => {
+        const text = (item.getAttribute('data-search-text') || '').toLowerCase();
+        const matches = !query || text.includes(query);
+        item.style.display = matches ? '' : 'none';
+        if (matches) visible += 1;
+      });
+      if (emptyState) emptyState.style.display = visible === 0 ? 'block' : 'none';
+      if (counter) {
+        const total = items.length;
+        counter.textContent = visible === total ? `Showing all ${total}` : `Showing ${visible} of ${total}`;
+      }
+    };
+    input.addEventListener('input', update);
+    update();
+  });
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  initCardPortals();
+  initSearchFilters();
+  initAtlasChat();
+});
+
+// ── Chat (Atlas + AGIS) ───────────────────────────────────────────────────────
+var activeChat = 'atlas';
+var chatState = {
+  atlas: { lastUpdateId: null, rendered: new Set(), pollTimer: null },
+  agis:  { lastUpdateId: null, rendered: new Set(), pollTimer: null }
+};
+
+var chatConfig = {
+  atlas: { sendUrl: '/api/telegram-send',  fetchUrl: '/api/telegram-messages',  label: 'Atlas', subtitle: 'Give Atlas tasks directly' },
+  agis:  { sendUrl: '/api/agis',            fetchUrl: '/api/agis',       label: 'AGIS',  subtitle: 'Talk to AGIS (Anton\'s agent)' }
+};
+
+function switchChat(name, btn) {
+  activeChat = name;
+  document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  var subtitle = document.getElementById('chatSubtitle');
+  if (subtitle) subtitle.textContent = chatConfig[name].subtitle;
+  var container = document.getElementById('chatMessages');
+  container.innerHTML = '<p class="chat-empty muted">Loading messages…</p>';
+  chatState[name].rendered = new Set();
+  chatState[name].lastUpdateId = null;
+  document.getElementById('chatInput').placeholder = 'Message ' + chatConfig[name].label + '…';
+  fetchMessages(name);
+}
+
+function initAtlasChat() {
+  var form = document.getElementById('chatForm');
+  var input = document.getElementById('chatInput');
+  var sendBtn = document.getElementById('chatSend');
+  if (!form) return;
+
+  form.addEventListener('submit', function() {
+    var text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    sendMessage(activeChat, text);
+  });
+
+  fetchMessages('atlas');
+  setInterval(function() { fetchMessages(activeChat); }, 4000);
+}
+
+function formatTime(unixTs) {
+  return new Date(unixTs * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function addBubble(chatName, msg, outgoing) {
+  if (chatName !== activeChat) return;
+  var state = chatState[chatName];
+  if (state.rendered.has(msg.message_id)) return;
+  state.rendered.add(msg.message_id);
+  var container = document.getElementById('chatMessages');
+  var bubble = document.createElement('div');
+  bubble.className = 'chat-bubble ' + (outgoing ? 'outgoing' : 'incoming');
+  bubble.innerHTML =
+    '<div class="chat-bubble-text">' + msg.text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>' +
+    '<span class="chat-bubble-meta">' + (outgoing ? 'You' : msg.from) + ' · ' + formatTime(msg.date) + '</span>';
+  container.appendChild(bubble);
+  container.scrollTop = container.scrollHeight;
+}
+
+async function fetchMessages(chatName) {
+  var state = chatState[chatName];
+  var cfg = chatConfig[chatName];
+  try {
+    var url = state.lastUpdateId
+      ? cfg.fetchUrl + '?since=' + state.lastUpdateId
+      : cfg.fetchUrl;
+    var r = await fetch(url);
+    if (!r.ok) return;
+    var data = await r.json();
+    if (data.messages && data.messages.length) {
+      var container = document.getElementById('chatMessages');
+      var empty = container.querySelector('.chat-empty');
+      if (empty) empty.remove();
+      data.messages.forEach(function(msg) { addBubble(chatName, msg, false); });
+      state.lastUpdateId = data.messages[data.messages.length - 1].message_id;
+    }
+  } catch(e) { /* ignore poll errors */ }
+}
+
+async function sendMessage(chatName, text) {
+  var cfg = chatConfig[chatName];
+  addBubble(chatName, { message_id: 'out-' + Date.now(), text: text, from: 'You', date: Date.now() / 1000 }, true);
+  try {
+    await fetch(cfg.sendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text })
+    });
+  } catch(e) { /* ignore send errors */ }
 }
 </script>
 
-{# ── Create project modal ── #}
-<div id="create-project-modal" class="modal-backdrop" style="display:none" role="dialog" aria-modal="true">
-  <div class="modal-box" onclick="event.stopPropagation()">
+{# ── Create / Edit Project modal ── #}
+<div id="create-project-modal" style="display:none" class="modal-backdrop" onclick="if(event.target===this)closeCreateModal()">
+  <div class="modal">
     <header class="modal-header">
-      <h3 id="create-modal-title">New Project</h3>
+      <h2 id="create-modal-title">New Project</h2>
       <button class="modal-close" onclick="closeCreateModal()">✕</button>
     </header>
     <div class="modal-body">
-      <div class="editor-grid">
-        <div class="editor-field editor-full">
-          <label>Project name</label>
-          <input id="cp-name" type="text" placeholder="e.g. Texas Care Franchise">
+      <div class="form-grid">
+        <div class="form-field form-full">
+          <label for="cp-name">PROJECT NAME <span class="req">*</span></label>
+          <input id="cp-name" type="text" placeholder="e.g. ECHO Website Redesign" required>
         </div>
-        <div class="editor-field editor-full">
-          <label>Client</label>
+        <div class="form-field form-full">
+          <label for="cp-client">CLIENT</label>
           <select id="cp-client" onchange="toggleNewClientField()">
             <option value="atlas">— Internal / TBD —</option>
             {% for client in clients | sort(attribute='name') %}
@@ -906,12 +1079,12 @@ function collectBrainNotes(projectId) {
           </select>
           <input id="cp-new-client" type="text" placeholder="New client name" style="display:none;margin-top:0.4rem">
         </div>
-        <div class="editor-field">
-          <label>Owner</label>
-          <input id="cp-owner" type="text" placeholder="Erik">
+        <div class="form-field">
+          <label for="cp-owner">OWNER</label>
+          <input id="cp-owner" type="text" value="Erik">
         </div>
-        <div class="editor-field">
-          <label>Stage</label>
+        <div class="form-field">
+          <label for="cp-stage">STAGE</label>
           <select id="cp-stage">
             <option value="Lead">Lead</option>
             <option value="Client">Client</option>
@@ -920,26 +1093,26 @@ function collectBrainNotes(projectId) {
             <option value="Paused">Paused</option>
           </select>
         </div>
-        <div class="editor-field editor-full">
-          <label>Summary</label>
-          <input id="cp-summary" type="text" placeholder="Brief description">
+        <div class="form-field form-full">
+          <label for="cp-summary">SUMMARY</label>
+          <input id="cp-summary" type="text" placeholder="One-line description">
         </div>
-        <div class="editor-field editor-full">
-          <label>Preview URL <span class="muted">(optional)</span></label>
+        <div class="form-field form-full">
+          <label for="cp-preview">PREVIEW URL <span class="optional">(optional)</span></label>
           <input id="cp-preview" type="url" placeholder="https://">
         </div>
       </div>
-      <div class="editor-contacts-section">
-        <label class="editor-contacts-label">Contacts <span class="muted">(optional)</span></label>
+      <div class="form-contacts">
+        <label class="form-contacts-label">CONTACTS <span class="optional">(optional)</span></label>
         <div id="cp-contacts-list"></div>
         <button type="button" class="btn btn-ghost btn-sm" onclick="addCpContactRow()">+ Add contact</button>
       </div>
-      <input type="hidden" id="cp-recording-ids">
+      <input type="hidden" id="cp-recording-ids" value="[]">
     </div>
     <footer class="modal-footer">
-      <button class="btn btn-primary" onclick="submitCreateProject(this)">Create project</button>
+      <span id="cp-status" class="form-status"></span>
       <button class="btn btn-ghost" onclick="closeCreateModal()">Cancel</button>
-      <span id="cp-status" style="font-size:0.8rem;margin-left:0.5rem"></span>
+      <button class="btn btn-primary" onclick="submitCreateProject(this)">Create project</button>
     </footer>
   </div>
 </div>
