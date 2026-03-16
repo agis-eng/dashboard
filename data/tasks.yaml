@@ -1,4 +1,46 @@
 tasks:
+  - id: notion-32559b38371a813c
+    title: "Affiliate: Activate 24social7 Marketing Referral"
+    status: backlog
+    priority: high
+    type: marketing
+    platforms: []
+    project: ""
+    client: ""
+    assignee: Erik
+    due_date: null
+    notes: Complete the pending signup at 24social7.com/partners to start earning 15% on social/influencer campaign upsells after every site launch. Natural post-launch upsell for web clients. Est. $1,125/mo potential.
+    tags: []
+    notion_url: "https://www.notion.so/Affiliate-Activate-24social7-Marketing-Referral-32559b38371a813c8b2ef98e596750b8"
+    updated_at: "2026-03-16T13:10:00.000Z"
+  - id: notion-32559b38371a8114
+    title: "Affiliate: Apply to Apex Head Hunters Recruiting Referral"
+    status: backlog
+    priority: high
+    type: strategy
+    platforms: []
+    project: ""
+    client: ""
+    assignee: Erik
+    due_date: null
+    notes: Reach out to Tom Laing or Preston Park to get the Apex Head Hunters affiliate link set up. 15% of first placement fee per referral. Activate when clients are in hiring mode. Est. $1,200/mo potential.
+    tags: []
+    notion_url: "https://www.notion.so/Affiliate-Apply-to-Apex-Head-Hunters-Recruiting-Referral-32559b38371a811483cde1b977256c34"
+    updated_at: "2026-03-16T13:10:00.000Z"
+  - id: notion-32559b38371a816e
+    title: "Affiliate: Apply to Fix My Fees Revenue Recovery"
+    status: backlog
+    priority: high
+    type: strategy
+    platforms: []
+    project: ""
+    client: ""
+    assignee: Erik
+    due_date: null
+    notes: Apply to Fix My Fees Revenue Recovery program — contact Mike Sancho directly via the fix-my-fees.com partner page. Natural fit for ECHO + dental/healthcare clients leaving money on the table. Est. $1,600/mo potential.
+    tags: []
+    notion_url: "https://www.notion.so/Affiliate-Apply-to-Fix-My-Fees-Revenue-Recovery-32559b38371a816e861de36aff96e76d"
+    updated_at: "2026-03-16T13:10:00.000Z"
   - id: notion-32259b38371a81e1
     title: Chelimitless website redesign
     status: in-progress
