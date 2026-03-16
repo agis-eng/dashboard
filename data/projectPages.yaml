@@ -1,0 +1,10 @@
+projectPages:
+  - id: proj-automateiq-main
+    name: AutomateIQ
+    url: https://automateiq-alpha.vercel.app
+    notes: AI chatbot for business owners
+
+  - id: proj-memoryforge-main
+    name: MemoryForge
+    url: https://memoryforge-kappa.vercel.app
+    notes: AI memory + knowledge tool

@@ -64,6 +64,7 @@ const settings     = await loadYaml('settings.yaml').settings || {};
 const voiceMemosRaw = await loadYaml('voice_memos.yaml', 'voice_memos');
 const tasksData    = await loadYaml('tasks.yaml', 'tasks');
 const callNotesRaw = await loadYaml('call-notes.yaml', 'calls');
+const projectPagesData = await loadYaml('projectPages.yaml', 'projectPages');
 
 // Group call notes by project_id and partner_id (sorted newest first)
 const callsByProject = {};
@@ -345,5 +346,25 @@ for (const client of clientsData) {
   });
   await writePage(path.join('clients', `${client.slug}.html`), html);
 }
+
+// Project pages
+await fs.emptyDir(path.join(distDir, 'project-pages'));
+const projectPagesHtml = renderPage('layout.njk', {
+  title: 'Project Pages',
+  subtitle: 'Live deployed apps and sites',
+  generatedAt, basePath: '../', showNav: true, activeNav: 'project-pages',
+  content: renderPage('project-pages.njk', { projectPages: projectPagesData })
+});
+await writePage(path.join('project-pages', 'index.html'), projectPagesHtml);
+
+// Leads (shell page — data loaded client-side from /api/leads)
+await fs.emptyDir(path.join(distDir, 'leads'));
+const leadsHtml = renderPage('layout.njk', {
+  title: 'Leads',
+  subtitle: 'Inbound CRM leads from Supabase',
+  generatedAt, basePath: '../', showNav: true, activeNav: 'leads',
+  content: renderPage('leads.njk', {})
+});
+await writePage(path.join('leads', 'index.html'), leadsHtml);
 
 console.log('Dashboard built:', distDir);

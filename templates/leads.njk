@@ -1,0 +1,208 @@
+<div class="workspace">
+
+  <header class="section-header">
+    <div class="section-header-text">
+      <h2>Leads</h2>
+      <p class="muted">CRM view — all inbound leads from Supabase.</p>
+    </div>
+  </header>
+
+  {# ── Filters ── #}
+  <div class="leads-controls">
+    <div class="filter-group">
+      <label for="sourceTagFilter" class="filter-label">Source</label>
+      <select id="sourceTagFilter" class="filter-select">
+        <option value="">All sources</option>
+        <option value="automateiq">AutomateIQ</option>
+        <option value="memoryforge">MemoryForge</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label for="statusFilter" class="filter-label">Status</label>
+      <select id="statusFilter" class="filter-select">
+        <option value="">All statuses</option>
+        <option value="new">New</option>
+        <option value="contacted">Contacted</option>
+        <option value="qualified">Qualified</option>
+        <option value="converted">Converted</option>
+        <option value="lost">Lost</option>
+      </select>
+    </div>
+    <div class="filter-group search-field">
+      <label for="leadsSearch" class="filter-label">Search</label>
+      <input type="search" id="leadsSearch" placeholder="Name, email, notes…" />
+    </div>
+    <button id="leadsRefresh" class="btn-secondary">Refresh</button>
+  </div>
+
+  {# ── Stats bar ── #}
+  <div class="leads-stats" id="leadsStats" style="display:none;">
+    <div class="tasks-stat">
+      <span class="tasks-stat-num" id="statTotal">—</span>
+      <span class="tasks-stat-label">Total</span>
+    </div>
+    <div class="tasks-stat">
+      <span class="tasks-stat-num" id="statNew">—</span>
+      <span class="tasks-stat-label">New</span>
+    </div>
+    <div class="tasks-stat">
+      <span class="tasks-stat-num" id="statContacted">—</span>
+      <span class="tasks-stat-label">Contacted</span>
+    </div>
+    <div class="tasks-stat">
+      <span class="tasks-stat-num" id="statConverted">—</span>
+      <span class="tasks-stat-label">Converted</span>
+    </div>
+  </div>
+
+  {# ── Table ── #}
+  <div class="table-wrapper" id="leadsTableWrapper">
+    <p class="muted" id="leadsLoading">Loading leads…</p>
+    <table class="data-table" id="leadsTable" style="display:none;">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Source</th>
+          <th>Status</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody id="leadsBody"></tbody>
+    </table>
+    <p class="muted" id="leadsEmpty" style="display:none;">No leads found.</p>
+    <p class="muted text-error" id="leadsError" style="display:none;"></p>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  // ── Helpers ──────────────────────────────────────────────────────────────
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      + ' ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function esc(str) {
+    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function statusBadge(status) {
+    const cls = {
+      new:       'badge-new',
+      contacted: 'badge-contacted',
+      qualified: 'badge-qualified',
+      converted: 'badge-converted',
+      lost:      'badge-lost',
+    }[status] || 'badge-new';
+    return `<span class="lead-status-badge ${cls}">${esc(status || 'new')}</span>`;
+  }
+
+  // ── State ────────────────────────────────────────────────────────────────
+  let allLeads = [];
+
+  // ── DOM refs ─────────────────────────────────────────────────────────────
+  const sourceFilter  = document.getElementById('sourceTagFilter');
+  const statusFilter  = document.getElementById('statusFilter');
+  const searchInput   = document.getElementById('leadsSearch');
+  const refreshBtn    = document.getElementById('leadsRefresh');
+  const loading       = document.getElementById('leadsLoading');
+  const table         = document.getElementById('leadsTable');
+  const tbody         = document.getElementById('leadsBody');
+  const emptyMsg      = document.getElementById('leadsEmpty');
+  const errorMsg      = document.getElementById('leadsError');
+  const statsBar      = document.getElementById('leadsStats');
+
+  // ── Fetch ────────────────────────────────────────────────────────────────
+  async function fetchLeads() {
+    loading.style.display = '';
+    table.style.display   = 'none';
+    emptyMsg.style.display = 'none';
+    errorMsg.style.display = 'none';
+    statsBar.style.display = 'none';
+
+    const params = new URLSearchParams({ limit: '500' });
+    const src = sourceFilter.value;
+    const st  = statusFilter.value;
+    if (src) params.set('source_tag', src);
+    if (st)  params.set('status', st);
+
+    try {
+      const res  = await fetch('/api/leads?' + params.toString());
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Unknown error');
+      allLeads = data.leads || [];
+      renderLeads();
+    } catch (err) {
+      loading.style.display  = 'none';
+      errorMsg.textContent   = 'Error loading leads: ' + err.message;
+      errorMsg.style.display = '';
+    }
+  }
+
+  // ── Render ───────────────────────────────────────────────────────────────
+  function renderLeads() {
+    const query = (searchInput.value || '').trim().toLowerCase();
+    const filtered = allLeads.filter(lead => {
+      if (!query) return true;
+      const haystack = [lead.name, lead.email, lead.phone, lead.source_tag, lead.status, lead.notes]
+        .join(' ').toLowerCase();
+      return haystack.includes(query);
+    });
+
+    loading.style.display = 'none';
+
+    // Stats
+    const total     = allLeads.length;
+    const newCount  = allLeads.filter(l => (l.status || 'new') === 'new').length;
+    const contacted = allLeads.filter(l => l.status === 'contacted').length;
+    const converted = allLeads.filter(l => l.status === 'converted').length;
+    document.getElementById('statTotal').textContent     = total;
+    document.getElementById('statNew').textContent       = newCount;
+    document.getElementById('statContacted').textContent = contacted;
+    document.getElementById('statConverted').textContent = converted;
+    statsBar.style.display = total ? '' : 'none';
+
+    if (!filtered.length) {
+      table.style.display    = 'none';
+      emptyMsg.style.display = '';
+      return;
+    }
+
+    emptyMsg.style.display = 'none';
+    table.style.display    = '';
+
+    tbody.innerHTML = filtered.map(lead => `
+      <tr>
+        <td class="muted nowrap">${esc(fmtDate(lead.created_at))}</td>
+        <td class="fw-medium">${esc(lead.name || '—')}</td>
+        <td><a href="mailto:${esc(lead.email)}">${esc(lead.email)}</a></td>
+        <td class="muted">${esc(lead.phone || '—')}</td>
+        <td><span class="source-tag source-${esc(lead.source_tag || 'other')}">${esc(lead.source_tag || '—')}</span></td>
+        <td>${statusBadge(lead.status)}</td>
+        <td class="muted">${esc(lead.notes || '—')}</td>
+      </tr>
+    `).join('');
+  }
+
+  // ── Event listeners ───────────────────────────────────────────────────────
+  sourceFilter.addEventListener('change', fetchLeads);
+  statusFilter.addEventListener('change', fetchLeads);
+  searchInput.addEventListener('input',   renderLeads);
+  refreshBtn.addEventListener('click',    fetchLeads);
+
+  // Pre-select source_tag from URL query param (e.g. /leads/?source_tag=automateiq)
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlSource = urlParams.get('source_tag');
+  if (urlSource) sourceFilter.value = urlSource;
+
+  // Initial load
+  fetchLeads();
+})();
+</script>

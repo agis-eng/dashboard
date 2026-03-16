@@ -1,0 +1,47 @@
+<div class="workspace">
+
+  <header class="section-header">
+    <div class="section-header-text">
+      <h2>Live Project Pages</h2>
+      <p class="muted">Quick links to all deployed project apps and sites.</p>
+    </div>
+    <div class="search-field">
+      <input type="search" placeholder="Search projects…" data-search-input="project-pages" />
+    </div>
+  </header>
+
+  <div class="table-wrapper" data-search-list="project-pages">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>URL</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for page in projectPages %}
+        <tr data-search-item="project-pages"
+            data-search-text="{{ (page.name + ' ' + (page.notes or '') + ' ' + page.url) | lower }}">
+          <td class="fw-medium">{{ page.name }}</td>
+          <td>
+            <a href="{{ page.url }}" target="_blank" rel="noopener noreferrer" class="external-link">
+              {{ page.url }}
+              <span class="link-arrow">↗</span>
+            </a>
+          </td>
+          <td class="muted">{{ page.notes or '—' }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="3" class="muted text-center">No project pages defined yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <p class="search-empty muted" data-search-empty="project-pages" style="display:none;">No results match your search.</p>
+  </div>
+
+  <p class="table-hint muted">Add entries to <code>data/projectPages.yaml</code> to list more pages here.</p>
+
+</div>
