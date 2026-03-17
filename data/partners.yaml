@@ -819,14 +819,19 @@ partners:
   - id: michael-brown
     name: Michael Brown
     slug: michael-brown
-    summary: Importer network ally.
-    description: Handles import logistics for specialty goods.
+    summary: Agri agrifood investment and export brokerage connector.
+    description: Michael leads partnerships for scaling vertically integrated hydronics (strawberries) and cashew processing ventures in Cambodia and the SE Asia region, leveraging blended finance and public/private funds.
     website: ""
     contact: Michael Brown
-    region: International
+    phone: "+1 (813) 297-5528"
+    region: Southeast Asia • International
     focusAreas:
-      - Logistics
+      - Agri-Food
+      - Investment
+      - Brokerage
+      - Blended Finance
     tags:
+      - Strategic
       - Network
     projectIds: []
   - id: erik-thailand
