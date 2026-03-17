@@ -704,6 +704,7 @@ projects:
     status: ECHO ecosystem strategy sessions with Von
     lastUpdate: 2026-03-13
     summary: ECHO HCP strategy and onboarding meetings with VonMarie
+    priority: high
   - id: unmatched-rasha-dedra
     name: Rasha & Dedra Team
     clientId: atlas
