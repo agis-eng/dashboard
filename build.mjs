@@ -95,6 +95,7 @@ const clientsMap  = new Map(clientsData.map(c => [c.id, c]));
 const projectsMap = new Map(projectsData.map(p => [p.id, p]));
 
 const projects = projectsData
+  .filter(p => !p.archived)
   .map(project => ({
     ...project,
     client: clientsMap.get(project.clientId) ?? { name: 'Unknown', slug: 'unknown' }
