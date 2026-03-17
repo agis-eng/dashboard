@@ -540,7 +540,7 @@ projects:
     liveUrl: https://stratpath.webdezigns.ai/
     repoUrl: ""
     rank: 11
-    priority: medium
+    priority: high
   - id: ted-associates-ted-associates
     name: Ted Associates
     clientId: ted-associates
