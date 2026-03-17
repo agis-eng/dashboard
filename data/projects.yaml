@@ -346,7 +346,7 @@ projects:
     repoUrl: https://github.com/agis-eng/atlas-portal
     summary: Internal dashboard concept showing projects + change queue.
     rank: 7
-    priority: medium
+    priority: low
   - id: lumen-site
     name: Lumen Dental Microsite
     clientId: lumen
