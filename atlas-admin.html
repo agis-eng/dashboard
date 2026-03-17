@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Atlas Admin — Client Portals</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f1117;color:#e2e8f0;min-height:100vh;padding:2rem}
+    h1{font-size:1.4rem;font-weight:600;margin-bottom:.25rem}
+    .sub{color:#94a3b8;font-size:.875rem;margin-bottom:1.5rem}
+    .search{width:100%;max-width:400px;padding:.6rem .9rem;background:#1e2330;border:1px solid #2d3748;border-radius:8px;color:#e2e8f0;font-size:.9rem;margin-bottom:1.25rem;outline:none}
+    .search:focus{border-color:#6366f1}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem}
+    .card{background:#1e2330;border:1px solid #2d3748;border-radius:10px;padding:1rem;cursor:pointer;transition:border-color .15s,transform .1s;text-align:left}
+    .card:hover{border-color:#6366f1;transform:translateY(-1px)}
+    .card h3{font-size:.875rem;font-weight:600;margin-bottom:.2rem}
+    .card span{font-size:.75rem;color:#64748b}
+    .back{display:inline-block;margin-bottom:1.5rem;color:#6366f1;font-size:.875rem;text-decoration:none}
+    .back:hover{text-decoration:underline}
+    .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#22c55e;color:#fff;padding:.7rem 1.2rem;border-radius:8px;font-size:.875rem;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none}
+    .toast.show{opacity:1}
+    .empty{color:#64748b;font-size:.875rem;display:none}
+  </style>
+</head>
+<body>
+  <a class="back" href="https://atlas-dashboard-psi.vercel.app/index.html">← Back to dashboard</a>
+  <h1>Atlas Admin — Client Portals</h1>
+  <p class="sub">Click any client to open their portal directly. Your session token is set automatically.</p>
+  <input class="search" type="search" placeholder="Search clients…" id="search"/>
+  <p class="empty" id="empty">No clients match that search.</p>
+  <div class="grid" id="grid"></div>
+  <div class="toast" id="toast"></div>
+  <script>
+    const BASE = 'https://atlas-dashboard-psi.vercel.app/clients/';
+    const clients = [
+  {slug:"a-plus-epoxy",name:"A Plus Epoxy",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiYS1wbHVzLWVwb3h5IiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDN9.apNa--Ua_BPxNaT86W2AvdwUgHSsxf_OS5f-AXXy4D0"},
+  {slug:"action-real-estate",name:"Action Real Estate",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiYWN0aW9uLXJlYWwtZXN0YXRlIiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDN9.-lrcQDWJIy3WK6VyDew6FpouInLbg0SO2O-49ZAcdLI"},
+  {slug:"asian-food-magic",name:"Asian Food Magic",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiYXNpYW4tZm9vZC1tYWdpYyIsICJuYW1lIjogIkVyaWsiLCAibXVzdENoYW5nZVBhc3N3b3JkIjogZmFsc2UsICJleHAiOiAxODY3ODkxNzExNjA0fQ.TblDozgNIcvc3AVxw1DoZSvTILAIKkuJgOSfSdbKJ4s"},
+  {slug:"atlas-hq",name:"Atlas HQ",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiYXRsYXMtaHEiLCAibmFtZSI6ICJFcmlrIiwgIm11c3RDaGFuZ2VQYXNzd29yZCI6IGZhbHNlLCAiZXhwIjogMTg2Nzg5MTcxMTYwNH0.-_cnujvybl9Bf8zgoORBEF2iF1_YSd4t2ncy8YCj2wY"},
+  {slug:"brentlee-paddi-thomas",name:"Brentlee & Paddi Thomas",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiYnJlbnRsZWUtcGFkZGktdGhvbWFzIiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDR9.ji361a8TyERlkhnRq01Wd51cXeYf0Z2AyKe-3fCJtaI"},
+  {slug:"capture-build-connect",name:"Capture Build Connect",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiY2FwdHVyZS1idWlsZC1jb25uZWN0IiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDR9.cngR7vRmCkF_WZ5-GJCa39T7YmtXK3p-8Tjwplr0hL8"},
+  {slug:"caring-echo-bridge",name:"Caring Echo Bridge",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiY2FyaW5nLWVjaG8tYnJpZGdlIiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDR9.IEuMFpSFtTusHwRpENWz-RYJh4xgMPPMZ6GdrJM0wUo"},
+  {slug:"carmen",name:"Carmen",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiY2FybWVuIiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDR9.mZ8AbrGoHQ6AcEgwXVEzGUYHd5xbUW3yCWFY4yvPazs"},
+  {slug:"che-limitless",name:"Che Limitless",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiY2hlLWxpbWl0bGVzcyIsICJuYW1lIjogIkVyaWsiLCAibXVzdENoYW5nZVBhc3N3b3JkIjogZmFsc2UsICJleHAiOiAxODY3ODkxNzExNjA0fQ.OsuF23GL5gpXeZ9G484bGPF28PiA6r5qYvxcVyKM9IA"},
+  {slug:"chip-smith-hammersmith",name:"Chip Smith (Hammersmith)",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiY2hpcC1zbWl0aC1oYW1tZXJzbWl0aCIsICJuYW1lIjogIkVyaWsiLCAibXVzdENoYW5nZVBhc3N3b3JkIjogZmFsc2UsICJleHAiOiAxODY3ODkxNzExNjA0fQ.4WNl339n5zTP9wNF2La-IGRd4zQACYGIfKPD7ySVY3w"},
+  {slug:"clyde-rath",name:"Clyde Rath",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiY2x5ZGUtcmF0aCIsICJuYW1lIjogIkVyaWsiLCAibXVzdENoYW5nZVBhc3N3b3JkIjogZmFsc2UsICJleHAiOiAxODY3ODkxNzExNjA0fQ.8_CV6J404H2M8oqruaB9XiJ7OusRjZgCLQ9WKmv1nFY"},
+  {slug:"dan-bauman",name:"Dan Bauman",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiZGFuLWJhdW1hbiIsICJuYW1lIjogIkVyaWsiLCAibXVzdENoYW5nZVBhc3N3b3JkIjogZmFsc2UsICJleHAiOiAxODY3ODkxNzExNjA0fQ.pBG5VasQ5JIRvzRXJKqFokH8JcToyWRVNomejVH1ISo"},
+  {slug:"dilotiko-ai-network",name:"Dilotiko AI Network",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiZGlsb3Rpa28tYWktbmV0d29yayIsICJuYW1lIjogIkVyaWsiLCAibXVzdENoYW5nZVBhc3N3b3JkIjogZmFsc2UsICJleHAiOiAxODY3ODkxNzExNjA0fQ.ntI7HtzlIBdSDG6bID8uhpMzSjL-S7w6dpd4i7QSM0g"},
+  {slug:"dr-liza-jones",name:"Dr. Liza Jones",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiZHItbGl6YS1qb25lcyIsICJuYW1lIjogIkVyaWsiLCAibXVzdENoYW5nZVBhc3N3b3JkIjogZmFsc2UsICJleHAiOiAxODY3ODkxNzExNjA0fQ.3TelAl4VG1UE6yYft_F71C8MXvRpRXKy30E7eGFiyyU"},
+  {slug:"echo-credentialing",name:"ECHO Credentialing",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiZWNoby1jcmVkZW50aWFsaW5nIiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDR9.yDHW8DEucP_UiZSznUB1abe4cZPi3VlgghPvcqGHyXw"},
+  {slug:"echo-management",name:"ECHO Management",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiZWNoby1tYW5hZ2VtZW50IiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDR9.O9GkWNq3he9BbaNn_Dl_mGkIBkI0huZlCL5mw4Ue5J0"},
+  {slug:"ellie-hocking",name:"Ellie Hocking",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiZWxsaWUtaG9ja2luZyIsICJuYW1lIjogIkVyaWsiLCAibXVzdENoYW5nZVBhc3N3b3JkIjogZmFsc2UsICJleHAiOiAxODY3ODkxNzExNjA0fQ.sxcvkPK6ptBuJVpiChqQT86-nL4GRfLd-Moo-bZtsOY"},
+  {slug:"embrace-our-causes",name:"Embrace Our Causes",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiZW1icmFjZS1vdXItY2F1c2VzIiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDR9.23D4XOutoLXNJfu-7T9VNFCX6nuldfqgN750ZunARDA"},
+  {slug:"fundraising-hub",name:"Fundraising Hub",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiZnVuZHJhaXNpbmctaHViIiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDR9.E2-wwM3ihfLHVwNazkstZSbWef1YLM-f3Alshq8wog0"},
+  {slug:"genius-landing",name:"Genius Landing",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiZ2VuaXVzLWxhbmRpbmciLCAibmFtZSI6ICJFcmlrIiwgIm11c3RDaGFuZ2VQYXNzd29yZCI6IGZhbHNlLCAiZXhwIjogMTg2Nzg5MTcxMTYwNH0.0ABajWQ4f4YoKNicMUQhVgGfnqQnAk18-jsvs2Q8l4E"},
+  {slug:"george-hildreth",name:"George Hildreth",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiZ2VvcmdlLWhpbGRyZXRoIiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDR9.kXOHVxOokj21hmGRwJF83SqbbeewUeGOAySBvjCrkII"},
+  {slug:"heather-helms",name:"Heather Helms",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiaGVhdGhlci1oZWxtcyIsICJuYW1lIjogIkVyaWsiLCAibXVzdENoYW5nZVBhc3N3b3JkIjogZmFsc2UsICJleHAiOiAxODY3ODkxNzExNjA0fQ.yO6gbDZTo9dpu1VRi-NUB8cyUlR-vSYll6DkzF2lih0"},
+  {slug:"jesse-halverson",name:"Jesse Halverson",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiamVzc2UtaGFsdmVyc29uIiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDR9.AA-GlL_vO63SuA1CgA5_spyBbszxOvA39mJklGfa7hc"},
+  {slug:"john-griffin",name:"John Griffin",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAiam9obi1ncmlmZmluIiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDR9.f7Pq-kmzFosUPkL6e7sZCw45yPvf4gmkzhPOgaLnzCA"},
+  {slug:"jukebox-joy-jive",name:"Jukebox Joy Jive",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAianVrZWJveC1qb3ktaml2ZSIsICJuYW1lIjogIkVyaWsiLCAibXVzdENoYW5nZVBhc3N3b3JkIjogZmFsc2UsICJleHAiOiAxODY3ODkxNzExNjA0fQ.OmJH3wWKKYiyz_9y_RzQ2sNfhs1G_F_ed4mJo6GXLMw"},
+  {slug:"kd-foundation",name:"KD Foundation",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAia2QtZm91bmRhdGlvbiIsICJuYW1lIjogIkVyaWsiLCAibXVzdENoYW5nZVBhc3N3b3JkIjogZmFsc2UsICJleHAiOiAxODY3ODkxNzExNjA0fQ.PkwycJm9yXspe6L1_7L9Sj_FMQOA6BitpjSRU-MJZmI"},
+  {slug:"keith-trautman",name:"Keith Trautman",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAia2VpdGgtdHJhdXRtYW4iLCAibmFtZSI6ICJFcmlrIiwgIm11c3RDaGFuZ2VQYXNzd29yZCI6IGZhbHNlLCAiZXhwIjogMTg2Nzg5MTcxMTYwNH0.y4KxkmuvTGItf9FQ-GSy59GcEfnfOx1_iS7hO1AF5dI"},
+  {slug:"kenny-salyer",name:"Kenny Salyer",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAia2Vubnktc2FseWVyIiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDR9.6r-di5Ysrh-_3ZVWE2uLZ1r0S675Pqo-H6bCJMLHm18"},
+  {slug:"kooper-davis-foundation",name:"Kooper Davis Foundation",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAia29vcGVyLWRhdmlzLWZvdW5kYXRpb24iLCAibmFtZSI6ICJFcmlrIiwgIm11c3RDaGFuZ2VQYXNzd29yZCI6IGZhbHNlLCAiZXhwIjogMTg2Nzg5MTcxMTYwNH0.qIFDegVsxsNz0UCs_yBRFEyXnxodFN7NSHePagyCoJc"},
+  {slug:"lazo-kim",name:"Lazo & Kim",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAibGF6by1raW0iLCAibmFtZSI6ICJFcmlrIiwgIm11c3RDaGFuZ2VQYXNzd29yZCI6IGZhbHNlLCAiZXhwIjogMTg2Nzg5MTcxMTYwNH0.HgeOTLzis51tq4K1SqoTZCBL1a6jpt5tlQc5nT0f4yk"},
+  {slug:"lisa",name:"Lisa",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAibGlzYSIsICJuYW1lIjogIkVyaWsiLCAibXVzdENoYW5nZVBhc3N3b3JkIjogZmFsc2UsICJleHAiOiAxODY3ODkxNzExNjA0fQ.v3Vm92JDIwXxoYJTP-EbT0PN24LS_besgONP1NBz7m4"},
+  {slug:"lumen-dental",name:"Lumen Dental",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAibHVtZW4tZGVudGFsIiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDR9.A2DmACWnLLHcNxwcC-fR5mhBL6VwSeNtJ7LlVXFQCEk"},
+  {slug:"manifest-grow-mind",name:"Manifest Grow Mind",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAibWFuaWZlc3QtZ3Jvdy1taW5kIiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDR9.crERJzbZ9iutFn_pAkwm8J59GgxrlMdKxxIA9qNWc4U"},
+  {slug:"med-dream-weaver",name:"Med Dream Weaver",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAibWVkLWRyZWFtLXdlYXZlciIsICJuYW1lIjogIkVyaWsiLCAibXVzdENoYW5nZVBhc3N3b3JkIjogZmFsc2UsICJleHAiOiAxODY3ODkxNzExNjA0fQ.TwYaXo_jj51crah6OshLS57LmZcJP6ON4FoyJ4ZLL10"},
+  {slug:"mike-raiche",name:"Mike Raiche",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAibWlrZS1yYWljaGUiLCAibmFtZSI6ICJFcmlrIiwgIm11c3RDaGFuZ2VQYXNzd29yZCI6IGZhbHNlLCAiZXhwIjogMTg2Nzg5MTcxMTYwNH0.WXfQOFn8E9Kxm9i4S2yHYLJDn8RlAbvqmMa1Iij3ssQ"},
+  {slug:"mike-richman",name:"Mike Richman",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAibWlrZS1yaWNobWFuIiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDR9.iIPH9sQ_WZu3aEGs59UkidqA7niFoqwqB6bgCsOuJtU"},
+  {slug:"psychedelic-art-dream",name:"Psychedelic Art Dream",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAicHN5Y2hlZGVsaWMtYXJ0LWRyZWFtIiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDR9.9o_Q3FfdaJln0b3u7gNyD_H5fbM6FLnjaO2AnVAcSGg"},
+  {slug:"radiant-hiring-partners",name:"Radiant Hiring Partners",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAicmFkaWFudC1oaXJpbmctcGFydG5lcnMiLCAibmFtZSI6ICJFcmlrIiwgIm11c3RDaGFuZ2VQYXNzd29yZCI6IGZhbHNlLCAiZXhwIjogMTg2Nzg5MTcxMTYwNH0.E3eNp2N0Jkxbbz_vZj6fX_sohKRjIQ2up08VIEkYB6w"},
+  {slug:"resonant-care-network",name:"Resonant Care Network",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAicmVzb25hbnQtY2FyZS1uZXR3b3JrIiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDR9.A2ww3m0qCrF6A6-oOW9-8KODTvtbASs6596jer5dVWM"},
+  {slug:"rich-storholm",name:"Rich Storholm",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAicmljaC1zdG9yaG9sbSIsICJuYW1lIjogIkVyaWsiLCAibXVzdENoYW5nZVBhc3N3b3JkIjogZmFsc2UsICJleHAiOiAxODY3ODkxNzExNjA0fQ.BcbuU7I9Hjgvb5LeBJrS4f4h8roJimB8linwsH4The0"},
+  {slug:"sam",name:"Sam",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAic2FtIiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDR9.dqk2OD_sUzHr8uhYTTxvpXCKmaNE9mlv3LvILizK-FE"},
+  {slug:"sight-replicate-web",name:"Sight Replicate Web",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAic2lnaHQtcmVwbGljYXRlLXdlYiIsICJuYW1lIjogIkVyaWsiLCAibXVzdENoYW5nZVBhc3N3b3JkIjogZmFsc2UsICJleHAiOiAxODY3ODkxNzExNjA0fQ.JuifmP5OWKvkmzbOD77clxXCcPJqq6S2hSDQ5jQURFg"},
+  {slug:"stratpath-version-1",name:"StratPath (Version 1)",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAic3RyYXRwYXRoLXZlcnNpb24tMSIsICJuYW1lIjogIkVyaWsiLCAibXVzdENoYW5nZVBhc3N3b3JkIjogZmFsc2UsICJleHAiOiAxODY3ODkxNzExNjA0fQ.N70YOLNT8E4CTLG8Mllr4zGG94zfttWNUGwHnAzsXLw"},
+  {slug:"stratpath-version-2",name:"StratPath (Version 2)",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAic3RyYXRwYXRoLXZlcnNpb24tMiIsICJuYW1lIjogIkVyaWsiLCAibXVzdENoYW5nZVBhc3N3b3JkIjogZmFsc2UsICJleHAiOiAxODY3ODkxNzExNjA0fQ.OC8PBKrLDt_jlXAxvCx4i6jmj5y0BpigF3VMq3beReQ"},
+  {slug:"susan",name:"Susan",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAic3VzYW4iLCAibmFtZSI6ICJFcmlrIiwgIm11c3RDaGFuZ2VQYXNzd29yZCI6IGZhbHNlLCAiZXhwIjogMTg2Nzg5MTcxMTYwNH0.PCEvDOTpIN8x71J7qu_Ae_j1Ud7Mvu-eDhPEzqDfvSY"},
+  {slug:"taylor-southerton",name:"Taylor Southerton",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAidGF5bG9yLXNvdXRoZXJ0b24iLCAibmFtZSI6ICJFcmlrIiwgIm11c3RDaGFuZ2VQYXNzd29yZCI6IGZhbHNlLCAiZXhwIjogMTg2Nzg5MTcxMTYwNH0.I6sBjSbw7zwBH_w2iIt-J6TXGh4zQlfID0MHt91ix8Q"},
+  {slug:"ted-associates",name:"Ted Associates",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAidGVkLWFzc29jaWF0ZXMiLCAibmFtZSI6ICJFcmlrIiwgIm11c3RDaGFuZ2VQYXNzd29yZCI6IGZhbHNlLCAiZXhwIjogMTg2Nzg5MTcxMTYwNH0._jtyl3EhGiA4MBE-cpopVjMLahNJNzROFcjWCGPvb1w"},
+  {slug:"ted-care-compass",name:"Ted Care Compass",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAidGVkLWNhcmUtY29tcGFzcyIsICJuYW1lIjogIkVyaWsiLCAibXVzdENoYW5nZVBhc3N3b3JkIjogZmFsc2UsICJleHAiOiAxODY3ODkxNzExNjA0fQ.g73Ayrx0J8O8mDYMZwz9PhsVVP4rUHNirCAF_iW83so"},
+  {slug:"view-to-vista",name:"View To Vista",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAidmlldy10by12aXN0YSIsICJuYW1lIjogIkVyaWsiLCAibXVzdENoYW5nZVBhc3N3b3JkIjogZmFsc2UsICJleHAiOiAxODY3ODkxNzExNjA0fQ.dAK9nLQrJndcs5s-pteI4bswYUkx1kqzm-KgF0Q9wJE"},
+  {slug:"webdezigns-client-intake-stack",name:"Webdezigns Client Intake Stack",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAid2ViZGV6aWducy1jbGllbnQtaW50YWtlLXN0YWNrIiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDR9.nBzATYrOARRO3FlgfNA8NajhSBYHJl9YXyfgkOxdETI"},
+  {slug:"webdezigns-core-agency-site",name:"Webdezigns Core Agency Site",token:"eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJ1c2VybmFtZSI6ICJlcmlrIiwgImNsaWVudFNsdWciOiAid2ViZGV6aWducy1jb3JlLWFnZW5jeS1zaXRlIiwgIm5hbWUiOiAiRXJpayIsICJtdXN0Q2hhbmdlUGFzc3dvcmQiOiBmYWxzZSwgImV4cCI6IDE4Njc4OTE3MTE2MDR9.uuXUpyXxgv8kD_JqIkNw0TMYj86aCGMZZnKfubWcwwc"}
+    ];
+
+    function open_client(slug, token) {
+      localStorage.setItem('atlas_token', token);
+      localStorage.setItem('atlas_client_slug', slug);
+      window.open(BASE + slug + '.html', '_blank');
+      const t = document.getElementById('toast');
+      t.textContent = 'Opening ' + slug + '…';
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2000);
+    }
+
+    function render(list) {
+      const grid = document.getElementById('grid');
+      const empty = document.getElementById('empty');
+      grid.innerHTML = '';
+      if (!list.length) { empty.style.display = 'block'; return; }
+      empty.style.display = 'none';
+      list.forEach(c => {
+        const card = document.createElement('button');
+        card.className = 'card';
+        card.innerHTML = '<h3>' + c.name + '</h3><span>' + c.slug + '</span>';
+        card.onclick = () => open_client(c.slug, c.token);
+        grid.appendChild(card);
+      });
+    }
+
+    document.getElementById('search').addEventListener('input', function() {
+      const q = this.value.toLowerCase();
+      render(q ? clients.filter(c => c.name.toLowerCase().includes(q) || c.slug.includes(q)) : clients);
+    });
+
+    render(clients);
+  </script>
+</body>
+</html>

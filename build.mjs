@@ -58,6 +58,7 @@ env.addFilter('formatNum', (val) => {
 const clientsData  = await loadYaml('clients.yaml', 'clients');
 const projectsData = await loadYaml('projects.yaml', 'projects');
 const requestsData = await loadYaml('requests.yaml', 'requests');
+const voiceMemosData = await loadYaml('voice_memos.yaml', 'voice_memos');
 const partnersData = await loadYaml('partners.yaml', 'partners');
 const opportunitiesData = await loadYaml('opportunities.yaml');
 const settings     = await loadYaml('settings.yaml').settings || {};
@@ -366,5 +367,20 @@ const leadsHtml = renderPage('layout.njk', {
   content: renderPage('leads.njk', {})
 });
 await writePage(path.join('leads', 'index.html'), leadsHtml);
+
+// Voice Memos page
+await fs.emptyDir(path.join(distDir, 'voice-memos'));
+const unassignedMemos = (voiceMemosData || []).filter(m => !m.project_match).length;
+const voiceMemosHtml = renderPage('layout.njk', {
+  title: 'Voice Memos',
+  subtitle: 'Recordings, transcripts, and project assignments',
+  generatedAt, basePath: '../', showNav: true, activeNav: 'voice-memos',
+  content: renderPage('voice-memos.njk', {
+    memos: voiceMemosData || [],
+    projects: projectsData || [],
+    unassigned: unassignedMemos,
+  })
+});
+await writePage(path.join('voice-memos', 'index.html'), voiceMemosHtml);
 
 console.log('Dashboard built:', distDir);

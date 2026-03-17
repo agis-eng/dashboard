@@ -1,0 +1,286 @@
+{% macro memoCard(memo, projects) %}
+<div class="memo-card type-{{ memo.type }}"
+     data-search-item="memos"
+     data-search-text="{{ (memo.title + ' ' + memo.speakers + ' ' + (memo.project_match or '') + ' ' + memo.summary) | lower }}">
+
+  <div class="memo-card-top">
+    <div class="memo-card-header">
+      <span class="memo-type-badge type-{{ memo.type }}">{{ memo.type }}</span>
+      <span class="memo-date muted">{{ memo.date | date('MMM d, yyyy · h:mm a') }}</span>
+    </div>
+    <h3 class="memo-title">
+      {% if memo.notion_url %}
+        <a href="{{ memo.notion_url }}" target="_blank" rel="noopener">{{ memo.title }}</a>
+      {% else %}
+        {{ memo.title }}
+      {% endif %}
+    </h3>
+    {% if memo.speakers %}
+      <p class="memo-speakers muted">🗣 {{ memo.speakers }}</p>
+    {% endif %}
+  </div>
+
+  {% if memo.summary %}
+    <p class="memo-summary">{{ memo.summary | truncate(220) }}</p>
+  {% endif %}
+
+  {% if memo.topics and memo.topics.length %}
+    <div class="memo-topics">
+      {% for topic in memo.topics | list | slice(0, 4) %}
+        <span class="memo-topic-tag">{{ topic }}</span>
+      {% endfor %}
+      {% if memo.topics | list | length > 4 %}
+        <span class="memo-topic-tag muted">+{{ (memo.topics | list | length) - 4 }} more</span>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if memo.action_items and memo.action_items.length %}
+    <details class="memo-actions">
+      <summary>✅ {{ memo.action_items | list | length }} action item{{ 's' if (memo.action_items | list | length) > 1 }}</summary>
+      <ul class="memo-action-list">
+        {% for item in memo.action_items %}
+          <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+    </details>
+  {% endif %}
+
+  <div class="memo-footer">
+    <div class="memo-project-assign">
+      <select class="memo-project-select"
+              data-memo-id="{{ memo.id }}"
+              onchange="assignProject(this)">
+        <option value="">— assign project —</option>
+        {% for proj in projects %}
+          <option value="{{ proj.name }}"
+            {% if memo.project_match == proj.name %}selected{% endif %}>
+            {{ proj.name }}
+          </option>
+        {% endfor %}
+      </select>
+      <span class="memo-save-status" id="status-{{ memo.id }}"></span>
+    </div>
+    {% if memo.notion_url %}
+      <a href="{{ memo.notion_url }}" target="_blank" class="memo-notion-link" title="Open in Notion">
+        Open in Notion ↗
+      </a>
+    {% endif %}
+  </div>
+
+</div>
+{% endmacro %}
+
+<div class="workspace memos-workspace">
+
+  <div class="workspace-main">
+
+    <div class="section-header">
+      <div class="stat-chips">
+        <span class="chip">{{ memos | length }} total</span>
+        <span class="chip chip-biz">{{ memos | where('type','business') | length }} business</span>
+        <span class="chip chip-pers">{{ memos | where('type','personal') | length }} personal</span>
+        <span class="chip chip-unassigned">{{ unassigned }} unassigned</span>
+      </div>
+      <div class="section-actions">
+        <div class="search-field">
+          <input type="search" placeholder="Search memos…" data-search-input="memos" />
+          <small class="muted" data-search-count="memos"></small>
+        </div>
+        <div class="memo-filters">
+          <button class="filter-btn active" onclick="filterMemos('all', this)">All</button>
+          <button class="filter-btn" onclick="filterMemos('business', this)">Business</button>
+          <button class="filter-btn" onclick="filterMemos('personal', this)">Personal</button>
+          <button class="filter-btn" onclick="filterMemos('unassigned', this)">Unassigned</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="memo-list" id="memoList" data-search-list="memos">
+      {% if memos and memos.length %}
+        {% for memo in memos %}
+          {{ memoCard(memo, projects) }}
+        {% endfor %}
+      {% else %}
+        <p class="muted">No voice memos yet. Record something in Just Press Record and it will appear here within 15 minutes.</p>
+      {% endif %}
+    </div>
+
+  </div>
+
+</div>
+
+<style>
+.memos-workspace { display: block; }
+
+.memo-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.memo-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 0.85rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: border-color 0.2s;
+}
+.memo-card:hover { border-color: rgba(255,255,255,0.18); }
+.memo-card.type-business { border-left: 3px solid var(--accent); }
+.memo-card.type-personal { border-left: 3px solid var(--accent-2); }
+
+.memo-card-top { display: flex; flex-direction: column; gap: 0.35rem; }
+.memo-card-header { display: flex; align-items: center; gap: 0.6rem; }
+
+.memo-type-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+}
+.memo-type-badge.type-business { background: rgba(93,228,199,0.15); color: var(--accent); }
+.memo-type-badge.type-personal { background: rgba(124,131,255,0.15); color: var(--accent-2); }
+
+.memo-date { font-size: 0.8rem; }
+.memo-title { margin: 0; font-size: 1rem; font-weight: 600; line-height: 1.4; }
+.memo-title a { color: var(--text); text-decoration: none; border-bottom: 1px solid rgba(93,228,199,0.3); }
+.memo-title a:hover { border-color: var(--accent); }
+.memo-speakers { margin: 0; font-size: 0.85rem; }
+.memo-summary { margin: 0; font-size: 0.875rem; line-height: 1.6; color: #d1d5db; }
+
+.memo-topics { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.memo-topic-tag {
+  font-size: 0.72rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+
+.memo-actions summary {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+  list-style: none;
+}
+.memo-actions summary::-webkit-details-marker { display: none; }
+.memo-action-list {
+  margin: 0.5rem 0 0 1rem;
+  padding: 0;
+  font-size: 0.82rem;
+  color: #d1d5db;
+  line-height: 1.8;
+}
+
+.memo-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.memo-project-assign { display: flex; align-items: center; gap: 0.5rem; flex: 1; }
+
+.memo-project-select {
+  flex: 1;
+  max-width: 260px;
+  padding: 0.4rem 0.65rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  background: rgba(15,17,21,0.8);
+  color: var(--text);
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.memo-project-select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(93,228,199,0.2);
+}
+
+.memo-save-status { font-size: 0.75rem; color: var(--accent); white-space: nowrap; }
+
+.memo-notion-link {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.memo-notion-link:hover { color: var(--accent); }
+
+.memo-filters { display: flex; gap: 0.4rem; }
+.filter-btn {
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.filter-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+.filter-btn.active { background: var(--accent); color: #0f1115; border-color: var(--accent); font-weight: 600; }
+
+.chip {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+}
+.chip-biz { color: var(--accent); }
+.chip-pers { color: var(--accent-2); }
+.chip-unassigned { color: #f59e0b; }
+</style>
+
+<script>
+function filterMemos(type, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.memo-card').forEach(card => {
+    if (type === 'all') {
+      card.style.display = '';
+    } else if (type === 'unassigned') {
+      const sel = card.querySelector('.memo-project-select');
+      card.style.display = (sel && sel.value === '') ? '' : 'none';
+    } else {
+      card.style.display = card.classList.contains('type-' + type) ? '' : 'none';
+    }
+  });
+}
+
+async function assignProject(select) {
+  const memoId = select.getAttribute('data-memo-id');
+  const project = select.value;
+  const statusEl = document.getElementById('status-' + memoId);
+  statusEl.textContent = 'Saving…';
+  try {
+    const res = await fetch('/api/assign-memo-project', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ memoId, project })
+    });
+    if (res.ok) {
+      statusEl.textContent = project ? '✓ Saved' : '✓ Cleared';
+      setTimeout(() => { statusEl.textContent = ''; }, 2500);
+    } else {
+      statusEl.textContent = '✗ Error';
+    }
+  } catch(e) {
+    statusEl.textContent = '✗ Failed';
+  }
+}
+</script>
