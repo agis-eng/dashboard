@@ -6790,7 +6790,7 @@ calls:
     meeting_name: Turner Campaign Meeting
     date: 2025-08-19
     participants: []
-    project_id: null
+    project_id: proj-turner-campaign-meeting
     partner_id: null
     key_takeaways: []
     next_steps:
