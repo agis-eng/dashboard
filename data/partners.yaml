@@ -413,15 +413,17 @@ partners:
     name: Teresa Poindexter, PT
     slug: teresa-poindexter
     summary: Physical therapy expert for care-pathways.
-    description: Advises on PT-specific onboarding flows.
+    description: Advises on PT-specific onboarding flows. Teresa is an extremely talented therapist with very high somatic IQ and is actively mentored in Anton's Quantum Somatics body of work. High priority for Quantum Somatics clinical application and performance enhancement. Actively seeking clinical and performance research partners.
     website: ""
     contact: Teresa Poindexter
     region: National
     focusAreas:
       - Healthcare
       - PT
+      - Quantum Somatics
     tags:
       - Strategic
+      - Quantum Somatics
     projectIds: []
   - id: maj-zakari
     name: Maj Zakari, LP
