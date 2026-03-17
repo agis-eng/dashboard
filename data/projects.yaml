@@ -231,6 +231,7 @@ projects:
     previewUrl: https://hammersmith.webdezigns.ai/
     liveUrl: https://hammersmith.webdezigns.ai/
     repoUrl: ""
+    priority: high
   - id: heather-helms-helms
     name: Helms
     clientId: heather-helms
