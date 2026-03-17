@@ -986,3 +986,27 @@ partners:
       - g-wallet-usdt
     rank: 14
     priority: high
+  - id: maj-zakari
+    name: Dr. Maj Zakari
+    slug: maj-zakari
+    summary: Founder of Integrated Somatic Institute (ISI), specialist in Triple Vagal Method® (TVM).
+    description: Maj Zakari, LP, is a licensed professional and compliance advisor guiding regulated language and LP-specific funnels. She is the Founder & Lead Facilitator of ISI. Linked with ECHO Care Network, Hammersmith Sports, and the Kooper Davis Foundation.
+    website: https://www.integratedsomaticinstitute.org/team-1/dr.-maj-zakari
+    contact: Dr. Maj Zakari
+    email: info@integratedsomaticinstitute.com
+    region: National
+    focusAreas:
+      - Somatic Therapy
+      - Vagal Nerve
+      - Compliance
+      - Healthcare
+    tags:
+      - Strategic
+      - Partner
+      - ECHO Care Network
+      - Hammersmith Sports
+      - Kooper Davis Foundation
+    projectIds:
+      - kooper-davis-foundation-kooperdavis
+      - echo-credentialing-credentialing
+    brain: {}

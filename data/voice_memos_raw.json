@@ -1,5 +1,46 @@
 [
   {
+    "id": "2026-03-17-echo-foundation-facility-expansion-sports-app-strategy",
+    "title": "ECHO Foundation, Facility Expansion & Sports App Strategy",
+    "date": "2026-03-17T10:43:17.612037",
+    "type": "business",
+    "speakers": "Justin, Eric, Unknown",
+    "project_match": "ECHO",
+    "summary": "Justin and Eric discuss plans for the ECHO foundation and clinic buildout, including SBA loan strategies, revenue projections for mental health services, and partnerships with Trip Tyson's sports performance facility. They also explore developing a sports training app based on Chip Smith's Moore system that could be monetized through subscriptions, and discuss fundraising strategies including connections to Mexican soccer players and gala events.",
+    "topics": [
+      "ECHO clinic buildout and SBA loan",
+      "Foundation fundraising strategy",
+      "Sports performance facility expansion",
+      "Chip Smith Performance app development",
+      "Mental health services revenue projections",
+      "Group therapy licensing",
+      "LP hiring and credentialing",
+      "Hammersmith Esports branding",
+      "Real estate and location strategy",
+      "TexasCare recovery",
+      "Pitch deck development",
+      "Pastoral degree and licensing"
+    ],
+    "action_items": [
+      "Follow up with Ted Williams at the bank about SBA loan",
+      "Get Vaughn to clean out and prepare the office space",
+      "Find and hire a Licensed Professional (LP) with sports background",
+      "Antoine to set up calls with sports-aligned LPs",
+      "Get Trip the group therapy class information from Vaughn",
+      "Put together updated pitch deck for Freddie to show investors",
+      "Send ChatGPT app prototype code to Eric for development",
+      "Send Chip Smith training videos to Eric",
+      "Set up call with new TexasCare contact",
+      "Meeting with Robin Trade tomorrow about sandblasting",
+      "Research pastoral degree and certification requirements",
+      "Connect with Patrick Hawes about 20,000 sq ft facility plans",
+      "Talk to Trip Tyson about facility and partnership details",
+      "Explore grant opportunities once clinic is operational",
+      "Investigate app submission to Apple and Android stores"
+    ],
+    "notion_url": "https://www.notion.so/ECHO-Foundation-Facility-Expansion-Sports-App-Strategy-32659b38371a81688a5cc7862b0ff424"
+  },
+  {
     "id": "2026-03-17-facility-expansion-planning-meeting-at-training-gym",
     "title": "Facility Expansion Planning Meeting at Training Gym",
     "date": "2026-03-17T09:07:24.904823",
@@ -1177,19 +1218,5 @@
       "Continue building automated dashboard from Fathom call recordings using Claude/OpenCloud"
     ],
     "notion_url": "https://www.notion.so/ECHO-Branding-Hammersmith-and-Partnership-Strategy-Call-32159b38371a81bd8da8d02068f95a54"
-  },
-  {
-    "id": "2026-03-12-first-test-recording",
-    "title": "First Test Recording",
-    "date": "2026-03-12T10:13:21.962208",
-    "type": "personal",
-    "speakers": "Unknown",
-    "project_match": null,
-    "summary": "A brief test recording to verify audio capture functionality. No substantive content was discussed.",
-    "topics": [
-      "test recording"
-    ],
-    "action_items": [],
-    "notion_url": "https://www.notion.so/First-Test-Recording-321a1f1a5a9d81459ed8f0d0e43b8b5d"
   }
 ]
