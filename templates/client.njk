@@ -87,8 +87,7 @@
       <a href="{{ client.requestUrl or settings.defaultRequestUrl }}" class="secondary" target="_blank">Request change</a>
     </div>
     {# ── Project Brain ── #}
-    <details class="brain-section" id="brain-{{ project.id }}">
-      <summary class="brain-toggle">🧠 Project Brain <span class="brain-badge" id="bb-{{ project.id }}"></span></summary>
+    <section class="brain-section" id="brain-{{ project.id }}">
       <div class="brain-panel">
         <div class="brain-links-section">
           <div class="brain-sub-header">
@@ -116,7 +115,7 @@
           <span class="brain-save-status" id="bss-{{ project.id }}"></span>
         </div>
       </div>
-    </details>
+    </section>
   </article>
 {% else %}
   <p class="muted">No live projects yet.</p>
@@ -380,10 +379,6 @@ async function moveCall(rid, btn) {
     var d = brainData[id];
     renderBrainLinks(id, d.links || []);
     renderBrainNotes(id, d.notes || []);
-    var brainDetails = document.getElementById('brain-' + id);
-    if (brainDetails && ((d.links && d.links.length) || (d.notes && d.notes.length))) {
-      brainDetails.open = true;
-    }
   });
 })();
 
