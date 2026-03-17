@@ -1,4 +1,25 @@
 voice_memos:
+- id: "2026-03-17-chip-smith-training-system-digital-app-facility-plans"
+  title: "Chip Smith Training System Digital App & Facility Plans"
+  date: "2026-03-17T09:03:30.500413"
+  type: business
+  speakers: "Unknown (primary narrator), Chip Smith, Eric, Unknown (athlete/trainee)"
+  project_match: "ECHO"
+  summary: "A meeting at a gym where the narrator pitches Chip Smith on digitizing his physical training/reaction system into a mobile app with subscription tiers ($5.99 basic, $20/mo pro). They discuss adding AI camera feedback, timer hardware, and expanding applications to mental health treatment, ADHD therapy, military/police training, and youth sports. They also discuss plans for a 100,000 sq ft facility under a foundation, integrating ECHO Care, recovery services, and community youth programs."
+  notion_url: "https://www.notion.so/Chip-Smith-Training-System-Digital-App-Facility-Plans-32659b38371a8101be97e06c385b926c"
+  topics: ["digital app development for training system", "subscription model pricing strategy", "AI camera and reaction time measurement", "mental health and ADHD applications", "military and police training applications", "youth sports training and camps", "100K sq ft facility and foundation plans", "ECHO Care branding and partnerships", "patent protection", "marketing and promotion strategy", "soccer and baseball training demos", "flag football and Chinese national team coaching"]
+  action_items:
+    - "Send Chip Smith a mock-up/prototype of the digital app"
+    - "Talk to patent attorneys to ensure IP protection for the system"
+    - "Connect Chip Smith with the combat brain training guy"
+    - "Have Eric build a better app prototype using his app builder"
+    - "Call Jared about getting the variance and starting facility build plans"
+    - "Feed existing building plans into AI to generate blueprint mockups"
+    - "Reach out to Linley about coming for a soccer camp"
+    - "Get videos of athletes (Josh Blackwell, five girls, baseball guys) for promotion"
+    - "Talk to psychiatrists/psychologists about mental health applications"
+    - "Load Chip Smith's 20 existing workouts into the digital platform"
+    - "Raise money to fund Linley's trip for soccer camp exposure"
 - id: "2026-03-17-mlm-strategy-discussion-trading-bot-lumex-revenue-engines"
   title: "MLM Strategy Discussion: Trading Bot, Lumex & Revenue Engines"
   date: "2026-03-17T08:57:23.384387"
@@ -680,15 +701,5 @@ voice_memos:
   project_match: null
   summary: "The speaker records a brief test memo to try out the recording functionality. No substantive content is discussed."
   notion_url: "https://www.notion.so/First-Test-Recording-321a1f1a5a9d81d2a3eecf25032e03ea"
-  topics: ["test recording"]
-  action_items: []
-- id: "2026-03-12-first-test-recording"
-  title: "First Test Recording"
-  date: "2026-03-12T10:10:12.257138"
-  type: personal
-  speakers: "Unknown"
-  project_match: null
-  summary: "A brief test recording with no substantive content. The speaker is simply verifying that the recording functionality works."
-  notion_url: "https://www.notion.so/First-Test-Recording-321a1f1a5a9d81ffb149f9069c58f8b7"
   topics: ["test recording"]
   action_items: []
