@@ -336,9 +336,23 @@
             <p>{{ memo.summary | truncate(80) }}</p>
             <span class="muted">
               {{ memo.date | date('MMM d, h:mm a') }}
-              {% if memo.project_match %} · {{ memo.project_match }}{% endif %}
               · <span class="status-pill {{ memo.type }}">{{ memo.type }}</span>
             </span>
+            <div style="margin-top: 8px; display: flex; align-items: center; gap: 8px;">
+              <select class="memo-project-select" data-memo-id="{{ memo.id }}" style="font-size: 12px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 3px;">
+                <option value="">Attach to project...</option>
+                {% for project in projects %}
+                  <option value="{{ project.name }}"{% if memo.project_match === project.name %} selected{% endif %}>{{ project.name }}</option>
+                {% endfor %}
+              </select>
+              {% if memo.project_match %}
+                <span class="memo-project-display" style="font-size: 12px; color: #666;">
+                  Attached to: <strong>{{ memo.project_match }}</strong>
+                  <button class="memo-clear-project" data-memo-id="{{ memo.id }}" style="margin-left: 4px; background: none; border: none; color: #999; cursor: pointer; font-size: 10px;" title="Clear assignment">×</button>
+                </span>
+              {% endif %}
+              <span class="memo-save-status" id="memo-status-{{ memo.id }}" style="font-size: 12px;"></span>
+            </div>
           </li>
         {% else %}
           <li class="muted">No voice memos processed yet.</li>
@@ -1053,6 +1067,72 @@ async function sendMessage(chatName, text) {
     });
   } catch(e) { /* ignore send errors */ }
 }
+
+/* ── Voice memo project assignment ── */
+async function assignMemoToProject(memoId, project) {
+  var statusEl = document.getElementById('memo-status-' + memoId);
+  statusEl.textContent = '⟳';
+  statusEl.style.color = '#666';
+
+  try {
+    var response = await fetch('/api/assign-memo-project', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ memoId: memoId, project: project || null })
+    });
+    var data = await response.json();
+
+    if (data.ok) {
+      statusEl.textContent = '✓ Saved';
+      statusEl.style.color = '#4ade80';
+
+      // Update the project display
+      var li = statusEl.closest('li');
+      var displayEl = li.querySelector('.memo-project-display');
+
+      if (project) {
+        if (displayEl) {
+          displayEl.innerHTML = 'Attached to: <strong>' + project + '</strong> <button class="memo-clear-project" data-memo-id="' + memoId + '" style="margin-left: 4px; background: none; border: none; color: #999; cursor: pointer; font-size: 10px;" title="Clear assignment">×</button>';
+        } else {
+          var newDisplayEl = document.createElement('span');
+          newDisplayEl.className = 'memo-project-display';
+          newDisplayEl.style = 'font-size: 12px; color: #666;';
+          newDisplayEl.innerHTML = 'Attached to: <strong>' + project + '</strong> <button class="memo-clear-project" data-memo-id="' + memoId + '" style="margin-left: 4px; background: none; border: none; color: #999; cursor: pointer; font-size: 10px;" title="Clear assignment">×</button>';
+          statusEl.parentNode.insertBefore(newDisplayEl, statusEl);
+        }
+      } else {
+        if (displayEl) displayEl.remove();
+      }
+
+      setTimeout(function() { statusEl.textContent = ''; }, 2500);
+    } else {
+      statusEl.textContent = '✗ Error';
+      statusEl.style.color = '#f87171';
+    }
+  } catch(e) {
+    statusEl.textContent = '✗ Error';
+    statusEl.style.color = '#f87171';
+  }
+}
+
+// Handle memo project dropdown changes
+document.addEventListener('change', function(e) {
+  if (e.target.classList.contains('memo-project-select')) {
+    var memoId = e.target.dataset.memoId;
+    var project = e.target.value;
+    assignMemoToProject(memoId, project);
+  }
+});
+
+// Handle clear project button clicks
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('memo-clear-project')) {
+    var memoId = e.target.dataset.memoId;
+    var select = e.target.closest('li').querySelector('.memo-project-select');
+    select.value = '';
+    assignMemoToProject(memoId, null);
+  }
+});
 </script>
 
 {# ── Create / Edit Project modal ── #}
