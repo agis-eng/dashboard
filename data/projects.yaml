@@ -116,7 +116,7 @@ projects:
     liveUrl: https://dilotikoainetwork.com
     repoUrl: ""
     rank: 6
-    priority: high
+    priority: low
   - id: dr-liza-jones-drlizajones
     name: Drlizajones
     clientId: dr-liza-jones
@@ -346,7 +346,7 @@ projects:
     repoUrl: https://github.com/agis-eng/atlas-portal
     summary: Internal dashboard concept showing projects + change queue.
     rank: 7
-    priority: medium
+    priority: low
   - id: lumen-site
     name: Lumen Dental Microsite
     clientId: lumen
@@ -751,3 +751,27 @@ projects:
     status: Pho Marketing Partner
     lastUpdate: 2026-03-14
     summary: Pho Marketing Partner
+  - id: proj-revofi-overview
+    name: Revofi overview
+    clientId: atlas
+    owner: Erik
+    stage: Lead
+    status: Revofi overview
+    lastUpdate: 2026-03-17
+    summary: Revofi overview
+  - id: proj-turner-campaign-meeting
+    name: Turner Campaign Meeting
+    clientId: atlas
+    owner: Erik
+    stage: Lead
+    status: Turner Campaign Meeting
+    lastUpdate: 2026-03-17
+    summary: Turner Campaign Meeting
+  - id: proj-robot-lab-with-ravi
+    name: Robot Lab With Ravi
+    clientId: atlas
+    owner: Erik
+    stage: Lead
+    status: Robot Lab With Ravi
+    lastUpdate: 2026-03-17
+    summary: Robot Lab With Ravi

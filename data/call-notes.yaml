@@ -2840,7 +2840,7 @@ calls:
     meeting_name: Revofi overview
     date: 2025-12-15
     participants: []
-    project_id: null
+    project_id: proj-revofi-overview
     partner_id: null
     key_takeaways:
       - "Prompt-to-Reality AI:: RevoFi's core innovation is a conversational AI that automates full-stack deployment (websites, apps), making advanced t"
@@ -4780,7 +4780,7 @@ calls:
     meeting_name: Team Call
     date: 2025-10-28
     participants: []
-    project_id: null
+    project_id: unmatched-texas-care-franchise
     partner_id: null
     key_takeaways:
       - "Strategic Pivot:: Launching \"Echo,\" a new brand under NP Kimberly Epperson's credentials. This bypasses Texas Care's slow, inefficient sys"
@@ -6790,7 +6790,7 @@ calls:
     meeting_name: Turner Campaign Meeting
     date: 2025-08-19
     participants: []
-    project_id: null
+    project_id: proj-turner-campaign-meeting
     partner_id: null
     key_takeaways: []
     next_steps:
@@ -8638,7 +8638,7 @@ calls:
     meeting_name: Meeting with Richard and Partners
     date: 2025-06-16
     participants: []
-    project_id: null
+    project_id: unmatched-texas-care-franchise
     partner_id: null
     key_takeaways: []
     next_steps:
@@ -9146,7 +9146,7 @@ calls:
     meeting_name: Phil, Ron and Rabin
     date: 2025-05-30
     participants: []
-    project_id: null
+    project_id: unmatched-texas-care-franchise
     partner_id: null
     key_takeaways: []
     next_steps:
@@ -9246,7 +9246,7 @@ calls:
     meeting_name: Robot Lab With Ravi
     date: 2025-05-23
     participants: []
-    project_id: null
+    project_id: proj-robot-lab-with-ravi
     partner_id: null
     key_takeaways: []
     next_steps:
@@ -9313,7 +9313,7 @@ calls:
     meeting_name: Meeting with Rabin
     date: 2025-05-21
     participants: []
-    project_id: null
+    project_id: unmatched-texas-care-franchise
     partner_id: null
     key_takeaways: []
     next_steps:
