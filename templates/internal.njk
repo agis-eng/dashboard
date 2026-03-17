@@ -106,6 +106,11 @@
                   data-brain-notes="{{ (project.brain.notes if project.brain else []) | dump | escape }}">
             ✏️ Edit
           </button>
+          <button class="btn btn-ghost btn-sm archive-btn" onclick="archiveProject(this, event)" data-noportal
+                  data-id="{{ project.id }}"
+                  data-name="{{ project.name }}">
+            🗑 Archive
+          </button>
         </div>
 
         {# ── Inline editor panel ── #}
@@ -814,6 +819,61 @@ async function attachCallsToProject(idx, recordingIds) {
   }
 }
 
+/* ── Archive Project ── */
+async function archiveProject(btn, evt) {
+  evt.stopPropagation();
+  var id = btn.dataset.id;
+  var name = btn.dataset.name;
+
+  if (!confirm('Archive project "' + name + '"? This will remove it from the dashboard.')) {
+    return;
+  }
+
+  try {
+    var response = await fetch('/api/update-field', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'archive-project', id: id })
+    });
+
+    var result = await response.json();
+
+    if (result.ok) {
+      // Find and fade out the project card
+      var card = btn.closest('.card');
+      if (card) {
+        card.style.transition = 'opacity 0.3s, transform 0.3s';
+        card.style.opacity = '0.5';
+        card.style.transform = 'scale(0.95)';
+
+        setTimeout(function() {
+          card.remove();
+        }, 300);
+      }
+
+      // Show success toast
+      showToast('Archived project "' + name + '"');
+    } else {
+      alert('Failed to archive project: ' + (result.error || 'Unknown error'));
+    }
+  } catch (err) {
+    alert('Error archiving project: ' + err.message);
+  }
+}
+
+function showToast(message) {
+  // Create a simple toast notification
+  var toast = document.createElement('div');
+  toast.className = 'toast-notification';
+  toast.textContent = message;
+  toast.style.cssText = 'position:fixed;top:20px;right:20px;background:#4ade80;color:white;padding:12px 20px;border-radius:6px;z-index:9999;opacity:0;transition:opacity 0.3s;';
+  document.body.appendChild(toast);
+
+  setTimeout(function() { toast.style.opacity = '1'; }, 10);
+  setTimeout(function() { toast.style.opacity = '0'; }, 3000);
+  setTimeout(function() { document.body.removeChild(toast); }, 3300);
+}
+
 /* ── Brain (links + notes) ── */
 function renderBrainLinks(projectId, links) {
   var list = document.getElementById('bl-' + projectId);
@@ -1052,6 +1112,79 @@ async function sendMessage(chatName, text) {
       body: JSON.stringify({ message: text })
     });
   } catch(e) { /* ignore send errors */ }
+}
+
+async function archiveProject(btn, evt) {
+  evt.stopPropagation();
+  var id = btn.dataset.id;
+  var name = btn.dataset.name;
+
+  if (!confirm(`Are you sure you want to archive "${name}"? This will hide it from the project list.`)) {
+    return;
+  }
+
+  // Disable the button and show loading state
+  btn.disabled = true;
+  btn.textContent = '⟳ Archiving...';
+
+  try {
+    const response = await fetch('/api/update-field', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'archive-project', id: id })
+    });
+
+    if (response.ok) {
+      // Fade out and remove the project card
+      var projectCard = btn.closest('article');
+      if (projectCard) {
+        projectCard.style.opacity = '0.5';
+        projectCard.style.transition = 'opacity 0.3s';
+        setTimeout(() => {
+          projectCard.remove();
+        }, 300);
+      }
+
+      // Show success toast
+      showToast('Archived', 'success');
+    } else {
+      throw new Error('Archive failed');
+    }
+  } catch (err) {
+    console.error('Archive error:', err);
+    showToast('Failed to archive project', 'error');
+    btn.disabled = false;
+    btn.textContent = '🗑 Archive';
+  }
+}
+
+function showToast(message, type) {
+  // Simple toast notification
+  var toast = document.createElement('div');
+  toast.textContent = message;
+  toast.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 6px;
+    color: white;
+    font-size: 14px;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s;
+    ${type === 'success' ? 'background: #10b981;' : 'background: #ef4444;'}
+  `;
+  document.body.appendChild(toast);
+
+  // Fade in
+  setTimeout(() => toast.style.opacity = '1', 10);
+
+  // Fade out and remove
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    setTimeout(() => document.body.removeChild(toast), 300);
+  }, 3000);
 }
 </script>
 
