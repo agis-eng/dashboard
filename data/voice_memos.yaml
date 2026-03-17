@@ -1,4 +1,24 @@
 voice_memos:
+- id: "2026-03-17-facility-expansion-planning-meeting-at-training-gym"
+  title: "Facility Expansion Planning Meeting at Training Gym"
+  date: "2026-03-17T09:07:24.904823"
+  type: business
+  speakers: "Hammersmith, Tripp, Justin"
+  project_match: null
+  summary: "Hammersmith, Tripp, and Justin discuss plans to expand a youth training/therapy gym facility in Suwanee, Georgia. Key topics include getting TRIP certified for insurance billing, building an addition (approximately 40x20 or 50x20 feet) off the existing metal building for offices, classrooms, and a kitchenette, while navigating setback variances, septic relocation, and grandfathered building codes. They also explore a potential collaboration with a homeschool sports program that needs classroom space and discuss construction logistics including permits, cost-sharing as a landlord-tenant arrangement, and interim soundproofing of the existing office."
+  notion_url: "https://www.notion.so/Facility-Expansion-Planning-Meeting-at-Training-Gym-32659b38371a8166bba0ec48e1ad136b"
+  topics: ["TRIP certification and insurance billing for therapeutic youth programs", "Building addition and facility expansion planning", "Zoning variances and setback requirements in Suwanee", "Grandfathered building codes and permit requirements", "Septic tank and utility relocation", "Homeschool sports program collaboration", "Construction logistics and cost estimates", "Landlord-tenant lease arrangement for build-out", "Interim office soundproofing"]
+  action_items:
+    - "Determine whether city of Suwanee or county handles setback variance approval"
+    - "Email the zoning contact to inquire about the front setback variance"
+    - "Follow up with consultant in Arizona on TRIP certification details within a couple weeks"
+    - "Get accredited by end of April to avoid waiting until July"
+    - "Contact Jared and architect to design the building addition"
+    - "Investigate septic tank relocation logistics and cost"
+    - "Coordinate with railroad contact about potential variance for railroad property setback"
+    - "Soundproof and prepare existing office as interim workspace"
+    - "Change office door to a lockable door"
+    - "Discuss collaboration terms with Pam regarding homeschool classroom space sharing"
 - id: "2026-03-17-chip-smith-training-system-digital-app-facility-plans"
   title: "Chip Smith Training System Digital App & Facility Plans"
   date: "2026-03-17T09:03:30.500413"
@@ -691,15 +711,5 @@ voice_memos:
   project_match: null
   summary: "A brief test recording to verify audio capture functionality. No substantive content was discussed."
   notion_url: "https://www.notion.so/First-Test-Recording-321a1f1a5a9d81459ed8f0d0e43b8b5d"
-  topics: ["test recording"]
-  action_items: []
-- id: "2026-03-12-first-test-recording"
-  title: "First Test Recording"
-  date: "2026-03-12T10:12:37.511282"
-  type: personal
-  speakers: "Unknown"
-  project_match: null
-  summary: "The speaker records a brief test memo to try out the recording functionality. No substantive content is discussed."
-  notion_url: "https://www.notion.so/First-Test-Recording-321a1f1a5a9d81d2a3eecf25032e03ea"
   topics: ["test recording"]
   action_items: []
