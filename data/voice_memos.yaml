@@ -1,4 +1,20 @@
 voice_memos:
+- id: "2026-03-17-mlm-strategy-discussion-trading-bot-lumex-revenue-engines"
+  title: "MLM Strategy Discussion: Trading Bot, Lumex & Revenue Engines"
+  date: "2026-03-17T08:57:23.384387"
+  type: business
+  speakers: "Unknown, Eric"
+  project_match: null
+  summary: "Two individuals discuss a multi-tiered network marketing strategy involving a trading bot connected to its own exchange, Lumex, and other investment systems. They outline plans to recruit people into three 'engines' at ~$250 total cost, projecting $10K+ monthly income within 12 months, while also critiquing a colleague named Bill's competing system as unsustainable. They discuss building downline networks, compensating people who lost money in previous opportunities, and updating onboarding checklists and roadmaps."
+  notion_url: "https://www.notion.so/MLM-Strategy-Discussion-Trading-Bot-Lumex-Revenue-Engines-32659b38371a81649b00c9c4764818c3"
+  topics: ["trading bot and exchange revenue sharing", "MLM recruitment strategy", "Lumex investment system", "network building and downline placement", "Bill's competing system sustainability concerns", "onboarding roadmap and checklist updates", "compounding investment returns", "compensating previous opportunity losses"]
+  action_items:
+    - "Create new checklist and road map over the weekend for onboarding steps"
+    - "Get Andre a spot and start building around him"
+    - "Hook Jared under Antoine to build his network"
+    - "Revamp the step-by-step onboarding process (activate Lumex, get contract, join next engine)"
+    - "Talk to Bill about simplifying his approach and moving his people into the current system"
+    - "Once higher-level bonuses hit, pay back people who lost money in previous opportunities"
 - id: "2026-03-17-mlm-strategy-arm-lumex-and-revify-ecosystem-plan"
   title: "MLM Strategy: ARM, Lumex, and Revify Ecosystem Plan"
   date: "2026-03-17T08:55:17.434851"
@@ -674,15 +690,5 @@ voice_memos:
   project_match: null
   summary: "A brief test recording with no substantive content. The speaker is simply verifying that the recording functionality works."
   notion_url: "https://www.notion.so/First-Test-Recording-321a1f1a5a9d81ffb149f9069c58f8b7"
-  topics: ["test recording"]
-  action_items: []
-- id: "2026-03-12-first-test-recording"
-  title: "First Test Recording"
-  date: "2026-03-12T10:08:38.154496"
-  type: personal
-  speakers: "Unknown"
-  project_match: null
-  summary: "A brief test recording with no substantive content. The speaker is simply verifying that the recording functionality works."
-  notion_url: "https://www.notion.so/First-Test-Recording-321a1f1a5a9d81dd9502f86b6844012d"
   topics: ["test recording"]
   action_items: []
