@@ -116,7 +116,7 @@ projects:
     liveUrl: https://dilotikoainetwork.com
     repoUrl: ""
     rank: 6
-    priority: high
+    priority: low
   - id: dr-liza-jones-drlizajones
     name: Drlizajones
     clientId: dr-liza-jones
