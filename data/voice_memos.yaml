@@ -1,4 +1,22 @@
 voice_memos:
+- id: "2026-03-17-mlm-strategy-arm-lumex-and-revify-ecosystem-plan"
+  title: "MLM Strategy: ARM, Lumex, and Revify Ecosystem Plan"
+  date: "2026-03-17T08:55:17.434851"
+  type: business
+  speakers: "Dan, Unknown"
+  project_match: null
+  summary: "Dan discusses a multi-level marketing strategy involving ARM (a 2x2 matrix trading platform), Lumex, and Revify with a partner. He outlines a plan to build deep legs in the 2x2 structure, compound $100 seed investments into significant bonuses, and leverage Revify's upcoming platform (VPN, trading bots, AI tool called Raven, and lead generation) to create a 'Legacy Lifestyle' ecosystem. He also discusses signing up specific people (Andrea, Teresa, Bill, Doug, Boone) and the mechanics of registration using VPNs."
+  notion_url: "https://www.notion.so/MLM-Strategy-ARM-Lumex-and-Revify-Ecosystem-Plan-32659b38371a81db9da2c2a63a6fadca"
+  topics: ["MLM network building", "ARM trading platform", "Lumex investment strategy", "Revify platform features", "2x2 matrix compensation plan", "VPN requirements", "trading bots", "lead generation", "Legacy Lifestyle ecosystem", "compounding strategy", "$100 seed investments"]
+  action_items:
+    - "Send registration link to partner tonight"
+    - "Partner registers via Teresa's boyfriend's link then sends back their own link"
+    - "Partner signs up Andrea under themselves and sends Andrea's link back to Dan"
+    - "Use VPN set to a different country for registration"
+    - "Dan will sign up one person under partner's link and build 2x2 under Andrea's link"
+    - "Get access to Revify's Raven platform next week and test it"
+    - "Involve Doug and other guys in understanding Revify's trading bot"
+    - "Take kid to karate"
 - id: "2026-03-17-modular-trailer-rental-inquiry-for-ada-compliant-office"
   title: "Modular Trailer Rental Inquiry for ADA Compliant Office"
   date: "2026-03-17T08:52:03.526090"
@@ -666,15 +684,5 @@ voice_memos:
   project_match: null
   summary: "A brief test recording with no substantive content. The speaker is simply verifying that the recording functionality works."
   notion_url: "https://www.notion.so/First-Test-Recording-321a1f1a5a9d81dd9502f86b6844012d"
-  topics: ["test recording"]
-  action_items: []
-- id: "2026-03-12-first-test-recording"
-  title: "First Test Recording"
-  date: "2026-03-12T10:06:20.772597"
-  type: personal
-  speakers: "Unknown"
-  project_match: null
-  summary: "A brief test recording to verify audio capture functionality. No substantive content was discussed."
-  notion_url: "https://www.notion.so/First-Test-Recording-321a1f1a5a9d81f1bea3ec1d180d181d"
   topics: ["test recording"]
   action_items: []
