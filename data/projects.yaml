@@ -759,3 +759,11 @@ projects:
     status: Revofi overview
     lastUpdate: 2026-03-17
     summary: Revofi overview
+  - id: proj-turner-campaign-meeting
+    name: Turner Campaign Meeting
+    clientId: atlas
+    owner: Erik
+    stage: Lead
+    status: Turner Campaign Meeting
+    lastUpdate: 2026-03-17
+    summary: Turner Campaign Meeting
