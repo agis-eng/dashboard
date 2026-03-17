@@ -820,59 +820,6 @@ async function attachCallsToProject(idx, recordingIds) {
 }
 
 /* ── Archive Project ── */
-async function archiveProject(btn, evt) {
-  evt.stopPropagation();
-  var id = btn.dataset.id;
-  var name = btn.dataset.name;
-
-  if (!confirm('Archive project "' + name + '"? This will remove it from the dashboard.')) {
-    return;
-  }
-
-  try {
-    var response = await fetch('/api/update-field', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'archive-project', id: id })
-    });
-
-    var result = await response.json();
-
-    if (result.ok) {
-      // Find and fade out the project card
-      var card = btn.closest('.card');
-      if (card) {
-        card.style.transition = 'opacity 0.3s, transform 0.3s';
-        card.style.opacity = '0.5';
-        card.style.transform = 'scale(0.95)';
-
-        setTimeout(function() {
-          card.remove();
-        }, 300);
-      }
-
-      // Show success toast
-      showToast('Archived project "' + name + '"');
-    } else {
-      alert('Failed to archive project: ' + (result.error || 'Unknown error'));
-    }
-  } catch (err) {
-    alert('Error archiving project: ' + err.message);
-  }
-}
-
-function showToast(message) {
-  // Create a simple toast notification
-  var toast = document.createElement('div');
-  toast.className = 'toast-notification';
-  toast.textContent = message;
-  toast.style.cssText = 'position:fixed;top:20px;right:20px;background:#4ade80;color:white;padding:12px 20px;border-radius:6px;z-index:9999;opacity:0;transition:opacity 0.3s;';
-  document.body.appendChild(toast);
-
-  setTimeout(function() { toast.style.opacity = '1'; }, 10);
-  setTimeout(function() { toast.style.opacity = '0'; }, 3000);
-  setTimeout(function() { document.body.removeChild(toast); }, 3300);
-}
 
 /* ── Brain (links + notes) ── */
 function renderBrainLinks(projectId, links) {
