@@ -751,3 +751,11 @@ projects:
     status: Pho Marketing Partner
     lastUpdate: 2026-03-14
     summary: Pho Marketing Partner
+  - id: proj-revofi-overview
+    name: Revofi overview
+    clientId: atlas
+    owner: Erik
+    stage: Lead
+    status: Revofi overview
+    lastUpdate: 2026-03-17
+    summary: Revofi overview
