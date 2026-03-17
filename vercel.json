@@ -1,4 +1,8 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/api/telegram-messages", "destination": "/api/telegram" },
+    { "source": "/api/telegram-send", "destination": "/api/telegram" }
+  ]
 }
