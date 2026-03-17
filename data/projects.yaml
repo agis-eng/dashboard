@@ -767,3 +767,11 @@ projects:
     status: Turner Campaign Meeting
     lastUpdate: 2026-03-17
     summary: Turner Campaign Meeting
+  - id: proj-robot-lab-with-ravi
+    name: Robot Lab With Ravi
+    clientId: atlas
+    owner: Erik
+    stage: Lead
+    status: Robot Lab With Ravi
+    lastUpdate: 2026-03-17
+    summary: Robot Lab With Ravi
