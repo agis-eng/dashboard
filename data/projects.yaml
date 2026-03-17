@@ -775,3 +775,11 @@ projects:
     status: Robot Lab With Ravi
     lastUpdate: 2026-03-17
     summary: Robot Lab With Ravi
+  - id: proj-robot-lab-with-ravi-f2kw
+    name: Robot Lab With Ravi
+    clientId: atlas
+    owner: Erik
+    stage: Lead
+    status: Robot Lab With Ravi
+    lastUpdate: 2026-03-17
+    summary: Robot Lab With Ravi
