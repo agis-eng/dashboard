@@ -231,6 +231,7 @@ projects:
     previewUrl: https://hammersmith.webdezigns.ai/
     liveUrl: https://hammersmith.webdezigns.ai/
     repoUrl: ""
+    priority: high
   - id: heather-helms-helms
     name: Helms
     clientId: heather-helms
@@ -539,7 +540,7 @@ projects:
     liveUrl: https://stratpath.webdezigns.ai/
     repoUrl: ""
     rank: 11
-    priority: medium
+    priority: high
   - id: ted-associates-ted-associates
     name: Ted Associates
     clientId: ted-associates
@@ -703,6 +704,7 @@ projects:
     status: ECHO ecosystem strategy sessions with Von
     lastUpdate: 2026-03-13
     summary: ECHO HCP strategy and onboarding meetings with VonMarie
+    priority: high
   - id: unmatched-rasha-dedra
     name: Rasha & Dedra Team
     clientId: atlas
@@ -768,6 +770,14 @@ projects:
     lastUpdate: 2026-03-17
     summary: Turner Campaign Meeting
   - id: proj-robot-lab-with-ravi
+    name: Robot Lab With Ravi
+    clientId: atlas
+    owner: Erik
+    stage: Lead
+    status: Robot Lab With Ravi
+    lastUpdate: 2026-03-17
+    summary: Robot Lab With Ravi
+  - id: proj-robot-lab-with-ravi-f2kw
     name: Robot Lab With Ravi
     clientId: atlas
     owner: Erik
