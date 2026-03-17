@@ -33,12 +33,12 @@ projects:
     liveUrl: https://benefitsforyoullc.com/
     repoUrl: ""
   - id: capture-build-connect-capture-build-connect
-    name: TED New Site
+    name: TED-Associates V2
     clientId: capture-build-connect
     owner: Anton
     stage: Internal
     status: Active
-    lastUpdate: 2026-03-14
+    lastUpdate: 2026-03-17
     summary: Active
     previewUrl: https://capture-build-connect.lovable.app
     liveUrl: https://capture-build-connect.lovable.app
