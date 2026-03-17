@@ -667,7 +667,7 @@ projects:
   - id: g-wallet-usdt
     name: G-Wallet (USDT Global Wallet)
     clientId: akilli-pollee
-    owner: Anton
+    owner: Akili Polee
     status: Partner Project
     lastUpdate: 2026-03-17
     summary: Merchant-focused stablecoin settlement infrastructure platform.
@@ -677,6 +677,7 @@ projects:
     contacts:
       - name: Akili Polee
     brain: {}
+    stage: Lead
   - id: fund-and-grow-partner
     name: Fund & Grow Partner Hub
     clientId: fund-and-grow
