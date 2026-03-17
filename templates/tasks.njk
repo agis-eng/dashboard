@@ -52,6 +52,41 @@
 </div>
 {% endmacro %}
 
+{# ── Active Agents Panel ── #}
+<section class="panel panel-agents">
+  <header>
+    <h3>Active Agents</h3>
+    <p class="muted">Running task sessions</p>
+  </header>
+  <div class="agents-table-container" id="agentsTable">
+    <p class="agents-loading muted">Loading agents...</p>
+  </div>
+</section>
+
+{# ── Chat Panel ── #}
+<section class="panel panel-chat">
+  <header class="chat-tab-header">
+    <div class="chat-tabs">
+      <button class="chat-tab active" data-chat="atlas" onclick="switchChat('atlas', this)">Atlas</button>
+      <button class="chat-tab" data-chat="agis" onclick="switchChat('agis', this)">AGIS</button>
+    </div>
+    <p class="muted" id="chatSubtitle">Give Atlas tasks directly</p>
+  </header>
+  <div class="chat-messages" id="chatMessages">
+    <p class="chat-empty muted">Loading messages…</p>
+  </div>
+  <form class="chat-form" id="chatForm" onsubmit="return false;">
+    <input
+      type="text"
+      id="chatInput"
+      class="chat-input"
+      placeholder="Type a task or message…"
+      autocomplete="off"
+    />
+    <button type="submit" class="btn chat-send" id="chatSend">Send</button>
+  </form>
+</section>
+
 <div class="workspace tasks-workspace">
 
   {# ── Stats bar ── #}
@@ -199,5 +234,69 @@
         if (empty) empty.style.display = visible === 0 ? 'block' : 'none';
       });
     });
+  });
+
+  // Active Agents functionality
+  async function fetchAgentStatus() {
+    try {
+      const response = await fetch('/api/agent-status');
+      const data = await response.json();
+      renderAgentsTable(data.tasks || []);
+    } catch (error) {
+      console.warn('Could not fetch agent status:', error);
+      document.getElementById('agentsTable').innerHTML = '<p class="agents-error muted">Could not load agent status</p>';
+    }
+  }
+
+  function renderAgentsTable(tasks) {
+    const container = document.getElementById('agentsTable');
+    if (!tasks.length) {
+      container.innerHTML = '<p class="agents-empty muted">No active agents</p>';
+      return;
+    }
+
+    const table = document.createElement('table');
+    table.className = 'agents-table';
+
+    // Header
+    const header = document.createElement('thead');
+    header.innerHTML = `
+      <tr>
+        <th>Session</th>
+        <th>Project</th>
+        <th>Branch</th>
+        <th>Started</th>
+        <th>Status</th>
+      </tr>
+    `;
+    table.appendChild(header);
+
+    // Body
+    const body = document.createElement('tbody');
+    tasks.forEach(task => {
+      const row = document.createElement('tr');
+      const statusClass = task.status === 'running' ? 'status-running' : 'status-stopped';
+      const statusDot = task.status === 'running' ? '🟢' : '⚫';
+      const startedDate = new Date(task.started).toLocaleDateString();
+
+      row.innerHTML = `
+        <td><code class="session-name">${task.session}</code></td>
+        <td>${task.project}</td>
+        <td><code class="branch-name">${task.branch}</code></td>
+        <td>${startedDate}</td>
+        <td class="${statusClass}">${statusDot} ${task.status}</td>
+      `;
+      body.appendChild(row);
+    });
+    table.appendChild(body);
+
+    container.innerHTML = '';
+    container.appendChild(table);
+  }
+
+  // Initialize and set up polling
+  document.addEventListener('DOMContentLoaded', () => {
+    fetchAgentStatus();
+    setInterval(fetchAgentStatus, 30000); // Poll every 30 seconds
   });
 </script>
