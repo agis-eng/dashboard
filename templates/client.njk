@@ -246,7 +246,13 @@
         <div class="call-section">
           <h5>Next Steps</h5>
           <ul class="call-list">
-            {% for ns in call.next_steps %}<li>{{ ns }}</li>{% endfor %}
+            {% for ns in call.next_steps %}
+            <li class="next-step-item">
+              <span>{{ ns }}</span>
+              <button class="btn btn-ghost btn-sm" onclick="addNextStepAsTask(this, {{ ns | dump }}, {{ call.title | dump }})">+ Task</button>
+              <span class="add-task-status"></span>
+            </li>
+            {% endfor %}
           </ul>
         </div>
         {% endif %}
@@ -848,4 +854,43 @@ async function saveAffiliate(projectId, btn) {
 
   btn.disabled = false;
 }
+
+// ── Add next step as task ──────────────────────────────────────────────
+async function addNextStepAsTask(btn, title, callTitle) {
+  var statusEl = btn.nextElementSibling;
+  btn.disabled = true;
+  btn.textContent = '⟳';
+  statusEl.textContent = '';
+
+  try {
+    var response = await fetch('/api/add-task', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: title,
+        source: 'Call: ' + callTitle
+      })
+    });
+
+    if (response.ok) {
+      statusEl.textContent = '✓ Added';
+      statusEl.style.color = '#4ade80';
+      btn.style.display = 'none';
+    } else {
+      var errorData = await response.json();
+      statusEl.textContent = '✗ ' + (errorData.error || 'Error');
+      statusEl.style.color = '#f87171';
+      btn.disabled = false;
+      btn.textContent = '+ Task';
+    }
+  } catch (error) {
+    statusEl.textContent = '✗ Network error';
+    statusEl.style.color = '#f87171';
+    btn.disabled = false;
+    btn.textContent = '+ Task';
+  }
+}
+
 </script>
