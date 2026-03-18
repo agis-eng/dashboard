@@ -786,3 +786,24 @@ projects:
     status: Robot Lab With Ravi
     lastUpdate: 2026-03-17
     summary: Robot Lab With Ravi
+  - id: deva-project
+    name: DEVA - Temple Wellness Resort
+    clientId: deva-team
+    owner: Anton
+    stage: Lead
+    status: Phase 1 funding - Due diligence
+    lastUpdate: 2026-03-17
+    summary: "$170M luxury wellness resort development on a private island. Primary funding strategy via Wall Street development-backed bond financing."
+    priority: high
+    contacts:
+      - name: Vishnu Swami
+        role: Primary Connection
+      - name: David Addeo
+        role: Founder, Deva Admissions
+      - name: Alanna Addeo
+        role: Co-Founder, Deva Admissions
+      - name: Rocco Bova
+      - name: Ingo Schweder
+      - name: Teresa A. Holden
+      - name: Subroto Banerjee
+      - name: Dr. J.R. Raju

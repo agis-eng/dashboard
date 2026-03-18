@@ -1027,3 +1027,30 @@ partners:
       - kooper-davis-foundation-kooperdavis
       - echo-credentialing-credentialing
     brain: {}
+  - id: deva-team
+    name: DEVA Team
+    slug: deva-team
+    summary: "Leadership and advisory team for DEVA - Temple Wellness Resort."
+    description: "Developing a $170M luxury wellness resort on a private island. Funding via bond financing. Key connection: Vishnu Swami."
+    website: ""
+    contact: Vishnu Swami, David Addeo, Alanna Addeo
+    region: Global
+    focusAreas:
+      - Hospitality
+      - Wellness
+      - Real Estate Development
+    tags:
+      - Strategic
+      - Partner
+      - Deva
+    projectIds:
+      - deva-project
+    notes: |
+      Team includes: 
+      - Vishnu Swami (The Maverick Monk) - Primary Connection. 
+      - Rocco Bova (Luxury hotel leadership). 
+      - Ingo Schweder (Wellness hospitality development). 
+      - Teresa A. Holden (Luxury hospitality sales). 
+      - Subroto Banerjee (Luxury hospitality operations). 
+      - Dr. J.R. Raju (Raj Vaidyacharya - Ayurvedic physician).
+      Project details: 56 keys in Phase 1, seeking $1-1.5M for due-diligence studies to qualify for development-backed bonds.
