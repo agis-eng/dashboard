@@ -1054,3 +1054,28 @@ partners:
       - Subroto Banerjee (Luxury hospitality operations). 
       - Dr. J.R. Raju (Raj Vaidyacharya - Ayurvedic physician).
       Project details: 56 keys in Phase 1, seeking $1-1.5M for due-diligence studies to qualify for development-backed bonds.
+
+  - id: echo-core-team
+    name: ECHO Core Team (Clinical & Ops)
+    clientId: echo
+    owner: Von Marie
+    stage: Active
+    status: Retained client - Weekly Ops
+    lastUpdate: 2026-03-17
+    summary: Clinical and operational leadership for ECHO Care Network (Healthcare Credentialing & experiments).
+    region: National
+    priority: high
+    focusAreas:
+      - Healthcare
+      - Credentialing
+      - Clinical Ops
+    notes: |
+      Team members and specific protocols (Oxytocin, Brainwave Research) are detailed in the `medsource` partner profile led by Von Marie.
+      Roster: Includes Von Marie Gastelo (Clinical Lead), Dr. Maj Zakari (NeuroTech/AI/Protocols).
+      Weekly Meeting: Every Wednesday at 9:00 AM Eastern Time (operational sync).
+    tags:
+      - Clinical
+      - Operational
+      - Strategic
+      - Partner
+      - ECHO Care Network
