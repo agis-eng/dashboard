@@ -58,23 +58,6 @@ tasks:
       - design
     notion_url: https://www.notion.so/Chelimitless-website-redesign-32259b38371a81e1a142e7a575781515
     updated_at: 2026-03-18T15:52:05.714Z
-  - id: notion-32259b38371a81d8
-    title: NanoBanana — Walmart listing review
-    status: done
-    priority: high
-    type: ecommerce
-    platforms:
-      - Walmart
-    project: NanoBanana
-    client: NanoBanana
-    assignee: Anton
-    due_date: 2026-03-15
-    notes: Check all 12 SKUs for suppressed listings, update images to Walmart spec 1500x1500
-    tags:
-      - walmart
-      - ecommerce
-    notion_url: https://www.notion.so/NanoBanana-Walmart-listing-review-32259b38371a81d8bcc5ecc7bc824e99
-    updated_at: 2026-03-18T16:09:55.518Z
   - id: notion-32259b38371a8117
     title: Amazon listing optimization — LogoClear
     status: in-progress
