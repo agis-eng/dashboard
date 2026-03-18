@@ -825,3 +825,33 @@ projects:
       - name: Teresa A. Holden
       - name: Subroto Banerjee
       - name: Dr. J.R. Raju
+
+  - id: kirby-guards
+    name: Kirby Guards (Insurance Bot Brokerage)
+    clientId: internal
+    owner: Anton
+    stage: Active
+    status: Operational mission
+    lastUpdate: 2026-03-18
+    summary: An automated agent/brokerage bot (AGIS) that maximizes revenue by capturing vertical fees through automated car insurance negotiation and direct vertical integration.
+    liveUrl: ""
+    rank: 1
+    priority: high
+    notes: |
+      Concept: A "digital guardian" agent (AGIS) that horizontally scans and forces competition between direct usage-based insurance (UBI) carriers (like Novo) and traditional carriers (like Geico, Progressive, etc.) on behalf of the user.
+      Revenue Model: Capture vertical fees from the brokerage/carrier via automated negotiation and referral conversion. Daily rewards model for node holders from flat vertical fees conceptually. 60% revenue sharing community model vibe.
+      Target Audience: Users seeking automated, fair, and usage-based insurance pricing that ignores proxy factors.
+    tags:
+      - AGIS
+      - Kirb-AI
+      - Insurance Bot
+      - Brokerage
+      - Revenue Generation
+      - Automated Negotiation
+      - Usage-Based Insurance
+      - Digital Guardian
+      - G-Wallet Partner
+    contacts:
+      - name: Anton
+      - name: AGIS
+    brain: {}
