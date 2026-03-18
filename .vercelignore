@@ -1,6 +1,2 @@
-api/admin/
-api/delete-task.js
-api/update-task-status.js
-api/add-task.js
-api/delete-voice-memo.js
-api/agent-status.js
+api/
+scripts/
