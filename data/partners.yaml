@@ -218,10 +218,9 @@ partners:
       avg_deal_size: 3500
       monthly_leads: 2
       monthly_potential: 560
-      status: active
+      status: pending
       notes: Referral arrangement with Dan Bauman — send education and services clients their way.
       affiliate_url: https://legacy-foundations-builder.lovable.app
-      signup_url: ""
   - id: admission-squad
     name: Admission Squad
     slug: admission-squad
