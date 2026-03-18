@@ -1,5 +1,20 @@
 [
   {
+    "id": "2026-03-17-test-voice-note",
+    "title": "Test voice note",
+    "date": "2026-03-17T14:12:45.268030",
+    "type": "personal",
+    "speakers": "Unknown",
+    "project_match": null,
+    "summary": "The speaker records a brief test voice note to check if it appears correctly. No substantive content is discussed.",
+    "topics": [
+      "testing",
+      "voice memo functionality"
+    ],
+    "action_items": [],
+    "notion_url": "https://www.notion.so/Test-voice-note-326a1f1a5a9d81e0a8c3d84b125039e8"
+  },
+  {
     "id": "2026-03-17-echo-foundation-facility-expansion-sports-app-strategy",
     "title": "ECHO Foundation, Facility Expansion & Sports App Strategy",
     "date": "2026-03-17T10:43:17.612037",
@@ -1184,39 +1199,5 @@
     ],
     "action_items": [],
     "notion_url": "https://www.notion.so/First-Test-Recording-321a1f1a5a9d81bd953dc4e7b6623ecf"
-  },
-  {
-    "id": "2026-03-12-echo-branding-hammersmith-and-partnership-strategy-call",
-    "title": "ECHO Branding, Hammersmith, and Partnership Strategy Call",
-    "date": "2026-03-12T10:15:08.036859",
-    "type": "business",
-    "speakers": "Anton, Erik",
-    "project_match": "ECHO",
-    "summary": "Anton and Erik discuss branding strategy for ECHO Healthcare Partners, particularly how to present the brand at Chip's gym to attract NFL players and others in the sports/mental health space. They cover partnership opportunities with Mercure, the foundation, Hammersmith Sports, licensing for mental health classes through Tripp and his wife, and fundraising strategies. They also touch on AI tools (Claude, OpenCloud) being used to build business plans, dashboards, and automated workflows for their projects.",
-    "topics": [
-      "ECHO branding and positioning",
-      "Mental health clinic at Chip's gym",
-      "Hammersmith Sports foundation partnership",
-      "Mercure partnership opportunity",
-      "Fundraising and grants",
-      "Texas Care franchise issues",
-      "Tripp and wife licensing for counseling",
-      "Pitch deck and business plan via AI",
-      "Claude and OpenCloud bot development",
-      "Fathom call recording automation and dashboards",
-      "Networking connections",
-      "Travel and personal life discussion"
-    ],
-    "action_items": [
-      "Schedule brainstorming session on ECHO branding for Chip's gym signage",
-      "Set up meeting with Mercure to discuss foundation and Hammersmith Sports partnership",
-      "Keep Justin out of shareholder/partner group communications",
-      "Do not disclose foundation details to Robert or outside parties",
-      "Support Tripp and his wife in getting licensed through Hammersmith for reimbursable classes",
-      "Build out soundproof room at Chip's gym and cover material costs",
-      "Review and refine Claude-generated business plan and Loveable landing page",
-      "Continue building automated dashboard from Fathom call recordings using Claude/OpenCloud"
-    ],
-    "notion_url": "https://www.notion.so/ECHO-Branding-Hammersmith-and-Partnership-Strategy-Call-32159b38371a81bd8da8d02068f95a54"
   }
 ]
