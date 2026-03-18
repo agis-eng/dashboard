@@ -154,7 +154,7 @@ partners:
       - kooper-davis-foundation-kooperdavis
       - echo-credentialing-credentialing
     rank: 7
-    priority: medium
+    priority: high
   - id: hammersmith
     name: Hammersmith
     slug: hammersmith
@@ -825,7 +825,7 @@ partners:
     description: Michael leads partnerships for scaling vertically integrated hydronics (strawberries) and cashew processing ventures in Cambodia and the SE Asia region, leveraging blended finance and public/private funds.
     website: ""
     contact: Michael Brown
-    phone: "+1 (813) 297-5528"
+    phone: +1 (813) 297-5528
     region: Southeast Asia • International
     focusAreas:
       - Agri-Food
@@ -976,7 +976,7 @@ partners:
     description: Creator of G-Wallet, a merchant-focused stablecoin settlement infrastructure platform for cross-border commerce.
     website: https://gwallet.webdezigns.ai
     contact: Akilli Pollee
-    phone: "+1 209 910 5719"
+    phone: +1 209 910 5719
     region: Global
     focusAreas:
       - Crypto
@@ -1007,15 +1007,8 @@ partners:
       - Oxytocin Protocols
       - Brainwave Research
       - Cognitive Enhancement
-    notes: >
-      Integrated somatic therapy into the team's venture to create a holistic mind-body performance model (combining her "mind" expertise with Chip Smith's "body" expertise).
-      Strategic priority: Establish legal/financial structure for fundraising pipeline. Her modality addresses implicit memory trauma (95% of memory) where traditional therapy fails.
-      Urgent action item: Propose trauma-informed audit for Skyscraper Schools based on new service opportunity (mitigation for lawsuits). Key connections: Justin Davis (fundraising), Chip Smith (athletes/connections).
-      Product suite includes practitioner trainings (e.g., May intensive in Austin), trauma-informed certifications, and "Seal of Excellence" for certified organizations.
-      Needs research funding for independent trials to validate data for insurance coverage.
-      *Research focus:* Generating therapeutic levels of endogenous oxytocin (body healing itself). Modality is a neurological tonic with epigenetic properties (erasing generational trauma, changing physiology). Peer review is a critical goal for oxytocin protocols, which are poised to become core to nervous system work.
-      *Cognitive Implications:* Clients transition between sleep/dream states and wakefulness. Research must include brain scanning to document brainwave changes. Modality reports higher cognition and has massive implications for degenerative cognitive disorders (e.g., TBI, cognitive decline, Alzheimer's).
-      Action items to track: Share Austin details in WhatsApp for Chip, draft NDA, send Maj Sky School links, report back on TYM packs/recovery.
+    notes: |
+      Integrated somatic therapy into the team's venture to create a holistic mind-body performance model (combining her "mind" expertise with Chip Smith's "body" expertise). Strategic priority: Establish legal/financial structure for fundraising pipeline. Her modality addresses implicit memory trauma (95% of memory) where traditional therapy fails. Urgent action item: Propose trauma-informed audit for Skyscraper Schools based on new service opportunity (mitigation for lawsuits). Key connections: Justin Davis (fundraising), Chip Smith (athletes/connections). Product suite includes practitioner trainings (e.g., May intensive in Austin), trauma-informed certifications, and "Seal of Excellence" for certified organizations. Needs research funding for independent trials to validate data for insurance coverage. *Research focus:* Generating therapeutic levels of endogenous oxytocin (body healing itself). Modality is a neurological tonic with epigenetic properties (erasing generational trauma, changing physiology). Peer review is a critical goal for oxytocin protocols, which are poised to become core to nervous system work. *Cognitive Implications:* Clients transition between sleep/dream states and wakefulness. Research must include brain scanning to document brainwave changes. Modality reports higher cognition and has massive implications for degenerative cognitive disorders (e.g., TBI, cognitive decline, Alzheimer's). Action items to track: Share Austin details in WhatsApp for Chip, draft NDA, send Maj Sky School links, report back on TYM packs/recovery.
     tags:
       - Strategic
       - Partner
@@ -1030,7 +1023,7 @@ partners:
   - id: deva-team
     name: DEVA Team
     slug: deva-team
-    summary: "Leadership and advisory team for DEVA - Temple Wellness Resort."
+    summary: Leadership and advisory team for DEVA - Temple Wellness Resort.
     description: "Developing a $170M luxury wellness resort on a private island. Funding via bond financing. Key connection: Vishnu Swami."
     website: ""
     contact: Vishnu Swami, David Addeo, Alanna Addeo
@@ -1054,7 +1047,6 @@ partners:
       - Subroto Banerjee (Luxury hospitality operations). 
       - Dr. J.R. Raju (Raj Vaidyacharya - Ayurvedic physician).
       Project details: 56 keys in Phase 1, seeking $1-1.5M for due-diligence studies to qualify for development-backed bonds.
-
   - id: echo-core-team
     name: ECHO Core Team (Clinical & Ops)
     clientId: echo
