@@ -20,6 +20,7 @@ import deleteTask        from './api/delete-task.js';
 import updateTaskStatus  from './api/update-task-status.js';
 import addTask           from './api/add-task.js';
 import deleteVoiceMemo   from './api/delete-voice-memo.js';
+import agentStatus       from './api/agent-status.js';
 import createUser        from './api/admin/create-user.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -51,6 +52,7 @@ app.all('/api/delete-task',         (req, res) => deleteTask(req, res));
 app.all('/api/update-task-status',  (req, res) => updateTaskStatus(req, res));
 app.all('/api/add-task',            (req, res) => addTask(req, res));
 app.all('/api/delete-voice-memo',   (req, res) => deleteVoiceMemo(req, res));
+app.all('/api/agent-status',        (req, res) => agentStatus(req, res));
 app.all('/api/admin/create-user',   (req, res) => createUser(req, res));
 
 // Serve static built files
