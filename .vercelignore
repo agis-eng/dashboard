@@ -1,2 +1,3 @@
 api/admin/
-api/add-task.js api/delete-voice-memo.js
+api/add-task.js
+api/delete-voice-memo.js
