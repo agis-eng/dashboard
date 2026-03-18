@@ -3,6 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import agis            from './api/agis.js';
+import assignMemoProject from './api/assign-memo-project.js';
 import changePassword  from './api/change-password.js';
 import ingestTranscript from './api/ingest-transcript.js';
 import leads           from './api/leads.js';
@@ -32,6 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // API routes
 app.all('/api/agis',                (req, res) => agis(req, res));
+app.all('/api/assign-memo-project', (req, res) => assignMemoProject(req, res));
 app.all('/api/change-password',     (req, res) => changePassword(req, res));
 app.all('/api/ingest-transcript',   (req, res) => ingestTranscript(req, res));
 app.all('/api/leads',               (req, res) => leads(req, res));
