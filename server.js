@@ -12,9 +12,10 @@ import notionPartners  from './api/notion-partners.js';
 import notionSearch    from './api/notion-search.js';
 import telegramMessages from './api/telegram-messages.js';
 import telegramSend    from './api/telegram-send.js';
-import updateField     from './api/update-field.js';
-import verify          from './api/verify.js';
-import createUser      from './api/admin/create-user.js';
+import updateField       from './api/update-field.js';
+import verify            from './api/verify.js';
+import assignMemoProject from './api/assign-memo-project.js';
+import createUser        from './api/admin/create-user.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -40,6 +41,7 @@ app.all('/api/telegram-messages',   (req, res) => telegramMessages(req, res));
 app.all('/api/telegram-send',       (req, res) => telegramSend(req, res));
 app.all('/api/update-field',        (req, res) => updateField(req, res));
 app.all('/api/verify',              (req, res) => verify(req, res));
+app.all('/api/assign-memo-project', (req, res) => assignMemoProject(req, res));
 app.all('/api/admin/create-user',   (req, res) => createUser(req, res));
 
 // Serve static built files
