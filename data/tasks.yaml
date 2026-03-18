@@ -43,7 +43,7 @@ tasks:
     updated_at: 2026-03-16T13:10:00.000Z
   - id: notion-32259b38371a81e1
     title: Chelimitless website redesign
-    status: done
+    status: in-progress
     priority: high
     type: website
     platforms:
@@ -57,7 +57,7 @@ tasks:
       - website
       - design
     notion_url: https://www.notion.so/Chelimitless-website-redesign-32259b38371a81e1a142e7a575781515
-    updated_at: 2026-03-18T15:52:03.337Z
+    updated_at: 2026-03-18T15:52:05.714Z
   - id: notion-32259b38371a81d8
     title: NanoBanana — Walmart listing review
     status: done
