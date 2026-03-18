@@ -33,12 +33,12 @@ projects:
     liveUrl: https://benefitsforyoullc.com/
     repoUrl: ""
   - id: capture-build-connect-capture-build-connect
-    name: TED New Site
+    name: TED-Associates V2
     clientId: capture-build-connect
     owner: Anton
     stage: Internal
     status: Active
-    lastUpdate: 2026-03-14
+    lastUpdate: 2026-03-17
     summary: Active
     previewUrl: https://capture-build-connect.lovable.app
     liveUrl: https://capture-build-connect.lovable.app
@@ -534,13 +534,13 @@ projects:
     owner: Anton
     stage: Internal
     status: Partner project with Mark Green. V2 site.
-    lastUpdate: 2026-03-05
+    lastUpdate: 2026-03-17
     summary: Partner project with Mark Green. V2 site.
     previewUrl: https://stratpath.webdezigns.ai/
     liveUrl: https://stratpath.webdezigns.ai/
-    repoUrl: ""
     rank: 11
     priority: high
+    brain: {}
   - id: ted-associates-ted-associates
     name: Ted Associates
     clientId: ted-associates
@@ -667,7 +667,7 @@ projects:
   - id: g-wallet-usdt
     name: G-Wallet (USDT Global Wallet)
     clientId: akilli-pollee
-    owner: Anton
+    owner: Akili Polee
     status: Partner Project
     lastUpdate: 2026-03-17
     summary: Merchant-focused stablecoin settlement infrastructure platform.
@@ -677,6 +677,7 @@ projects:
     contacts:
       - name: Akili Polee
     brain: {}
+    stage: Lead
   - id: fund-and-grow-partner
     name: Fund & Grow Partner Hub
     clientId: fund-and-grow
