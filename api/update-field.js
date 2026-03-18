@@ -62,6 +62,7 @@ export default async function handler(req, res) {
   const action = req.body?.action;
   if (action === 'create-project') return handleCreateProject(req, res);
   if (action === 'link-calls')     return handleLinkCalls(req, res);
+  if (action === 'archive-project') return handleArchiveProject(req, res);
   return handleUpdateField(req, res);
 }
 
@@ -214,6 +215,33 @@ async function handleLinkCalls(req, res) {
     }
   } catch (err) {
     console.error('link-calls error:', err);
+    return res.status(500).json({ error: err.message });
+  }
+}
+
+async function handleArchiveProject(req, res) {
+  const { id } = req.body || {};
+  if (!id) return res.status(400).json({ error: 'Missing project id' });
+
+  try {
+    const { content, sha } = await ghGet('data/projects.yaml');
+    const data = parse(content);
+    const projects = data.projects || [];
+    const idx = projects.findIndex(p => p.id === id);
+    if (idx === -1) return res.status(404).json({ error: `Project not found: ${id}` });
+
+    projects[idx].archived = true;
+
+    const newYaml = stringify(data, { lineWidth: 0 });
+    const result = await ghPut('data/projects.yaml', newYaml, sha, `dashboard: archive project ${id}`);
+
+    if (result.content) {
+      return res.status(200).json({ ok: true, archived: true });
+    } else {
+      return res.status(500).json({ error: 'GitHub push failed', detail: result.message });
+    }
+  } catch (err) {
+    console.error('archive-project error:', err);
     return res.status(500).json({ error: err.message });
   }
 }
