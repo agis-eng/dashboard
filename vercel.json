@@ -1,8 +1,7 @@
 {
-  "buildCommand": "node scripts/check-vercel-functions.mjs && npm run build",
-  "outputDirectory": "dist",
-  "rewrites": [
-    { "source": "/api/telegram-messages", "destination": "/api/telegram" },
-    { "source": "/api/telegram-send", "destination": "/api/telegram" }
-  ]
+    "buildCommand": "npm run build",
+    "outputDirectory": "dist",
+    "rewrites": [
+          { "source": "/api/:path*", "destination": "https://dashboard-production-0dec.up.railway.app/api/:path*" }
+    ]
 }
