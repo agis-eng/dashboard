@@ -676,6 +676,20 @@ projects:
     priority: high
     contacts:
       - name: Akili Polee
+    notes: |
+      Core Concept: Global ecosystem exclusively for USDT (Tether) management. Fast, simple, cost-effective p2p and merchant payments.
+      Unique Differentiators: Exclusively USDT. Off-chain transfers between users (no ETH/TRX gas fees, no network congestion, instant). Accessible worldwide (unlike Cash App/Zelle).
+      Revenue Model: 0.25% flat fee per transaction. 60% of system revenue is redistributed to the community.
+      Passive Income (Node Holders): Users can own digital nodes (Entry, Premium, Master) acting as virtual ATMs. Generates indefinite daily passive income from transaction volume. No selling or recruiting required.
+      Security & Trust: Built on proven blockchain, USDT backed 1:1 by US dollar (no speculation). Transparent leadership with live events and real-time support.
+    tags:
+      - G-Wallet
+      - USDT
+      - Stablecoin
+      - Global Payments
+      - Passive Income
+      - Node Holder
+      - Blockchain
     brain: {}
     stage: Lead
   - id: fund-and-grow-partner
