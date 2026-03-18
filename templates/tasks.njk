@@ -3,7 +3,9 @@
 <div class="task-card priority-{{ task.priority }}"
      data-search-item="tasks"
      data-status="{{ task.status }}"
-     data-search-text="{{ (task.title + ' ' + (task.client or '') + ' ' + (task.project or '') + ' ' + (task.assignee or '') + ' ' + (task.type or '') + ' ' + (task.tags | join(' ')  )) | lower }}">
+     data-task-id="{{ task.id }}"
+     data-search-text="{{ (task.title + ' ' + (task.client or '') + ' ' + (task.project or '') + ' ' + (task.assignee or '') + ' ' + (task.type or '') + ' ' + (task.tags | join(' ')  )) | lower }}"
+     draggable="true">
 
   <div class="task-card-top">
     <h4 class="task-title">
@@ -14,6 +16,7 @@
       {% endif %}
     </h4>
     <div class="task-badges">
+      <button class="task-delete-btn" onclick="deleteTask('{{ task.id }}')" title="Delete task">×</button>
       <span class="task-type-badge type-{{ task.type }}">{{ task.type }}</span>
       {% if task.priority == "high" %}<span class="task-priority-dot priority-dot-high" title="High priority">●</span>{% endif %}
     </div>
@@ -36,9 +39,12 @@
   </div>
 
   <div class="task-footer">
-    {% if task.assignee %}
-      <span class="task-assignee">{{ task.assignee[0] | upper }}</span>
-    {% endif %}
+    <select class="task-assignee-select" onchange="updateTaskAssignee('{{ task.id }}', this.value)">
+      <option value="" {% if not task.assignee %}selected{% endif %}>Unassigned</option>
+      <option value="Erik" {% if task.assignee == "Erik" %}selected{% endif %}>Erik</option>
+      <option value="Atlas" {% if task.assignee == "Atlas" %}selected{% endif %}>Atlas</option>
+      <option value="Anton" {% if task.assignee == "Anton" %}selected{% endif %}>Anton</option>
+    </select>
     <div class="task-footer-right">
       {% if task.due_date %}
         <span class="task-due muted">{{ task.due_date | date('MMM d') }}</span>
@@ -99,7 +105,7 @@
         <h3>Recurring</h3>
         <span class="kanban-col-count">{{ recurringTasks | length }}</span>
       </div>
-      <div class="kanban-col-body">
+      <div class="kanban-col-body" data-status="recurring">
         {% for task in recurringTasks %}
           {{ taskCard(task) }}
         {% else %}
@@ -116,7 +122,7 @@
         <h3>Backlog</h3>
         <span class="kanban-col-count">{{ backlogTasks | length }}</span>
       </div>
-      <div class="kanban-col-body">
+      <div class="kanban-col-body" data-status="backlog">
         {% for task in backlogTasks %}
           {{ taskCard(task) }}
         {% else %}
@@ -133,7 +139,7 @@
         <h3>In Progress</h3>
         <span class="kanban-col-count">{{ inProgressTasks | length }}</span>
       </div>
-      <div class="kanban-col-body">
+      <div class="kanban-col-body" data-status="in-progress">
         {% for task in inProgressTasks %}
           {{ taskCard(task) }}
         {% else %}
@@ -150,7 +156,7 @@
         <h3>Review</h3>
         <span class="kanban-col-count">{{ reviewTasks | length }}</span>
       </div>
-      <div class="kanban-col-body">
+      <div class="kanban-col-body" data-status="review">
         {% for task in reviewTasks %}
           {{ taskCard(task) }}
         {% else %}
@@ -167,7 +173,7 @@
         <h3>Done</h3>
         <span class="kanban-col-count">{{ doneTasks | length }}</span>
       </div>
-      <div class="kanban-col-body">
+      <div class="kanban-col-body" data-status="done">
         {% for task in doneTasks %}
           {{ taskCard(task) }}
         {% else %}
@@ -191,13 +197,141 @@
       document.querySelectorAll('.task-card').forEach(card => {
         card.style.display = (status === 'all' || card.getAttribute('data-status') === status) ? '' : 'none';
       });
-      document.querySelectorAll('.kanban-col').forEach(col => {
-        const visible = col.querySelectorAll('.task-card:not([style*="none"])').length;
-        const countEl = col.querySelector('.kanban-col-count');
-        if (countEl) countEl.textContent = visible;
-        const empty = col.querySelector('.kanban-empty');
-        if (empty) empty.style.display = visible === 0 ? 'block' : 'none';
-      });
+      updateColumnCounts();
     });
   });
+
+  // Update column counts and empty states
+  function updateColumnCounts() {
+    document.querySelectorAll('.kanban-col').forEach(col => {
+      const visible = col.querySelectorAll('.task-card:not([style*="none"])').length;
+      const countEl = col.querySelector('.kanban-col-count');
+      if (countEl) countEl.textContent = visible;
+      const empty = col.querySelector('.kanban-empty');
+      if (empty) empty.style.display = visible === 0 ? 'block' : 'none';
+    });
+  }
+
+  // Drag and drop functionality
+  let draggedElement = null;
+
+  document.addEventListener('dragstart', (e) => {
+    if (e.target.classList.contains('task-card')) {
+      draggedElement = e.target;
+      e.target.classList.add('dragging');
+      e.dataTransfer.setData('text/plain', e.target.getAttribute('data-task-id'));
+    }
+  });
+
+  document.addEventListener('dragend', (e) => {
+    if (e.target.classList.contains('task-card')) {
+      e.target.classList.remove('dragging');
+      draggedElement = null;
+    }
+  });
+
+  document.querySelectorAll('.kanban-col-body').forEach(colBody => {
+    colBody.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      colBody.classList.add('drag-over');
+    });
+
+    colBody.addEventListener('dragleave', (e) => {
+      if (!colBody.contains(e.relatedTarget)) {
+        colBody.classList.remove('drag-over');
+      }
+    });
+
+    colBody.addEventListener('drop', (e) => {
+      e.preventDefault();
+      colBody.classList.remove('drag-over');
+
+      if (draggedElement) {
+        const taskId = e.dataTransfer.getData('text/plain');
+        const newStatus = colBody.getAttribute('data-status');
+        const oldStatus = draggedElement.getAttribute('data-status');
+
+        if (newStatus !== oldStatus) {
+          updateTaskStatus(taskId, newStatus, draggedElement, colBody);
+        }
+      }
+    });
+  });
+
+  // Update task status via API
+  async function updateTaskStatus(taskId, newStatus, taskElement, targetColumn) {
+    try {
+      const response = await fetch('/api/update-task-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ taskId, newStatus })
+      });
+
+      if (response.ok) {
+        // Move the element to the target column
+        targetColumn.appendChild(taskElement);
+        taskElement.setAttribute('data-status', newStatus);
+
+        // Hide empty message in target column
+        const targetEmpty = targetColumn.querySelector('.kanban-empty');
+        if (targetEmpty) targetEmpty.style.display = 'none';
+
+        updateColumnCounts();
+      } else {
+        throw new Error('Failed to update task status');
+      }
+    } catch (error) {
+      console.error('Error updating task status:', error);
+      alert('Failed to update task status');
+    }
+  }
+
+  // Delete task functionality
+  async function deleteTask(taskId) {
+    if (!confirm('Are you sure you want to delete this task?')) return;
+
+    try {
+      const response = await fetch('/api/delete-task', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ taskId })
+      });
+
+      if (response.ok) {
+        // Remove the task card from DOM
+        const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
+        if (taskCard) {
+          taskCard.remove();
+          updateColumnCounts();
+        }
+      } else {
+        throw new Error('Failed to delete task');
+      }
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      alert('Failed to delete task');
+    }
+  }
+
+  // Update task assignee
+  async function updateTaskAssignee(taskId, assignee) {
+    try {
+      const response = await fetch('/api/update-field', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          entityType: 'task',
+          entityId: taskId,
+          updates: { assignee: assignee || null }
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update assignee');
+      }
+    } catch (error) {
+      console.error('Error updating assignee:', error);
+      alert('Failed to update assignee');
+    }
+  }
 </script>

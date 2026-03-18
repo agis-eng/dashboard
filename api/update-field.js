@@ -72,8 +72,8 @@ async function handleUpdateField(req, res) {
     return res.status(400).json({ error: 'Missing entityType, entityId, or updates' });
   }
 
-  const fileMap = { project: 'data/projects.yaml', partner: 'data/partners.yaml', client: 'data/clients.yaml' };
-  const keyMap  = { project: 'projects', partner: 'partners', client: 'clients' };
+  const fileMap = { project: 'data/projects.yaml', partner: 'data/partners.yaml', client: 'data/clients.yaml', task: 'data/tasks.yaml' };
+  const keyMap  = { project: 'projects', partner: 'partners', client: 'clients', task: 'tasks' };
   const yamlFile = fileMap[entityType];
   const rootKey  = keyMap[entityType];
   if (!yamlFile) return res.status(400).json({ error: `Unknown entityType: ${entityType}` });

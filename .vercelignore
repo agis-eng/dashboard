@@ -1,1 +1,3 @@
 api/admin/
+api/delete-task.js
+api/update-task-status.js
