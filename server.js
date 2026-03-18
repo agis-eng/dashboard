@@ -15,6 +15,7 @@ import telegramSend    from './api/telegram-send.js';
 import updateField       from './api/update-field.js';
 import verify            from './api/verify.js';
 import assignMemoProject from './api/assign-memo-project.js';
+import agentStatus from ;
 import createUser        from './api/admin/create-user.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
