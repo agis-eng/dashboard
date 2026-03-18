@@ -170,6 +170,42 @@
         <span class="editor-save-status" id="es-{{ project.id }}"></span>
       </div>
     </div>
+
+    {# ── Affiliate / Revenue Section ── #}
+    <section class="affiliate-section">
+      <div class="affiliate-header">
+        <span>💰 Affiliate / Revenue</span>
+        <button class="btn btn-ghost btn-sm" onclick="toggleAffiliateEditor('{{ project.id }}')">Edit</button>
+      </div>
+      {% if project.affiliate %}
+      <dl class="meta">
+        <div><dt>Status</dt><dd>{{ project.affiliate.status or '—' }}</dd></div>
+        <div><dt>Commission</dt><dd>{% if project.affiliate.commission_type == 'pct' %}{{ project.affiliate.commission_pct }}%{% elif project.affiliate.commission_type == 'flat' %}${{ project.affiliate.commission_flat }} flat{% else %}—{% endif %}</dd></div>
+        <div><dt>Avg deal</dt><dd>{% if project.affiliate.avg_deal_size %}${{ project.affiliate.avg_deal_size | formatNum }}{% else %}—{% endif %}</dd></div>
+        <div><dt>Monthly leads</dt><dd>{{ project.affiliate.monthly_leads or '—' }}</dd></div>
+        <div><dt>Monthly potential</dt><dd>{% if project.affiliate.monthly_potential %}${{ project.affiliate.monthly_potential | formatNum }}{% else %}—{% endif %}</dd></div>
+      </dl>
+      {% if project.affiliate.notes %}<p class="muted">{{ project.affiliate.notes }}</p>{% endif %}
+      {% else %}
+      <p class="muted">No affiliate data yet. Click Edit to add.</p>
+      {% endif %}
+      <div class="affiliate-editor" id="aff-editor-{{ project.id }}" style="display:none">
+        <div class="editor-grid">
+          <div class="editor-field"><label>Status</label><select class="aff-status"><option value="">None</option><option value="active">Active</option><option value="pending">Pending</option><option value="paused">Paused</option></select></div>
+          <div class="editor-field"><label>Commission type</label><select class="aff-type"><option value="pct">Percentage %</option><option value="flat">Flat $ per sale</option></select></div>
+          <div class="editor-field"><label>Commission %</label><input type="number" class="aff-pct" placeholder="e.g. 20"></div>
+          <div class="editor-field"><label>Flat commission $</label><input type="number" class="aff-flat" placeholder="e.g. 50"></div>
+          <div class="editor-field"><label>Avg deal size $</label><input type="number" class="aff-deal" placeholder="e.g. 500"></div>
+          <div class="editor-field"><label>Monthly leads</label><input type="number" class="aff-leads" placeholder="e.g. 10"></div>
+          <div class="editor-field editor-full"><label>Notes</label><input type="text" class="aff-notes" placeholder="e.g. 30-day cookie"></div>
+        </div>
+        <div class="editor-actions">
+          <button class="btn btn-primary btn-sm" onclick="saveAffiliate('{{ project.id }}', this)">Save</button>
+          <button class="btn btn-ghost btn-sm" onclick="toggleAffiliateEditor('{{ project.id }}')">Cancel</button>
+          <span id="aff-status-{{ project.id }}"></span>
+        </div>
+      </div>
+    </section>
   </article>
 {% else %}
   <p class="muted">No live projects yet.</p>
@@ -675,4 +711,141 @@ async function saveProjectEditor(id, btn) {
   }
 }
 
+/* ── Affiliate Editor Functions ── */
+function toggleAffiliateEditor(projectId) {
+  var editor = document.getElementById('aff-editor-' + projectId);
+  if (!editor) return;
+
+  if (editor.style.display === 'none') {
+    // Opening editor - populate current values
+    populateAffiliateEditor(projectId);
+    editor.style.display = 'block';
+  } else {
+    // Closing editor
+    editor.style.display = 'none';
+    // Clear any status message
+    var statusEl = document.getElementById('aff-status-' + projectId);
+    if (statusEl) statusEl.textContent = '';
+  }
+}
+
+function populateAffiliateEditor(projectId) {
+  // Find the current affiliate data from the template data
+  var affiliateData = {
+    {% for project in projects %}
+    '{{ project.id }}': {{ (project.affiliate if project.affiliate else {}) | dump }}{% if not loop.last %},{% endif %}
+    {% endfor %}
+  };
+
+  var data = affiliateData[projectId] || {};
+  var editor = document.getElementById('aff-editor-' + projectId);
+  if (!editor) return;
+
+  // Populate form fields
+  var statusSelect = editor.querySelector('.aff-status');
+  var typeSelect = editor.querySelector('.aff-type');
+  var pctInput = editor.querySelector('.aff-pct');
+  var flatInput = editor.querySelector('.aff-flat');
+  var dealInput = editor.querySelector('.aff-deal');
+  var leadsInput = editor.querySelector('.aff-leads');
+  var notesInput = editor.querySelector('.aff-notes');
+
+  if (statusSelect) statusSelect.value = data.status || '';
+  if (typeSelect) typeSelect.value = data.commission_type || 'pct';
+  if (pctInput) pctInput.value = data.commission_pct || '';
+  if (flatInput) flatInput.value = data.commission_flat || '';
+  if (dealInput) dealInput.value = data.avg_deal_size || '';
+  if (leadsInput) leadsInput.value = data.monthly_leads || '';
+  if (notesInput) notesInput.value = data.notes || '';
+}
+
+async function saveAffiliate(projectId, btn) {
+  var editor = document.getElementById('aff-editor-' + projectId);
+  var statusEl = document.getElementById('aff-status-' + projectId);
+  if (!editor) return;
+
+  btn.disabled = true;
+  if (statusEl) {
+    statusEl.textContent = '⟳ Saving…';
+    statusEl.style.color = 'var(--muted)';
+  }
+
+  // Collect form data
+  var statusSelect = editor.querySelector('.aff-status');
+  var typeSelect = editor.querySelector('.aff-type');
+  var pctInput = editor.querySelector('.aff-pct');
+  var flatInput = editor.querySelector('.aff-flat');
+  var dealInput = editor.querySelector('.aff-deal');
+  var leadsInput = editor.querySelector('.aff-leads');
+  var notesInput = editor.querySelector('.aff-notes');
+
+  var status = statusSelect ? statusSelect.value.trim() : '';
+  var commissionType = typeSelect ? typeSelect.value : 'pct';
+  var commissionPct = pctInput ? parseFloat(pctInput.value) || null : null;
+  var commissionFlat = flatInput ? parseFloat(flatInput.value) || null : null;
+  var avgDealSize = dealInput ? parseFloat(dealInput.value) || null : null;
+  var monthlyLeads = leadsInput ? parseInt(leadsInput.value) || null : null;
+  var notes = notesInput ? notesInput.value.trim() : '';
+
+  // Calculate monthly potential
+  var monthlyPotential = null;
+  if (avgDealSize && monthlyLeads) {
+    if (commissionType === 'pct' && commissionPct) {
+      monthlyPotential = Math.round((commissionPct / 100) * avgDealSize * monthlyLeads);
+    } else if (commissionType === 'flat' && commissionFlat) {
+      monthlyPotential = commissionFlat * monthlyLeads;
+    }
+  }
+
+  // Build affiliate object
+  var affiliateData = {};
+  if (status) affiliateData.status = status;
+  if (commissionType) affiliateData.commission_type = commissionType;
+  if (commissionPct !== null) affiliateData.commission_pct = commissionPct;
+  if (commissionFlat !== null) affiliateData.commission_flat = commissionFlat;
+  if (avgDealSize !== null) affiliateData.avg_deal_size = avgDealSize;
+  if (monthlyLeads !== null) affiliateData.monthly_leads = monthlyLeads;
+  if (monthlyPotential !== null) affiliateData.monthly_potential = monthlyPotential;
+  if (notes) affiliateData.notes = notes;
+
+  try {
+    var response = await fetch('/api/update-field', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        entityType: 'project',
+        entityId: projectId,
+        updates: {
+          affiliate: Object.keys(affiliateData).length ? affiliateData : null
+        }
+      })
+    });
+
+    var result = await response.json();
+
+    if (result.ok) {
+      if (statusEl) {
+        statusEl.textContent = '✓ Saved!';
+        statusEl.style.color = '#4ade80';
+        setTimeout(function() {
+          statusEl.textContent = '';
+          // Refresh the page to show updated data
+          window.location.reload();
+        }, 1500);
+      }
+    } else {
+      if (statusEl) {
+        statusEl.textContent = '✗ ' + (result.error || 'Error');
+        statusEl.style.color = '#f87171';
+      }
+    }
+  } catch (error) {
+    if (statusEl) {
+      statusEl.textContent = '✗ Network error';
+      statusEl.style.color = '#f87171';
+    }
+  }
+
+  btn.disabled = false;
+}
 </script>
