@@ -333,30 +333,60 @@
       </header>
       <ul class="activity-list">
         {% for memo in recentMemos %}
-          <li>
-            <strong>
-              {% if memo.notion_url %}<a href="{{ memo.notion_url }}" target="_blank">{{ memo.title }}</a>
-              {% else %}{{ memo.title }}{% endif %}
-            </strong>
-            <p>{{ memo.summary | truncate(80) }}</p>
-            <span class="muted">
-              {{ memo.date | date('MMM d, h:mm a') }}
-              · <span class="status-pill {{ memo.type }}">{{ memo.type }}</span>
-            </span>
-            <div style="margin-top: 8px; display: flex; align-items: center; gap: 8px;">
-              <select class="memo-project-select" data-memo-id="{{ memo.id }}" style="font-size: 12px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 3px;">
-                <option value="">Attach to project...</option>
-                {% for project in projects %}
-                  <option value="{{ project.name }}"{% if memo.project_match === project.name %} selected{% endif %}>{{ project.name }}</option>
-                {% endfor %}
-              </select>
-              {% if memo.project_match %}
-                <span class="memo-project-display" style="font-size: 12px; color: #666;">
-                  Attached to: <strong>{{ memo.project_match }}</strong>
-                  <button class="memo-clear-project" data-memo-id="{{ memo.id }}" style="margin-left: 4px; background: none; border: none; color: #999; cursor: pointer; font-size: 10px;" title="Clear assignment">×</button>
+          <li data-memo-id="{{ memo.id }}">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div style="flex: 1;">
+                <strong>
+                  {% if memo.notion_url %}<a href="{{ memo.notion_url }}" target="_blank">{{ memo.title }}</a>
+                  {% else %}{{ memo.title }}{% endif %}
+                </strong>
+                <p>{{ memo.summary | truncate(80) }}</p>
+                <span class="muted">
+                  {{ memo.date | date('MMM d, h:mm a') }}
+                  · <span class="status-pill {{ memo.type }}">{{ memo.type }}</span>
                 </span>
-              {% endif %}
-              <span class="memo-save-status" id="memo-status-{{ memo.id }}" style="font-size: 12px;"></span>
+                <div style="margin-top: 8px; display: flex; align-items: center; gap: 8px;">
+                  <select class="memo-project-select" data-memo-id="{{ memo.id }}" style="font-size: 12px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 3px;">
+                    <option value="">Attach to project...</option>
+                    {% for project in projects %}
+                      <option value="{{ project.name }}"{% if memo.project_match === project.name %} selected{% endif %}>{{ project.name }}</option>
+                    {% endfor %}
+                  </select>
+                  {% if memo.project_match %}
+                    <span class="memo-project-display" style="font-size: 12px; color: #666;">
+                      Attached to: <strong>{{ memo.project_match }}</strong>
+                      <button class="memo-clear-project" data-memo-id="{{ memo.id }}" style="margin-left: 4px; background: none; border: none; color: #999; cursor: pointer; font-size: 10px;" title="Clear assignment">×</button>
+                    </span>
+                  {% endif %}
+                  <span class="memo-save-status" id="memo-status-{{ memo.id }}" style="font-size: 12px;"></span>
+                </div>
+                {% if memo.action_items and memo.action_items.length > 0 %}
+                  <div style="margin-top: 8px;">
+                    <strong style="font-size: 0.9em; color: #666;">Action Items:</strong>
+                    <ul style="margin: 4px 0; padding-left: 20px; font-size: 0.9em;">
+                      {% for item in memo.action_items %}
+                        <li style="margin: 2px 0;">
+                          {{ item }}
+                          <button
+                            class="add-task-btn"
+                            data-action-item="{{ item }}"
+                            data-memo-title="{{ memo.title }}"
+                            style="margin-left: 8px; padding: 2px 6px; font-size: 0.8em; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer;"
+                            onclick="addTaskFromActionItem(this)"
+                          >+ Task</button>
+                          <span class="task-status" style="margin-left: 4px; font-size: 0.8em; color: #28a745;"></span>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                {% endif %}
+              </div>
+              <button
+                class="delete-memo-btn"
+                data-memo-id="{{ memo.id }}"
+                style="margin-left: 8px; padding: 4px 8px; font-size: 0.8em; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer;"
+                onclick="deleteMemo(this)"
+              >Delete</button>
             </div>
           </li>
         {% else %}
@@ -1213,6 +1243,80 @@ document.addEventListener('click', function(e) {
     assignMemoToProject(memoId, null);
   }
 });
+
+/* ── Voice memo delete ── */
+async function deleteMemo(btn) {
+  const memoId = btn.dataset.memoId;
+  const memoLi = btn.closest('li');
+
+  if (!confirm('Are you sure you want to delete this voice memo? This action cannot be undone.')) {
+    return;
+  }
+
+  btn.textContent = 'Deleting...';
+  btn.disabled = true;
+
+  try {
+    const response = await fetch('/api/delete-voice-memo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ memoId: memoId })
+    });
+
+    const result = await response.json();
+
+    if (result.ok) {
+      // Remove from DOM on success
+      memoLi.remove();
+    } else {
+      alert('Failed to delete memo: ' + result.error);
+      btn.textContent = 'Delete';
+      btn.disabled = false;
+    }
+  } catch (error) {
+    alert('Error deleting memo: ' + error.message);
+    btn.textContent = 'Delete';
+    btn.disabled = false;
+  }
+}
+
+/* ── Add task from action item ── */
+async function addTaskFromActionItem(btn) {
+  const actionItem = btn.dataset.actionItem;
+  const memoTitle = btn.dataset.memoTitle;
+  const statusSpan = btn.nextElementSibling;
+
+  btn.textContent = 'Adding...';
+  btn.disabled = true;
+
+  try {
+    const response = await fetch('/api/add-task', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: actionItem,
+        notes: '',
+        source: memoTitle
+      })
+    });
+
+    const result = await response.json();
+
+    if (result.ok) {
+      btn.style.display = 'none';
+      statusSpan.textContent = 'Added ✓';
+      statusSpan.style.display = 'inline';
+    } else {
+      alert('Failed to add task: ' + result.error);
+      btn.textContent = '+ Task';
+      btn.disabled = false;
+    }
+  } catch (error) {
+    alert('Error adding task: ' + error.message);
+    btn.textContent = '+ Task';
+    btn.disabled = false;
+  }
+}
 </script>
 
 {# ── Create / Edit Project modal ── #}
