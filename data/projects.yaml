@@ -43,7 +43,7 @@ projects:
     previewUrl: https://capture-build-connect.lovable.app
     liveUrl: https://capture-build-connect.lovable.app
     rank: 3
-    priority: high
+    priority: medium
     affiliate:
       active: false
       program_name: Capture Build Connect Referral
@@ -807,7 +807,7 @@ projects:
     stage: Lead
     status: Partner
     lastUpdate: 2026-03-17
-    summary: "$170M luxury wellness resort development on a private island. Primary funding strategy via Wall Street development-backed bond financing."
+    summary: $170M luxury wellness resort development on a private island. Primary funding strategy via Wall Street development-backed bond financing.
     priority: high
     notes: |
       Business Plan & Operations (Document 3):
@@ -832,7 +832,6 @@ projects:
       - name: Teresa A. Holden
       - name: Subroto Banerjee
       - name: Dr. J.R. Raju
-
   - id: kirby-guards
     name: Kirby Guards (Insurance Bot Brokerage)
     clientId: internal
