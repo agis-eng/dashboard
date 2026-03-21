@@ -22,6 +22,9 @@ import addTask           from './api/add-task.js';
 import deleteVoiceMemo   from './api/delete-voice-memo.js';
 import agentStatus       from './api/agent-status.js';
 import createUser        from './api/admin/create-user.js';
+import projectsMlpAnton  from './api/projects-mlp-anton.js';
+import projectsBrain     from './api/projects-brain.js';
+import brainSearch       from './api/brain-search.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -54,6 +57,9 @@ app.all('/api/add-task',            (req, res) => addTask(req, res));
 app.all('/api/delete-voice-memo',   (req, res) => deleteVoiceMemo(req, res));
 app.all('/api/agent-status',        (req, res) => agentStatus(req, res));
 app.all('/api/admin/create-user',   (req, res) => createUser(req, res));
+app.all('/api/projects/mlp-anton',  (req, res) => projectsMlpAnton(req, res));
+app.all('/api/projects-brain',      (req, res) => projectsBrain(req, res));
+app.all('/api/brain-search',        (req, res) => brainSearch(req, res));
 
 // Serve static built files
 app.use(express.static(path.join(__dirname, 'dist')));
