@@ -15,7 +15,6 @@ import telegramMessages from './api/telegram-messages.js';
 import telegramSend    from './api/telegram-send.js';
 import updateField       from './api/update-field.js';
 import verify            from './api/verify.js';
-import assignMemoProject from './api/assign-memo-project.js';
 import deleteTask        from './api/delete-task.js';
 import updateTaskStatus  from './api/update-task-status.js';
 import addTask           from './api/add-task.js';
