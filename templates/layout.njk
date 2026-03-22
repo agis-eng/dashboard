@@ -13,6 +13,27 @@
       {% if subtitle %}<p class="site-subtitle">{{ subtitle }}</p>{% endif %}
     </div>
     <div class="site-meta">
+      {% if showNav %}
+      <div class="profile-switcher" id="profileSwitcher">
+        <button class="profile-btn" id="profileBtn" onclick="toggleProfileMenu()">
+          <span class="profile-avatar" id="profileAvatar">E</span>
+          <span class="profile-name" id="profileName">Erik</span>
+          <span class="profile-chevron">▾</span>
+        </button>
+        <div class="profile-menu" id="profileMenu">
+          <button class="profile-option" data-profile="erik" onclick="switchProfile('erik')">
+            <span class="profile-option-avatar">E</span> Erik
+          </button>
+          <button class="profile-option" data-profile="anton" onclick="switchProfile('anton')">
+            <span class="profile-option-avatar">A</span> Anton
+          </button>
+          <div class="profile-divider"></div>
+          <button class="profile-option" data-profile="all" onclick="switchProfile('all')">
+            <span class="profile-option-avatar">⊛</span> All profiles
+          </button>
+        </div>
+      </div>
+      {% endif %}
       <span>Updated {{ generatedAt }}</span>
       {% if showNav %}
       <nav class="site-nav" aria-label="Primary">
@@ -24,6 +45,7 @@
         <a href="{{ basePath }}project-pages/index.html" class="{% if activeNav == 'project-pages' %}active{% endif %}" {% if activeNav == 'project-pages' %}aria-current="page"{% endif %}>Project Pages</a>
                 <a href="{{ basePath }}voice-memos/index.html" class="{% if activeNav == 'voice-memos' %}active{% endif %}" {% if activeNav == 'voice-memos' %}aria-current="page"{% endif %}>Voice Memos</a>
         <a href="{{ basePath }}leads/index.html" class="{% if activeNav == 'leads' %}active{% endif %}" {% if activeNav == 'leads' %}aria-current="page"{% endif %}>Leads</a>
+        <a href="{{ basePath }}chat/index.html" class="{% if activeNav == 'chat' %}active{% endif %}" {% if activeNav == 'chat' %}aria-current="page"{% endif %}>Chat</a>
       </nav>
       {% endif %}
     </div>
@@ -77,10 +99,72 @@
       });
     };
 
+    // ── Profile Switcher ─────────────────────────────────────────────────
+    var PROFILES = {
+      erik:  { name: 'Erik',  avatar: 'E', color: 'var(--accent)' },
+      anton: { name: 'Anton', avatar: 'A', color: 'var(--accent-2)' },
+      all:   { name: 'All',   avatar: '⊛', color: 'var(--muted)' }
+    };
+
+    function getActiveProfile() {
+      return localStorage.getItem('atlas_profile') || 'all';
+    }
+
+    function toggleProfileMenu() {
+      document.getElementById('profileSwitcher').classList.toggle('open');
+    }
+
+    function switchProfile(profileId) {
+      localStorage.setItem('atlas_profile', profileId);
+      applyProfile(profileId);
+      document.getElementById('profileSwitcher').classList.remove('open');
+    }
+
+    function applyProfile(profileId) {
+      var profile = PROFILES[profileId] || PROFILES.all;
+      var avatarEl = document.getElementById('profileAvatar');
+      var nameEl = document.getElementById('profileName');
+      if (avatarEl) {
+        avatarEl.textContent = profile.avatar;
+        avatarEl.style.background = profile.color;
+      }
+      if (nameEl) nameEl.textContent = profile.name;
+
+      // Mark active option
+      document.querySelectorAll('.profile-option').forEach(function(opt) {
+        opt.classList.toggle('active', opt.getAttribute('data-profile') === profileId);
+      });
+
+      // Filter items with data-profile-owner attribute
+      document.querySelectorAll('[data-profile-owner]').forEach(function(el) {
+        if (profileId === 'all') {
+          el.setAttribute('data-profile-hidden', 'false');
+        } else {
+          var owner = (el.getAttribute('data-profile-owner') || '').toLowerCase();
+          var matches = owner.includes(profileId);
+          el.setAttribute('data-profile-hidden', matches ? 'false' : 'true');
+        }
+      });
+
+      // Update visible counts after filtering
+      if (typeof updateColumnCounts === 'function') updateColumnCounts();
+    }
+
+    // Close profile menu when clicking outside
+    document.addEventListener('click', function(e) {
+      var switcher = document.getElementById('profileSwitcher');
+      if (switcher && !switcher.contains(e.target)) {
+        switcher.classList.remove('open');
+      }
+    });
+
     document.addEventListener('DOMContentLoaded', () => {
       initCardPortals();
       initSearchFilters();
       initAtlasChat();
+      // Apply saved profile on load
+      var saved = getActiveProfile();
+      applyProfile(saved);
     });
 
     // ── Chat (Atlas + AGIS) ──────────────────────────────────────────────

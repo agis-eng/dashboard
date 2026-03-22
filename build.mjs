@@ -384,4 +384,14 @@ const voiceMemosHtml = renderPage('layout.njk', {
 });
 await writePage(path.join('voice-memos', 'index.html'), voiceMemosHtml);
 
+// Chat page (shell — all client-side)
+await fs.emptyDir(path.join(distDir, 'chat'));
+const chatHtml = renderPage('layout.njk', {
+  title: 'Chat',
+  subtitle: 'Talk to OpenClaw in real-time',
+  generatedAt, basePath: '../', showNav: true, activeNav: 'chat',
+  content: renderPage('chat.njk', {})
+});
+await writePage(path.join('chat', 'index.html'), chatHtml);
+
 console.log('Dashboard built:', distDir);

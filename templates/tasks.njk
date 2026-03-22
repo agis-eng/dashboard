@@ -4,6 +4,7 @@
      data-search-item="tasks"
      data-status="{{ task.status }}"
      data-task-id="{{ task.id }}"
+     data-profile-owner="{{ task.assignee | lower }}"
      data-search-text="{{ (task.title + ' ' + (task.client or '') + ' ' + (task.project or '') + ' ' + (task.assignee or '') + ' ' + (task.type or '') + ' ' + (task.tags | join(' ')  )) | lower }}"
      draggable="true">
 
@@ -239,7 +240,7 @@
   // Update column counts and empty states
   function updateColumnCounts() {
     document.querySelectorAll('.kanban-col').forEach(col => {
-      const visible = col.querySelectorAll('.task-card:not([style*="none"])').length;
+      const visible = col.querySelectorAll('.task-card:not([style*="none"]):not([data-profile-hidden="true"])').length;
       const countEl = col.querySelector('.kanban-col-count');
       if (countEl) countEl.textContent = visible;
       const empty = col.querySelector('.kanban-empty');

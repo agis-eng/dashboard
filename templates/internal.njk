@@ -36,6 +36,7 @@
                data-portal="./clients/{{ project.client.slug }}.html"
                data-search-item="projects"
                data-stage="{{ project.stage | lower | replace(' ', '-') }}"
+               data-profile-owner="{{ project.owner | lower }}"
                data-search-text="{{ (project.name + ' ' + (project.summary or '') + ' ' + (project.owner or '') + ' ' + (project.client.name or '') + ' ' + (project.stage or '') + ' ' + (project.status or '')) | lower }}">
         <div class="card-header">
           <div>
@@ -158,6 +159,27 @@
               <label>Repo URL</label>
               <input type="url" class="ef-repo" placeholder="https://github.com/...">
             </div>
+          </div>
+
+          {# ── Screenshot capture ── #}
+          <div class="screenshot-capture-section" data-noportal onclick="event.stopPropagation()">
+            <div class="screenshot-capture-row">
+              <button type="button" class="btn btn-ghost btn-sm screenshot-btn"
+                      onclick="captureScreenshot('{{ project.id }}', this)"
+                      data-preview-url="{{ project.previewUrl }}">
+                📸 Capture Screenshot
+              </button>
+              <span class="screenshot-status" id="ss-{{ project.id }}"></span>
+            </div>
+            {% if project.thumbnailUrl %}
+            <div class="screenshot-preview" id="sp-{{ project.id }}">
+              <img src="{{ project.thumbnailUrl }}" alt="Current screenshot" class="screenshot-thumb">
+            </div>
+            {% else %}
+            <div class="screenshot-preview" id="sp-{{ project.id }}" style="display:none">
+              <img src="" alt="Screenshot preview" class="screenshot-thumb">
+            </div>
+            {% endif %}
           </div>
 
           <div class="editor-contacts-section">
@@ -571,6 +593,78 @@ function collectContacts(projectId) {
       return c;
     })
     .filter(Boolean);
+}
+
+async function captureScreenshot(projectId, btn) {
+  var editor = document.getElementById('editor-' + projectId);
+  var statusEl = document.getElementById('ss-' + projectId);
+  var previewEl = document.getElementById('sp-' + projectId);
+
+  // Get URL from preview field (user may have edited it) or fallback to data attr
+  var url = '';
+  if (editor) {
+    url = editor.querySelector('.ef-preview').value.trim();
+  }
+  if (!url) {
+    url = btn.dataset.previewUrl || '';
+  }
+  if (!url) {
+    statusEl.textContent = 'No preview URL set';
+    statusEl.style.color = 'var(--danger, #f87171)';
+    return;
+  }
+
+  btn.disabled = true;
+  statusEl.textContent = '⟳ Capturing…';
+  statusEl.style.color = 'var(--muted)';
+
+  try {
+    var resp = await fetch('/api/screenshot', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: url, projectId: projectId })
+    });
+    var data = await resp.json();
+    if (!resp.ok) {
+      statusEl.textContent = data.error || 'Capture failed';
+      statusEl.style.color = 'var(--danger, #f87171)';
+      return;
+    }
+    statusEl.textContent = data.cached ? '✓ Cached (< 24h)' : '✓ Captured!';
+    statusEl.style.color = 'var(--accent)';
+    // Show the new screenshot
+    if (previewEl) {
+      var img = previewEl.querySelector('img');
+      if (img) img.src = data.imageUrl + '?t=' + Date.now();
+      previewEl.style.display = '';
+    }
+    // Update thumbnail in the card itself
+    var card = document.querySelector('[data-project-id="' + projectId + '"]');
+    if (card) {
+      var cardArticle = card.closest('article');
+      if (cardArticle) {
+        var thumbWrapper = cardArticle.querySelector('.thumb-wrapper');
+        if (thumbWrapper) {
+          thumbWrapper.querySelector('img').src = data.imageUrl + '?t=' + Date.now();
+        } else {
+          var wrapper = document.createElement('div');
+          wrapper.className = 'thumb-wrapper';
+          var newImg = document.createElement('img');
+          newImg.className = 'site-thumb';
+          newImg.src = data.imageUrl + '?t=' + Date.now();
+          newImg.alt = 'Preview screenshot';
+          wrapper.appendChild(newImg);
+          var headerEl = cardArticle.querySelector('.card-header');
+          if (headerEl) headerEl.after(wrapper);
+        }
+      }
+    }
+  } catch (err) {
+    statusEl.textContent = 'Network error';
+    statusEl.style.color = 'var(--danger, #f87171)';
+  } finally {
+    btn.disabled = false;
+  }
 }
 
 async function saveProjectEditor(id, btn) {

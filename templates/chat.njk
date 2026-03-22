@@ -1,0 +1,382 @@
+<style>
+  .oc-chat-page {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 10rem);
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .oc-chat-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0;
+  }
+  .oc-chat-header h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+  .oc-chat-status {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .oc-chat-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: oc-pulse 2s ease-in-out infinite;
+  }
+  @keyframes oc-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .oc-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.25rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    scroll-behavior: smooth;
+  }
+  .oc-messages::-webkit-scrollbar { width: 6px; }
+  .oc-messages::-webkit-scrollbar-track { background: transparent; }
+  .oc-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  .oc-msg {
+    max-width: 75%;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+  }
+  .oc-msg--user {
+    align-self: flex-end;
+    background: var(--accent-2);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+  }
+  .oc-msg--assistant {
+    align-self: flex-start;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+  }
+  .oc-msg-meta {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 0.35rem;
+    opacity: 0.8;
+  }
+  .oc-msg--user .oc-msg-meta { text-align: right; }
+
+  .oc-typing {
+    align-self: flex-start;
+    display: none;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.65rem 1rem;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    border-bottom-left-radius: 4px;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .oc-typing.visible { display: flex; }
+  .oc-typing-dots { display: flex; gap: 3px; }
+  .oc-typing-dots span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--muted);
+    animation: oc-dot 1.4s ease-in-out infinite;
+  }
+  .oc-typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .oc-typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes oc-dot {
+    0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+    40% { opacity: 1; transform: scale(1); }
+  }
+
+  .oc-empty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    gap: 0.5rem;
+    text-align: center;
+  }
+  .oc-empty-icon { font-size: 2.5rem; opacity: 0.4; }
+  .oc-empty p { margin: 0; font-size: 0.9rem; }
+
+  .oc-input-bar {
+    display: flex;
+    gap: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+  .oc-input {
+    flex: 1;
+    padding: 0.7rem 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--text);
+    font-size: 0.92rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+    resize: none;
+    min-height: 42px;
+    max-height: 120px;
+  }
+  .oc-input:focus { border-color: var(--accent); }
+  .oc-input::placeholder { color: var(--muted); }
+
+  .oc-send-btn {
+    padding: 0 1.1rem;
+    border-radius: 10px;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: #0f1115;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+  }
+  .oc-send-btn:hover { opacity: 0.85; }
+  .oc-send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+</style>
+
+<div class="oc-chat-page">
+  <div class="oc-chat-header">
+    <div>
+      <h2>OpenClaw</h2>
+      <div class="oc-chat-status">
+        <span class="oc-chat-status-dot"></span>
+        <span>Online</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="oc-messages" id="ocMessages">
+    <div class="oc-empty" id="ocEmpty">
+      <div class="oc-empty-icon">&#9672;</div>
+      <p>Start a conversation with OpenClaw</p>
+      <p style="font-size:0.8rem; opacity:0.7">Messages stream in real-time</p>
+    </div>
+  </div>
+
+  <div class="oc-typing" id="ocTyping">
+    <div class="oc-typing-dots"><span></span><span></span><span></span></div>
+    <span>OpenClaw is thinking&hellip;</span>
+  </div>
+
+  <form class="oc-input-bar" id="ocForm" onsubmit="return false;">
+    <textarea class="oc-input" id="ocInput" placeholder="Message OpenClaw&hellip;" rows="1"></textarea>
+    <button class="oc-send-btn" id="ocSendBtn" type="submit">Send</button>
+  </form>
+</div>
+
+<script>
+(function() {
+  var userId = localStorage.getItem('atlas_profile') || 'erik';
+  var conversationId = null;
+  var messageContainer = document.getElementById('ocMessages');
+  var emptyState = document.getElementById('ocEmpty');
+  var typingIndicator = document.getElementById('ocTyping');
+  var form = document.getElementById('ocForm');
+  var input = document.getElementById('ocInput');
+  var sendBtn = document.getElementById('ocSendBtn');
+
+  // Auto-resize textarea
+  input.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+  });
+
+  // Send on Enter (Shift+Enter for newline)
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  });
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    handleSend();
+  });
+
+  // Load existing conversation on page load
+  loadHistory();
+
+  async function loadHistory() {
+    try {
+      var url = '/api/chat-history?userId=' + encodeURIComponent(userId);
+      var res = await fetch(url);
+      if (!res.ok) return;
+      var data = await res.json();
+      if (data.conversations && data.conversations.length) {
+        // Load the most recent conversation
+        conversationId = data.conversations[data.conversations.length - 1];
+        var histRes = await fetch(url + '&conversationId=' + encodeURIComponent(conversationId));
+        if (!histRes.ok) return;
+        var histData = await histRes.json();
+        if (histData.messages && histData.messages.length) {
+          emptyState.style.display = 'none';
+          histData.messages.forEach(function(msg) {
+            appendMessage(msg.role, msg.text, msg.timestamp);
+          });
+          scrollToBottom();
+        }
+      }
+    } catch(e) { console.warn('Failed to load chat history:', e); }
+  }
+
+  function appendMessage(role, text, timestamp) {
+    var div = document.createElement('div');
+    div.className = 'oc-msg oc-msg--' + role;
+
+    var textEl = document.createElement('div');
+    textEl.textContent = text;
+    div.appendChild(textEl);
+
+    if (timestamp) {
+      var meta = document.createElement('div');
+      meta.className = 'oc-msg-meta';
+      var d = new Date(typeof timestamp === 'number' && timestamp > 1e12 ? timestamp : timestamp * 1000);
+      meta.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      div.appendChild(meta);
+    }
+
+    messageContainer.appendChild(div);
+    return div;
+  }
+
+  function createStreamingMessage() {
+    var div = document.createElement('div');
+    div.className = 'oc-msg oc-msg--assistant';
+
+    var textEl = document.createElement('div');
+    textEl.className = 'oc-stream-text';
+    div.appendChild(textEl);
+
+    var meta = document.createElement('div');
+    meta.className = 'oc-msg-meta';
+    meta.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    div.appendChild(meta);
+
+    messageContainer.appendChild(div);
+    return textEl;
+  }
+
+  function scrollToBottom() {
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+  }
+
+  function setLoading(on) {
+    sendBtn.disabled = on;
+    typingIndicator.classList.toggle('visible', on);
+    if (on) scrollToBottom();
+  }
+
+  async function handleSend() {
+    var text = input.value.trim();
+    if (!text) return;
+
+    input.value = '';
+    input.style.height = 'auto';
+    emptyState.style.display = 'none';
+
+    // Show user message immediately
+    appendMessage('user', text, Date.now());
+    scrollToBottom();
+    setLoading(true);
+
+    try {
+      // Send message to API
+      var res = await fetch('/api/chat-send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: userId,
+          message: text,
+          conversationId: conversationId
+        })
+      });
+
+      if (!res.ok) throw new Error('Send failed: ' + res.status);
+
+      var data = await res.json();
+      conversationId = data.conversationId;
+
+      // Open SSE stream for the AI response
+      streamResponse(data.responseId);
+
+    } catch(e) {
+      console.error('Send error:', e);
+      setLoading(false);
+      appendMessage('assistant', 'Sorry, something went wrong. Please try again.');
+      scrollToBottom();
+    }
+  }
+
+  function streamResponse(responseId) {
+    var streamEl = createStreamingMessage();
+    var fullText = '';
+
+    var url = '/api/chat-stream?responseId=' + encodeURIComponent(responseId)
+      + '&userId=' + encodeURIComponent(userId)
+      + '&conversationId=' + encodeURIComponent(conversationId);
+
+    var evtSource = new EventSource(url);
+
+    evtSource.addEventListener('chunk', function(e) {
+      fullText += e.data;
+      streamEl.textContent = fullText;
+      scrollToBottom();
+    });
+
+    evtSource.addEventListener('done', function(e) {
+      evtSource.close();
+      setLoading(false);
+      if (e.data) {
+        streamEl.textContent = e.data;
+      }
+      scrollToBottom();
+    });
+
+    evtSource.addEventListener('error', function(e) {
+      if (evtSource.readyState === EventSource.CLOSED) return;
+      evtSource.close();
+      setLoading(false);
+      if (!fullText) {
+        streamEl.textContent = 'Connection lost. Please try again.';
+      }
+      scrollToBottom();
+    });
+
+    evtSource.onerror = function() {
+      evtSource.close();
+      setLoading(false);
+      scrollToBottom();
+    };
+  }
+})();
+</script>

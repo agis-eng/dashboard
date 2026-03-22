@@ -1,6 +1,7 @@
 {% macro memoCard(memo, projects) %}
 <div class="memo-card type-{{ memo.type }}"
      data-search-item="memos"
+     data-profile-owner="{{ memo.speakers | lower }}"
      data-search-text="{{ (memo.title + ' ' + memo.speakers + ' ' + (memo.project_match or '') + ' ' + memo.summary) | lower }}">
 
   <div class="memo-card-top">

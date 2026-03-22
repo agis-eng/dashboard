@@ -24,6 +24,9 @@ import createUser        from './api/admin/create-user.js';
 import projectsMlpAnton  from './api/projects-mlp-anton.js';
 import projectsBrain     from './api/projects-brain.js';
 import brainSearch       from './api/brain-search.js';
+import { chatSend, chatStatus, chatHistory } from './api/chat.js';
+import chatStream        from './api/chat-stream.js';
+import screenshot        from './api/screenshot.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -59,6 +62,11 @@ app.all('/api/admin/create-user',   (req, res) => createUser(req, res));
 app.all('/api/projects/mlp-anton',  (req, res) => projectsMlpAnton(req, res));
 app.all('/api/projects-brain',      (req, res) => projectsBrain(req, res));
 app.all('/api/brain-search',        (req, res) => brainSearch(req, res));
+app.all('/api/chat-send',           (req, res) => chatSend(req, res));
+app.all('/api/chat-status',         (req, res) => chatStatus(req, res));
+app.all('/api/chat-history',        (req, res) => chatHistory(req, res));
+app.all('/api/chat-stream',         (req, res) => chatStream(req, res));
+app.all('/api/screenshot',          (req, res) => screenshot(req, res));
 
 // Serve static built files
 app.use(express.static(path.join(__dirname, 'dist')));
